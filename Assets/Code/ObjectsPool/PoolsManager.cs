@@ -22,7 +22,7 @@ namespace Code.ObjectsPool
             objectsParent = new GameObject();
             objectsParent.name = "Pool";
 
-            for (int i = 0; i < pools.Length; i++)
+            for (var i = 0; i < pools.Length; i++)
             {
                 if (pools[i].prefab != null)
                 {
@@ -38,7 +38,7 @@ namespace Code.ObjectsPool
 
             if (pools != null)
             {
-                for (int i = 0; i < pools.Length; i++)
+                for (var i = 0; i < pools.Length; i++)
                 {
                     if (string.Compare(pools[i].name, name) == 0)
                     {

@@ -14,7 +14,7 @@ namespace Code.ObjectsPool
             
             objectsParent = parent;
 
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 AddObject(sample, parent);
             }
@@ -40,7 +40,7 @@ namespace Code.ObjectsPool
 
         public PoolObject GetObject()
         {
-            for (int i = 0; i < PoolObjects.Count; i++)
+            for (var i = 0; i < PoolObjects.Count; i++)
             {
                 if (PoolObjects[i].gameObject.activeInHierarchy == false)
                     return PoolObjects[i];

@@ -2,7 +2,7 @@
 
 namespace Code.Platforms.Concrete
 {
-    public class PlatfromAbyss : Platform
+    public class AbyssLargePlatform : Platform
     {
         
     }

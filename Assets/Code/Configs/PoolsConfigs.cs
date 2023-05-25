@@ -10,7 +10,7 @@ namespace Code.Configs
 
         private void OnValidate()
         {
-            for (int i = 0; i < pools.Length; i++)
+            for (var i = 0; i < pools.Length; i++)
             {
                 pools[i].name = pools[i].prefab.name;
             }
