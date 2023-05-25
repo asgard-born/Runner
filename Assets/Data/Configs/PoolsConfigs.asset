@@ -13,6 +13,21 @@ MonoBehaviour:
   m_Name: PoolsConfigs
   m_EditorClassIdentifier: 
   pools:
-  - name: 
-    prefab: {fileID: 0}
+  - name: Abyss Large Platform
+    prefab: {fileID: 3111733733263554048, guid: fbbf5e82f28f4e641a7ec126bb1f9774, type: 3}
     count: 50
+  - name: Abyss Platform
+    prefab: {fileID: 6077061347227549584, guid: 640193f5945a08840b5b1b5d6e5b6d2b, type: 3}
+    count: 50
+  - name: Fence Platform
+    prefab: {fileID: 6982261658204529491, guid: 45f5400485e4bd045876b11ef1c3e1c1, type: 3}
+    count: 50
+  - name: Standard Platform
+    prefab: {fileID: 4944008824941307272, guid: 7f81833f86bc38942b9f38b27a421447, type: 3}
+    count: 50
+  - name: Turn Left Platform
+    prefab: {fileID: 1562074697518075005, guid: a6da067a0a83f7e42861c9930ec5379d, type: 3}
+    count: 25
+  - name: Turn Right Platform
+    prefab: {fileID: 8403558742823295848, guid: 97238087ba9539a419af1fa0e62f5043, type: 3}
+    count: 25

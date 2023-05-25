@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Code.Platforms.Abstract;
 using UnityEngine;
 
 namespace Code.Platforms
 {
-    public class PlatformsSystem : MonoBehaviour
+    public class PlatformsSpawningSystem : MonoBehaviour
     {
         public List<Platform> platforms;
 
         private void Update()
         {
-            MovePlatforms();
+            SpawnPlatforms();
         }
 
-        private void MovePlatforms()
+        private void SpawnPlatforms()
         {
             foreach (var platform in platforms)
             {

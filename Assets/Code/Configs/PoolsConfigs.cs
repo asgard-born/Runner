@@ -1,4 +1,7 @@
-﻿using Code.ObjectsPool;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Code.ObjectsPool;
 using UnityEngine;
 
 namespace Code.Configs
@@ -6,14 +9,12 @@ namespace Code.Configs
     [CreateAssetMenu(menuName = "Configs/PoolsConfigs", fileName = "PoolsConfigs", order = 0)]
     public class PoolsConfigs : ScriptableObject
     {
-        [SerializeField] private PoolsManager.PoolInstance[] pools;
+        public PoolInfo[] pools;
+        public Dictionary<Type, PoolInfo> poolsDictionary = new Dictionary<Type, PoolInfo>();
 
         private void OnValidate()
         {
-            for (var i = 0; i < pools.Length; i++)
-            {
-                pools[i].name = pools[i].prefab.name;
-            }
+            poolsDictionary = pools.ToDictionary(p => p.prefab.GetType());
         }
 
         private void Awake()
@@ -23,7 +24,7 @@ namespace Code.Configs
 
         private void Initialize()
         {
-            PoolsManager.Initialize(pools);
+            PoolsManager.Initialize(poolsDictionary);
         }
     }
 }

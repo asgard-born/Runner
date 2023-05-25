@@ -1,55 +1,38 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace Code.ObjectsPool
 {
     public static class PoolsManager
     {
-        private static PoolInstance[] pools;
-        private static GameObject objectsParent;
+        private static Dictionary<Type, PoolInfo> _pools = new Dictionary<Type, PoolInfo>();
+        private static GameObject _objectsParent;
 
-        [System.Serializable]
-        public struct PoolInstance
+        public static void Initialize(Dictionary<Type, PoolInfo> newPools)
         {
-            public string name;
-            public PoolObject prefab;
-            public int count;
-            public Pool pool;
-        }
+            _pools = newPools;
+            _objectsParent = new GameObject();
+            _objectsParent.name = "Platforms Pool";
 
-        public static void Initialize(PoolInstance[] newPools)
-        {
-            pools = newPools;
-            objectsParent = new GameObject();
-            objectsParent.name = "Pool";
-
-            for (var i = 0; i < pools.Length; i++)
+            foreach (var pool in _pools.Values.Where(pool => pool.prefab != null))
             {
-                if (pools[i].prefab != null)
-                {
-                    pools[i].pool = new Pool();
-                    pools[i].pool.Initialize(pools[i].count, pools[i].prefab, objectsParent.transform);
-                }
+                pool.pool = new Pool();
+                pool.pool.Initialize(pool.count, pool.prefab, _objectsParent.transform);
             }
         }
 
-        public static GameObject GetObject(string name, Vector3 position, Quaternion rotation)
+        public static T GetObject<T>(Vector3 position, Quaternion rotation) where T : PoolObject
         {
-            GameObject result = null;
+            T result = null;
 
-            if (pools != null)
+            if (_pools.TryGetValue(typeof(T), out var poolInfo))
             {
-                for (var i = 0; i < pools.Length; i++)
-                {
-                    if (string.Compare(pools[i].name, name) == 0)
-                    {
-                        result = pools[i].pool.GetObject().gameObject;
-                        result.transform.position = position;
-                        result.transform.rotation = rotation;
-                        result.SetActive(true);
-
-                        return result;
-                    }
-                }
+                result = poolInfo.pool.GetObject<T>();
+                result.transform.position = position;
+                result.transform.rotation = rotation;
+                result.gameObject.SetActive(true);
             }
 
             return result;

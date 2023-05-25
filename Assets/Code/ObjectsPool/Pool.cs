@@ -5,14 +5,14 @@ namespace Code.ObjectsPool
 {
     public class Pool
     {
-        private List<PoolObject> PoolObjects { get; set; }
-        Transform objectsParent;
+        private LinkedList<PoolObject> _poolObjects { get; set; }
+        private Transform _objectsParent;
 
-        public void Initialize(int count, PoolObject sample, Transform parent)
+        public void Initialize<T>(int count, T sample, Transform parent) where T : PoolObject
         {
-            PoolObjects = new List<PoolObject>();
-            
-            objectsParent = parent;
+            _poolObjects = new LinkedList<PoolObject>();
+
+            _objectsParent = parent;
 
             for (var i = 0; i < count; i++)
             {
@@ -20,36 +20,38 @@ namespace Code.ObjectsPool
             }
         }
 
-        public void AddObject(PoolObject sample, Transform objectsParent)
+        public T GetObject<T>() where T : PoolObject
         {
-            GameObject temp;
+            foreach (var poolObject in _poolObjects)
+            {
+                if (!poolObject.gameObject.activeInHierarchy)
+                {
+                    return (T)poolObject;
+                }
+            }
+
+            AddObject(_poolObjects.First.Value, _objectsParent);
+            _poolObjects.RemoveFirst();
+
+            return (T)_poolObjects.Last.Value;
+        }
+
+        private void AddObject<T>(T sample, Transform objectsParent) where T : PoolObject
+        {
+            GameObject poolObject;
 
             if (sample.gameObject.scene.name == null)
             {
-                temp = Object.Instantiate(sample.gameObject, objectsParent, true);
-                temp.name = sample.name;
+                poolObject = Object.Instantiate(sample.gameObject, objectsParent, true);
+                poolObject.name = sample.name;
             }
             else
             {
-                temp = sample.gameObject;
+                poolObject = sample.gameObject;
             }
 
-            PoolObjects.Add(temp.GetComponent<PoolObject>());
-            temp.SetActive(false);
-        }
-
-        public PoolObject GetObject()
-        {
-            for (var i = 0; i < PoolObjects.Count; i++)
-            {
-                if (PoolObjects[i].gameObject.activeInHierarchy == false)
-                    return PoolObjects[i];
-            }
-
-            AddObject(PoolObjects[0], objectsParent);
-            PoolObjects.RemoveAt(0);
-
-            return PoolObjects[PoolObjects.Count - 1];
+            _poolObjects.AddLast(poolObject.GetComponent<T>());
+            poolObject.SetActive(false);
         }
     }
 }

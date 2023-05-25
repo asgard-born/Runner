@@ -1,4 +1,6 @@
-﻿using Code.Configs;
+﻿using System.Collections.Generic;
+using Code.Configs;
+using Code.ObjectsPool;
 using Code.Platforms.Abstract;
 using UnityEngine;
 
@@ -7,11 +9,13 @@ namespace Code.Platforms
     public class PlatformsFactory : MonoBehaviour
     {
         private Ctx _ctx;
+        private LinkedList<Platform> _platforms;
 
         public struct Ctx
         {
             public GameConfigs gameConfigs;
-            public Platform currentPlatform;
+            public PoolsConfigs poolsConfigs;
+            public Platform lastPlatform;
         }
 
         private PlatformsFactory(Ctx ctx)
@@ -19,13 +23,18 @@ namespace Code.Platforms
             _ctx = ctx;
         }
 
-        private void CreatePlatform()
+        private T CreatePlatform<T>(Vector3 position, Quaternion rotation) where T : Platform
         {
-            // calculate according settings
-            
-            // var platformType = Pla
-            //
-            // var newPlatform = Object.Instantiate()
+            if (_platforms.Count >= _ctx.gameConfigs.maxPlatformsCount)
+            {
+                _platforms.RemoveFirst();
+            }
+
+            var platform = PoolsManager.GetObject<T>(position, rotation);
+
+            _platforms.AddLast(platform);
+
+            return platform;
         }
     }
 }
