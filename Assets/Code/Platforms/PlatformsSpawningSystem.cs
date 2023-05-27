@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Code.Configs;
 using Code.ObjectsPool;
 using Code.Platforms.Abstract;
-using Code.Platforms.Concrete;
+using Code.Platforms.Essences;
 using UnityEngine;
 
 namespace Code.Platforms
@@ -14,6 +14,7 @@ namespace Code.Platforms
         private LevelConfigs _levelConfigs;
         private int _spawnCount;
         private readonly LinkedList<Platform> _platforms = new LinkedList<Platform>();
+        private const int _leftYAngle = 270;
 
         public PlatformsSpawningSystem(LevelConfigs levelConfigs)
         {
@@ -44,7 +45,7 @@ namespace Code.Platforms
             }
         }
 
-        private Platform CreatePlatform(Transform parent, Platform lastPlatform)
+        private Platform CreatePlatform(Transform parent, Platform previousPlatform)
         {
             var platformToSpawn = CalculatePlatformToSpawn();
 
@@ -55,23 +56,64 @@ namespace Code.Platforms
 
             var type = platformToSpawn.GetType();
 
-            var newPlatform = (Platform)PoolsManager.GetObject(type);
+            var nextPlatform = (Platform)PoolsManager.GetObject(type);
 
-            Vector3 newPosition = parent.position;
+            Vector3 nextPosition = parent.position;
 
-            if (lastPlatform != null)
+            if (previousPlatform != null)
             {
-                newPosition = lastPlatform.transform.position + Vector3.forward * (lastPlatform.transform.lossyScale.z / 2 + newPlatform.transform.lossyScale.z / 2);
+                nextPosition = CalculatePositionForPlatform(previousPlatform, nextPlatform);
+
+                nextPlatform.transform.rotation = previousPlatform.transform.rotation;
+
+                if (previousPlatform is TurnPlatform previousTurnedPlatform)
+                {
+                    CalculateRotationForPlatform(previousTurnedPlatform, nextPlatform);
+                }
             }
 
-            newPlatform.transform.position = newPosition;
-            newPlatform.transform.parent = parent;
+            nextPlatform.transform.position = nextPosition;
+            nextPlatform.transform.parent = parent;
 
             _spawnCount++;
 
-            _platforms.AddLast(newPlatform);
+            _platforms.AddLast(nextPlatform);
 
-            return newPlatform;
+            return nextPlatform;
+        }
+
+        private void CalculateRotationForPlatform(TurnPlatform previousTurnedPlatform, Platform nextPlatform)
+        {
+            switch (previousTurnedPlatform.platformType)
+            {
+                case PlatformType.TurnLeft:
+                    nextPlatform.transform.Rotate(0, _leftYAngle, 0);
+
+                    break;
+
+                case PlatformType.TurnRight:
+                    nextPlatform.transform.Rotate(0, -_leftYAngle, 0);
+
+                    break;
+            }
+        }
+
+        private Vector3 CalculatePositionForPlatform(Platform previousPlatform, Platform nextPlatform)
+        {
+            Vector3 position;
+
+            if (previousPlatform is TurnPlatform lastTurnPlatform)
+            {
+                position = lastTurnPlatform.lastPartTransform.position +
+                           lastTurnPlatform.lastPartTransform.forward.normalized * (lastTurnPlatform.lastPartTransform.lossyScale.z / 2 + nextPlatform.transform.lossyScale.z / 2);
+            }
+            else
+            {
+                var prevTransform = previousPlatform.transform;
+                position = prevTransform.position + prevTransform.forward * (prevTransform.lossyScale.z / 2 + nextPlatform.transform.lossyScale.z / 2);
+            }
+
+            return position;
         }
 
         private Platform CalculatePlatformToSpawn()

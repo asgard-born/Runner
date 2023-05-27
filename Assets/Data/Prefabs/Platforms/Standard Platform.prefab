@@ -111,6 +111,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolParent: {fileID: 0}
   platformType: 10
+  transform: {fileID: 7440445048137446372}
 --- !u!54 &4871087924455059716
 Rigidbody:
   m_ObjectHideFlags: 0
