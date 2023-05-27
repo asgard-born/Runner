@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7440445048137446372}
+  - component: {fileID: 8241224829057444074}
   - component: {fileID: 7440445048137446393}
   - component: {fileID: 7440445048137446374}
   - component: {fileID: 7440445048137446375}
-  - component: {fileID: 8241224829057444074}
   - component: {fileID: 4871087924455059716}
   m_Layer: 0
   m_Name: Standard Platform
@@ -35,6 +35,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8241224829057444074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7440445048137446373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4c65f10255d4be4ea38414534e5e5fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  poolParent: {fileID: 0}
 --- !u!33 &7440445048137446393
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -97,20 +110,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8241224829057444074
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7440445048137446373}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4c65f10255d4be4ea38414534e5e5fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  poolParent: {fileID: 0}
-  _platformType: 10
 --- !u!54 &4871087924455059716
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -1,38 +1,16 @@
-﻿using Code.Configs;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Code.Player
 {
     public class PlayerEntity : MonoBehaviour
     {
-        public bool canRun;
-
+        private bool _canRun;
         private Rigidbody _rigidbody;
-        private PlayersConfigs _playersConfigs;
-        private float _currentSpeed;
+        private Ctx _ctx;
 
-        public void Init(PlayersConfigs playersConfigs)
+        public struct Ctx
         {
-            _playersConfigs = playersConfigs;
-            _currentSpeed = playersConfigs.speed;
-        }
-
-        public void AddSpeed(float factor)
-        {
-            _currentSpeed *= factor;
-        }
-
-        public void ReduceSpeed(float factor)
-        {
-            _currentSpeed /= factor;
-        }
-
-        public void RotateLeft()
-        {
-        }
-
-        public void RotateRight()
-        {
+            public SessionStats sessionStats;
         }
 
         private void Awake()
@@ -40,17 +18,43 @@ namespace Code.Player
             _rigidbody = GetComponent<Rigidbody>();
         }
 
-        private void Run()
-        {
-            _rigidbody.MovePosition(transform.position + transform.forward * _currentSpeed * Time.deltaTime);
-        }
-
         private void Update()
         {
-            if (canRun)
+            if (_canRun)
             {
                 Run();
             }
+        }
+
+        public void StartRun()
+        {
+            _canRun = true;
+        }
+
+        public void Init(Ctx ctx)
+        {
+            _ctx = ctx;
+        }
+
+        public void RotateLeft()
+        {
+            transform.Rotate(Vector3.up * -90);
+        }
+
+        public void RotateRight()
+        {
+            transform.Rotate(Vector3.up * 90);
+        }
+
+        private void Run()
+        {
+            var speed = _ctx.sessionStats.currentSpeed;
+            _rigidbody.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);
+        }
+
+        private void Jump()
+        {
+            
         }
     }
 }

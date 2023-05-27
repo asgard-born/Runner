@@ -12,7 +12,6 @@ namespace Code.Configs
         public float runDelaySec = 1.2f;
         public int allPlatformsCount;
         public int maxPlatformsInTime;
-
         public List<PlatformChance> platformChances;
 
         private void OnValidate()

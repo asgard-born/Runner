@@ -34,7 +34,7 @@ namespace Code.Platforms
             return _platforms.First.Value;
         }
 
-        public async void StartSpawningCycle(Transform parent, Action<Type> enteredCallback)
+        public async void StartSpawningCycleAsync(Transform parent, Action<Type> enteredCallback)
         {
             while (_spawnCount < _levelConfigs.allPlatformsCount)
             {
@@ -123,9 +123,9 @@ namespace Code.Platforms
         private Platform CalculatePlatformToSpawn()
         {
             var chances = _levelConfigs.platformChances.OrderBy(x => x.chance);
-            var summ = chances.Sum(x => x.chance);
+            var sum = chances.Sum(x => x.chance);
 
-            var randomNumber = Random.Range(0, summ);
+            var randomNumber = Random.Range(0, sum);
 
             var currentSumm = 0f;
 

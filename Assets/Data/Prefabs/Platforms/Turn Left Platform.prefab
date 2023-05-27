@@ -140,7 +140,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6957375940798231546}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.107, z: 1.75}
+  m_LocalPosition: {x: 0, y: 0.107, z: 2}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 8778657921650512101}
@@ -229,8 +229,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8778657921650512101}
-  - component: {fileID: 8778657921650512120}
   - component: {fileID: 4760468436822903129}
+  - component: {fileID: 8778657921650512120}
   m_Layer: 0
   m_Name: Turn Left Platform
   m_TagString: Untagged
@@ -255,14 +255,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &8778657921650512120
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8778657921650512100}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &4760468436822903129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -279,6 +271,14 @@ MonoBehaviour:
   _firstPartTransform: {fileID: 7685621149128350728}
   _lastPartTransform: {fileID: 8021274883420073284}
   _triggerZone: {fileID: 8450307956019275444}
+--- !u!33 &8778657921650512120
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8778657921650512100}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &8785169013592381613
 GameObject:
   m_ObjectHideFlags: 0

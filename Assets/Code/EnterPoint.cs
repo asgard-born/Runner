@@ -35,34 +35,47 @@ namespace Code
             Initialize();
         }
 
-        private async void Start()
+        private void Start()
+        {
+            StartLevelAsync();
+        }
+
+        private async void StartLevelAsync()
         {
             await Task.Delay((int)(_levelConfigs.runDelaySec * 1000));
 
-            StartLevel();
-        }
-
-        private void StartLevel()
-        {
-            _player.canRun = true;
+            _player.StartRun();
         }
 
         private void Initialize()
         {
-            _poolsConfigs.Initialize();
-            
-            _sessionStats = new SessionStats();
-            _platformsSpawningSystem = new PlatformsSpawningSystem(_levelConfigs);
-            
-            _playerSpawnPoint = _platformsSpawningSystem.SpawnImmediately(_platformsParent, OnPlayerInterracted).transform;
-            _platformsSpawningSystem.StartSpawningCycle(_platformsParent, OnPlayerInterracted);
-
-            InitializePlayer();
-            InitializeCamera();
-            InitializeInteractingSystems();
+            InitSession();
+            InitPlatforms();
+            InitPlayer();
+            InitCamera();
+            InitInteractingSystems();
         }
 
-        private void InitializeCamera()
+        private void InitPlatforms()
+        {
+            _poolsConfigs.Initialize();
+            _platformsSpawningSystem = new PlatformsSpawningSystem(_levelConfigs);
+            _playerSpawnPoint = _platformsSpawningSystem.SpawnImmediately(_platformsParent, OnPlayerInterracted).transform;
+            _platformsSpawningSystem.StartSpawningCycleAsync(_platformsParent, OnPlayerInterracted);
+        }
+
+        private void InitSession()
+        {
+            var ctx = new SessionStats.Ctx
+            {
+                playersConfigs = _playersConfigs,
+                levelConfigs = _levelConfigs
+            };
+
+            _sessionStats = new SessionStats(ctx);
+        }
+
+        private void InitCamera()
         {
             var cameraCtx = new CameraFollowSystem.Ctx
             {
@@ -74,7 +87,7 @@ namespace Code
             _cameraSystem = new CameraFollowSystem(cameraCtx);
         }
 
-        private void InitializeInteractingSystems()
+        private void InitInteractingSystems()
         {
             var ctx = new PlatformInteractingBehaviour.Ctx
             {
@@ -102,11 +115,17 @@ namespace Code
             }
         }
 
-        private void InitializePlayer()
+        private void InitPlayer()
         {
             _player = Instantiate(_playersConfigs.playerPrefab);
             _player.transform.position = _playerSpawnPoint.position + _playerSpawnOffset;
-            _player.Init(_playersConfigs);
+
+            var ctx = new PlayerEntity.Ctx
+            {
+                sessionStats = _sessionStats
+            };
+
+            _player.Init(ctx);
         }
 
         private void LateUpdate()

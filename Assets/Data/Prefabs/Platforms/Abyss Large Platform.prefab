@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 846471137415786659}
+  - component: {fileID: 1841572096132251726}
   - component: {fileID: 846471137415786686}
   - component: {fileID: 846471137415786657}
   - component: {fileID: 846471137415786656}
-  - component: {fileID: 1841572096132251726}
   - component: {fileID: -4362121361469992093}
   m_Layer: 0
   m_Name: Abyss Large Platform
@@ -35,6 +35,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1841572096132251726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846471137415786658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91b91a3bc5c04d7483b0002c1a74f820, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  poolParent: {fileID: 0}
 --- !u!33 &846471137415786686
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -97,20 +110,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1841572096132251726
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 846471137415786658}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91b91a3bc5c04d7483b0002c1a74f820, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  poolParent: {fileID: 0}
-  _platformType: 30
 --- !u!54 &-4362121361469992093
 Rigidbody:
   m_ObjectHideFlags: 0

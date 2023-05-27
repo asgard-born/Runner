@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 937048210716120951}
-  - component: {fileID: 937048210716120938}
   - component: {fileID: 6116486953119759579}
+  - component: {fileID: 937048210716120938}
   m_Layer: 0
   m_Name: Turn Right Platform
   m_TagString: Untagged
@@ -35,14 +35,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &937048210716120938
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 937048210716120950}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &6116486953119759579
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,6 +51,14 @@ MonoBehaviour:
   _firstPartTransform: {fileID: 2197142039769242522}
   _lastPartTransform: {fileID: 1982804011849853654}
   _triggerZone: {fileID: 4193957665603457079}
+--- !u!33 &937048210716120938
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 937048210716120950}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &954250818703515455
 GameObject:
   m_ObjectHideFlags: 0
@@ -199,7 +199,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1027854900845584053}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.107, z: 1.75}
+  m_LocalPosition: {x: 0, y: 0.107, z: 2}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 937048210716120951}
