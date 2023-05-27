@@ -6,7 +6,7 @@ namespace Code.Player
     public class PlayerEntity : MonoBehaviour
     {
         public bool canRun;
-        
+
         private Rigidbody _rigidbody;
         private PlayersConfigs _playersConfigs;
         private float _currentSpeed;
@@ -25,6 +25,14 @@ namespace Code.Player
         public void ReduceSpeed(float factor)
         {
             _currentSpeed /= factor;
+        }
+
+        public void RotateLeft()
+        {
+        }
+
+        public void RotateRight()
+        {
         }
 
         private void Awake()

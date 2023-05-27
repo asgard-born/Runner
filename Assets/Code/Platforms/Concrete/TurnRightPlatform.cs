@@ -4,6 +4,5 @@ namespace Code.Platforms.Concrete
 {
     public class TurnRightPlatform : TurnPlatform
     {
-        
     }
 }

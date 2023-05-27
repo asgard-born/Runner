@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Code.Configs;
 using Code.ObjectsPool;
 using Code.Platforms.Abstract;
-using Code.Platforms.Essences;
+using Code.Platforms.Concrete;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Code.Platforms
 {
@@ -22,17 +24,17 @@ namespace Code.Platforms
             _levelConfigs = levelConfigs;
         }
 
-        public Platform SpawnImmediately(Transform parent)
+        public Platform SpawnImmediately(Transform parent, Action<Type> enteredCallback)
         {
             for (var i = 0; i < _levelConfigs.startPlatformsCount; i++)
             {
-                _lastPlatform = CreatePlatform(parent, _lastPlatform);
+                _lastPlatform = CreatePlatform(parent, _lastPlatform, enteredCallback);
             }
 
             return _platforms.First.Value;
         }
 
-        public async void StartSpawningCycle(Transform parent)
+        public async void StartSpawningCycle(Transform parent, Action<Type> enteredCallback)
         {
             while (_spawnCount < _levelConfigs.allPlatformsCount)
             {
@@ -40,16 +42,17 @@ namespace Code.Platforms
                 {
                     var firstPlatform = _platforms.First.Value;
                     firstPlatform.ReturnToPool();
+                    firstPlatform.Dispose();
                     _platforms.RemoveFirst();
                 }
 
-                _lastPlatform = CreatePlatform(parent, _lastPlatform);
+                _lastPlatform = CreatePlatform(parent, _lastPlatform, enteredCallback);
 
                 await Task.Delay((int)(_levelConfigs.spawnPlatformsDelaySec * 1000));
             }
         }
 
-        private Platform CreatePlatform(Transform parent, Platform previousPlatform)
+        private Platform CreatePlatform(Transform parent, Platform previousPlatform, Action<Type> enteredCallback)
         {
             var platformToSpawn = CalculatePlatformToSpawn();
 
@@ -78,6 +81,7 @@ namespace Code.Platforms
 
             nextPlatform.transform.position = nextPosition;
             nextPlatform.transform.parent = parent;
+            nextPlatform.OnInterractedByPlayer += enteredCallback;
 
             _spawnCount++;
 
@@ -88,17 +92,13 @@ namespace Code.Platforms
 
         private void CalculateRotationForPlatform(TurnPlatform previousTurnedPlatform, Platform nextPlatform)
         {
-            switch (previousTurnedPlatform.platformType)
+            if (previousTurnedPlatform is TurnLeftPlatform)
             {
-                case PlatformType.TurnLeft:
-                    nextPlatform.transform.Rotate(0, _leftYAngle, 0);
-
-                    break;
-
-                case PlatformType.TurnRight:
-                    nextPlatform.transform.Rotate(0, -_leftYAngle, 0);
-
-                    break;
+                nextPlatform.transform.Rotate(0, _leftYAngle, 0);
+            }
+            else if (previousTurnedPlatform is TurnRightPlatform)
+            {
+                nextPlatform.transform.Rotate(0, -_leftYAngle, 0);
             }
         }
 
