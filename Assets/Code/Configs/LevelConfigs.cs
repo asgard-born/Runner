@@ -8,7 +8,8 @@ namespace Code.Configs
     public class LevelConfigs : ScriptableObject
     {
         public int startPlatformsCount = 5;
-        public float spawnDelaySec = 1.5f;
+        public float spawnPlatformsDelaySec = .4f;
+        public float runDelaySec = 1.2f;
         public int allPlatformsCount;
         public int maxPlatformsInTime;
 

@@ -40,7 +40,7 @@ namespace Code.Platforms
 
                 lastPlatform = CreatePlatform(parent, lastPlatform);
 
-                await Task.Delay((int)(_levelConfigs.spawnDelaySec * 1000));
+                await Task.Delay((int)(_levelConfigs.spawnPlatformsDelaySec * 1000));
             }
         }
 

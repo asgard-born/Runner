@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fff46d450fd547ba82c05f5bd64dcbc2, type: 3}
   m_Name: LevelConfigs
   m_EditorClassIdentifier: 
-  startPlatformsCount: 5
-  spawnDelaySec: 0.2
-  allPlatformsCount: 40
-  maxPlatformsInTime: 15
+  startPlatformsCount: 30
+  spawnPlatformsDelaySec: 0.6
+  runDelaySec: 1.2
+  allPlatformsCount: 500
+  maxPlatformsInTime: 100
   platformChances:
   - platform: {fileID: 8241224829057444074, guid: 7f81833f86bc38942b9f38b27a421447, type: 3}
     chance: 0.4

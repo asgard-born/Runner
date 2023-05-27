@@ -1,4 +1,5 @@
-﻿using Code.Configs;
+﻿using System.Threading.Tasks;
+using Code.Configs;
 using Code.Platforms;
 using Code.Player;
 using UnityEngine;
@@ -38,9 +39,14 @@ namespace Code
             _spawningSystem.StartSpawning(_platformsParent);
         }
 
-        private void SpawnPlayer()
+        private async void SpawnPlayer()
         {
             _player = Instantiate(_playersConfigs.playerPrefab, _playerSpawnPoint);
+            _player.Init(_playersConfigs);
+
+            await Task.Delay((int)(_levelConfigs.runDelaySec * 1000));
+
+            _player.canRun = true;
         }
         
         
