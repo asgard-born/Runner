@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using Code.Configs.Essences;
+using UnityEngine;
 
 namespace Code.Configs
 {
@@ -9,5 +11,19 @@ namespace Code.Configs
         public float spawnDelaySec = 1.5f;
         public int allPlatformsCount;
         public int maxPlatformsInTime;
+
+        public List<PlatformChance> platformChances;
+
+        private void OnValidate()
+        {
+            var totalChance = 0f;
+
+            foreach (var platformChance in platformChances)
+            {
+                totalChance += platformChance.chance;
+            }
+
+            Debug.Log($"The summ of chances is {totalChance}");
+        }
     }
 }

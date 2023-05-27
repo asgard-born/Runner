@@ -23,26 +23,26 @@ namespace Code.ObjectsPool
             }
         }
 
-        public static T GetObject<T>() where T : PoolObject
+        public static PoolObject GetObject(Type type)
         {
-            T result = null;
+            PoolObject result = null;
 
-            if (_pools.TryGetValue(typeof(T), out var poolInfo))
+            if (_pools.TryGetValue(type, out var poolInfo))
             {
-                result = poolInfo.pool.GetObject<T>();
+                result = poolInfo.pool.GetObject();
                 result.gameObject.SetActive(true);
             }
 
             return result;
         }
 
-        public static T GetObject<T>(Vector3 position, Quaternion rotation) where T : PoolObject
+        public static PoolObject GetObject(Type type, Vector3 position, Quaternion rotation)
         {
-            T result = null;
+            PoolObject result = null;
 
-            if (_pools.TryGetValue(typeof(T), out var poolInfo))
+            if (_pools.TryGetValue(type, out var poolInfo))
             {
-                result = poolInfo.pool.GetObject<T>();
+                result = poolInfo.pool.GetObject();
                 result.transform.position = position;
                 result.transform.rotation = rotation;
                 result.gameObject.SetActive(true);

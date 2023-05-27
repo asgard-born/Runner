@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Code.ObjectsPool
 {
@@ -20,23 +22,23 @@ namespace Code.ObjectsPool
             }
         }
 
-        public T GetObject<T>() where T : PoolObject
+        public PoolObject GetObject()
         {
             foreach (var poolObject in _poolObjects)
             {
                 if (!poolObject.gameObject.activeInHierarchy)
                 {
-                    return (T)poolObject;
+                    return poolObject;
                 }
             }
 
             AddObject(_poolObjects.First.Value, _objectsParent);
             _poolObjects.RemoveFirst();
 
-            return (T)_poolObjects.Last.Value;
+            return _poolObjects.Last.Value;
         }
 
-        private void AddObject<T>(T sample, Transform objectsParent) where T : PoolObject
+        private void AddObject(PoolObject sample, Transform objectsParent)
         {
             PoolObject poolObject;
 
@@ -51,7 +53,7 @@ namespace Code.ObjectsPool
                 poolObject = sample;
             }
 
-            _poolObjects.AddLast(poolObject.GetComponent<T>());
+            _poolObjects.AddLast(poolObject);
             poolObject.gameObject.SetActive(false);
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Code.Configs;
 using Code.ObjectsPool;
@@ -45,23 +46,54 @@ namespace Code.Platforms
 
         private Platform CreatePlatform(Transform parent, Platform lastPlatform)
         {
-            var platform = PoolsManager.GetObject<StandardPlatform>();
+            var platformToSpawn = CalculatePlatformToSpawn();
+
+            if (platformToSpawn == null)
+            {
+                Debug.LogError("Cannot spawn platform, check the Platform's chances in Current level's configs");
+            }
+
+            var type = platformToSpawn.GetType();
+
+            var newPlatform = (Platform)PoolsManager.GetObject(type);
 
             Vector3 newPosition = parent.position;
 
             if (lastPlatform != null)
             {
-                newPosition = lastPlatform.transform.TransformPoint(Vector3.forward * platform.transform.lossyScale.z / 2);
+                newPosition = lastPlatform.transform.position + Vector3.forward * (lastPlatform.transform.lossyScale.z / 2 + newPlatform.transform.lossyScale.z / 2);
             }
 
-            platform.transform.position = newPosition;
-            platform.transform.parent = parent;
-            
+            newPlatform.transform.position = newPosition;
+            newPlatform.transform.parent = parent;
+
             _spawnCount++;
 
-            _platforms.AddLast(platform);
+            _platforms.AddLast(newPlatform);
 
-            return platform;
+            return newPlatform;
+        }
+
+        private Platform CalculatePlatformToSpawn()
+        {
+            var chances = _levelConfigs.platformChances.OrderBy(x => x.chance);
+            var summ = chances.Sum(x => x.chance);
+
+            var randomNumber = Random.Range(0, summ);
+
+            var currentSumm = 0f;
+
+            foreach (var platformChance in chances)
+            {
+                currentSumm += platformChance.chance;
+
+                if (randomNumber <= currentSumm)
+                {
+                    return platformChance.platform;
+                }
+            }
+
+            return null;
         }
     }
 }
