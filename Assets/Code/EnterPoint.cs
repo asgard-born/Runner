@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Code.CameraLogic;
 using Code.Configs;
 using Code.Platforms;
 using Code.Player;
@@ -11,44 +12,59 @@ namespace Code
         [SerializeField] private LevelConfigs _levelConfigs;
         [SerializeField] private PlayersConfigs _playersConfigs;
         [SerializeField] private PoolsConfigs _poolsConfigs;
-        [SerializeField] private Transform _playerSpawnPoint;
         [SerializeField] private Transform _platformsParent;
+        [SerializeField] private Camera _camera;
 
+        private Transform _playerSpawnPoint;
         private PlayerEntity _player;
-        private PlayerMovingSystem _movingSystem;
-        private PlatformsSpawningSystem _spawningSystem;
+        private PlatformsSpawningSystem _platformsSpawningSystem;
+        private CameraFollowSystem _cameraSystem;
 
         private void Awake()
         {
             Initialize();
         }
 
+        private async void Start()
+        {
+            await Task.Delay((int)(_levelConfigs.runDelaySec * 1000));
+
+            StartLevel();
+        }
+
+        private void StartLevel()
+        {
+            // _player.canRun = true;
+        }
+
         private void Initialize()
         {
             _poolsConfigs.Initialize();
+
+            _platformsSpawningSystem = new PlatformsSpawningSystem(_levelConfigs);
+            _playerSpawnPoint = _platformsSpawningSystem.SpawnImmediately(_platformsParent).transform;
+            _platformsSpawningSystem.StartSpawningCycle(_platformsParent);
+
             SpawnPlayer();
 
-            var movingSystemCtx = new PlayerMovingSystem.Ctx
+            var cameraCtx = new CameraFollowSystem.Ctx
             {
-                player = _player,
-                playersConfigs = _playersConfigs
+                transform = _camera.transform,
+                player = _player.transform
             };
 
-            _movingSystem = new PlayerMovingSystem(movingSystemCtx);
-            _spawningSystem = new PlatformsSpawningSystem(_levelConfigs);
-            _spawningSystem.StartSpawning(_platformsParent);
+            _cameraSystem = new CameraFollowSystem(cameraCtx);
         }
 
-        private async void SpawnPlayer()
+        private void SpawnPlayer()
         {
-            _player = Instantiate(_playersConfigs.playerPrefab, _playerSpawnPoint);
+            _player = Instantiate(_playersConfigs.playerPrefab);
             _player.Init(_playersConfigs);
-
-            await Task.Delay((int)(_levelConfigs.runDelaySec * 1000));
-
-            _player.canRun = true;
         }
-        
-        
+
+        private void LateUpdate()
+        {
+            _cameraSystem.Follow();
+        }
     }
 }

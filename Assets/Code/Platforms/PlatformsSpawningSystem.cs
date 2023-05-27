@@ -15,21 +15,25 @@ namespace Code.Platforms
         private int _spawnCount;
         private readonly LinkedList<Platform> _platforms = new LinkedList<Platform>();
         private const int _leftYAngle = 270;
+        private Platform _lastPlatform;
 
         public PlatformsSpawningSystem(LevelConfigs levelConfigs)
         {
             _levelConfigs = levelConfigs;
         }
 
-        public async void StartSpawning(Transform parent)
+        public Platform SpawnImmediately(Transform parent)
         {
-            Platform lastPlatform = null;
-
             for (var i = 0; i < _levelConfigs.startPlatformsCount; i++)
             {
-                lastPlatform = CreatePlatform(parent, lastPlatform);
+                _lastPlatform = CreatePlatform(parent, _lastPlatform);
             }
 
+            return _platforms.First.Value;
+        }
+
+        public async void StartSpawningCycle(Transform parent)
+        {
             while (_spawnCount < _levelConfigs.allPlatformsCount)
             {
                 if (_platforms.Count >= _levelConfigs.maxPlatformsInTime)
@@ -39,7 +43,7 @@ namespace Code.Platforms
                     _platforms.RemoveFirst();
                 }
 
-                lastPlatform = CreatePlatform(parent, lastPlatform);
+                _lastPlatform = CreatePlatform(parent, _lastPlatform);
 
                 await Task.Delay((int)(_levelConfigs.spawnPlatformsDelaySec * 1000));
             }

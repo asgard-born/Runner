@@ -393,6 +393,7 @@ MonoBehaviour:
   _poolsConfigs: {fileID: 11400000, guid: eec40383e087af94b887a22466782dd8, type: 2}
   _playerSpawnPoint: {fileID: 78377294}
   _platformsParent: {fileID: 1482401171}
+  _camera: {fileID: 994953459}
 --- !u!4 &1528448815
 Transform:
   m_ObjectHideFlags: 0
