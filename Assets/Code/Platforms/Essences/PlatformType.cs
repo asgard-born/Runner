@@ -9,6 +9,7 @@
         AbyssLarge = 30,
         Saw = 40,
         Fence = 50,
-        Turn = 60,
+        TurnLeft = 60,
+        TurnRight = 70,
     }
 }

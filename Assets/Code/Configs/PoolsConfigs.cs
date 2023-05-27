@@ -6,23 +6,18 @@ using UnityEngine;
 
 namespace Code.Configs
 {
-    [CreateAssetMenu(menuName = "Configs/PoolsConfigs", fileName = "PoolsConfigs", order = 0)]
+    [CreateAssetMenu(menuName = "Configs/PoolsConfigs", fileName = "PoolsConfigs")]
     public class PoolsConfigs : ScriptableObject
     {
         public PoolInfo[] pools;
-        public Dictionary<Type, PoolInfo> poolsDictionary = new Dictionary<Type, PoolInfo>();
+        public Dictionary<Type, PoolInfo> poolsDictionary;
 
         private void OnValidate()
         {
             poolsDictionary = pools.ToDictionary(p => p.prefab.GetType());
         }
 
-        private void Awake()
-        {
-            Initialize();
-        }
-
-        private void Initialize()
+        public void Initialize()
         {
             PoolsManager.Initialize(poolsDictionary);
         }

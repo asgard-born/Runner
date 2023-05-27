@@ -4,10 +4,12 @@ namespace Code.ObjectsPool
 {
     public class PoolObject : MonoBehaviour
     {
+        public Transform poolParent;
         public void ReturnToPool()
         {
             gameObject.SetActive(false);
-            transform.position = Vector3.zero;
+            transform.position = poolParent.position;
+            transform.parent = poolParent;
         }
     }
 }

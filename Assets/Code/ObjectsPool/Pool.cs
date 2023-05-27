@@ -38,20 +38,21 @@ namespace Code.ObjectsPool
 
         private void AddObject<T>(T sample, Transform objectsParent) where T : PoolObject
         {
-            GameObject poolObject;
+            PoolObject poolObject;
 
             if (sample.gameObject.scene.name == null)
             {
-                poolObject = Object.Instantiate(sample.gameObject, objectsParent, true);
+                poolObject = Object.Instantiate(sample.gameObject, objectsParent, true).GetComponent<PoolObject>();
                 poolObject.name = sample.name;
+                poolObject.poolParent = _objectsParent;
             }
             else
             {
-                poolObject = sample.gameObject;
+                poolObject = sample;
             }
 
             _poolObjects.AddLast(poolObject.GetComponent<T>());
-            poolObject.SetActive(false);
+            poolObject.gameObject.SetActive(false);
         }
     }
 }

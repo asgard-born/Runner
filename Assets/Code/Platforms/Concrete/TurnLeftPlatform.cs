@@ -2,7 +2,7 @@
 
 namespace Code.Platforms.Concrete
 {
-    public class TurnPlatform : Platform
+    public class TurnLeftPlatform : Platform
     {
         
     }

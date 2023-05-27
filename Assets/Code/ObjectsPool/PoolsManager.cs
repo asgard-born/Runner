@@ -23,6 +23,19 @@ namespace Code.ObjectsPool
             }
         }
 
+        public static T GetObject<T>() where T : PoolObject
+        {
+            T result = null;
+
+            if (_pools.TryGetValue(typeof(T), out var poolInfo))
+            {
+                result = poolInfo.pool.GetObject<T>();
+                result.gameObject.SetActive(true);
+            }
+
+            return result;
+        }
+
         public static T GetObject<T>(Vector3 position, Quaternion rotation) where T : PoolObject
         {
             T result = null;
