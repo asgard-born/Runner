@@ -7,7 +7,8 @@ namespace Code.Configs
     public class PlayersConfigs : ScriptableObject
     {
         public PlayerEntity playerPrefab;
-        public int cameraSmooth = 6;
+        public float cameraSmooth = 1.5f;
         public int initialSpeed = 15;
+        public float jumpForce = 4;
     }
 }

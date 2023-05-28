@@ -9,6 +9,7 @@ using Code.Platforms.Concrete;
 using Code.PlatformsBehaviour;
 using Code.PlatformsBehaviour.Abstract;
 using Code.Player;
+using Code.PlayersInput;
 using UnityEngine;
 
 namespace Code
@@ -19,14 +20,14 @@ namespace Code
         [SerializeField] private PlayersConfigs _playersConfigs;
         [SerializeField] private PoolsConfigs _poolsConfigs;
         [SerializeField] private Transform _platformsParent;
-        [SerializeField] private Camera _camera;
         [SerializeField] private Vector3 _playerSpawnOffset;
+        [SerializeField] private CameraFollowSystem _cameraSystem;
+        [SerializeField] private InputSystem _inputSystem;
 
         private SessionStats _sessionStats;
         private Transform _playerSpawnPoint;
         private PlayerEntity _player;
         private PlatformsSpawningSystem _platformsSpawningSystem;
-        private CameraFollowSystem _cameraSystem;
         private PlatformInteractingBehaviour _platformInteractingBehaviour;
 
         private HashSet<PlatformInteractingBehaviour> _interactingBehaviours;
@@ -54,7 +55,18 @@ namespace Code
             InitPlatforms();
             InitPlayer();
             InitCamera();
-            InitInteractingSystems();
+            InitPlatformInteractingSystems();
+            InitInputSystem();
+        }
+
+        private void InitInputSystem()
+        {
+            _inputSystem.hasTouched += OnInput;
+        }
+
+        private void OnInput()
+        {
+            _player.TryJump();
         }
 
         private void InitPlatforms()
@@ -80,15 +92,14 @@ namespace Code
         {
             var cameraCtx = new CameraFollowSystem.Ctx
             {
-                cameraTransform = _camera.transform,
                 player = _player.transform,
                 cameraSmooth = _playersConfigs.cameraSmooth,
             };
 
-            _cameraSystem = new CameraFollowSystem(cameraCtx);
+            _cameraSystem.Initialize(cameraCtx);
         }
 
-        private void InitInteractingSystems()
+        private void InitPlatformInteractingSystems()
         {
             var ctx = new PlatformInteractingBehaviour.Ctx
             {
@@ -125,11 +136,6 @@ namespace Code
             };
 
             _player.Init(ctx);
-        }
-
-        private void LateUpdate()
-        {
-            _cameraSystem.Follow();
         }
     }
 }

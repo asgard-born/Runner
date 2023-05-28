@@ -5,13 +5,13 @@ namespace Code.PlayersInput
 {
     public class InputSystem : MonoBehaviour
     {
-        public Action HasTouched;
+        public Action hasTouched;
         
         private void Update()
         {
             if (Input.GetMouseButtonDown(0))
             {
-                HasTouched?.Invoke();
+                hasTouched?.Invoke();
             }
         }
     }

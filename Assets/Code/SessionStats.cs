@@ -9,6 +9,7 @@ namespace Code
         public ConcurrentDictionary<PlatformType, int> platformsDictionary = new ConcurrentDictionary<PlatformType, int>();
         private readonly Ctx _ctx;
         public float currentSpeed { get; private set; }
+        public float jumpForce { get; private set; }
 
         public struct Ctx
         {
@@ -20,6 +21,7 @@ namespace Code
         {
             _ctx = ctx;
             currentSpeed = _ctx.playersConfigs.initialSpeed;
+            jumpForce = _ctx.playersConfigs.jumpForce;
         }
         
         public void AddPlatformCount(PlatformType platformType)
