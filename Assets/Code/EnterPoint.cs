@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Code.CameraLogic;
 using Code.Configs;
@@ -28,7 +29,7 @@ namespace Code
         private CameraFollowSystem _cameraSystem;
         private PlatformInteractingBehaviour _platformInteractingBehaviour;
 
-        private Dictionary<Type, PlatformInteractingBehaviour> _interactingSystems;
+        private HashSet<PlatformInteractingBehaviour> _interactingBehaviours;
 
         private void Awake()
         {
@@ -95,24 +96,22 @@ namespace Code
                 sessionStats = _sessionStats
             };
 
-            _interactingSystems = new Dictionary<Type, PlatformInteractingBehaviour>
+            _interactingBehaviours = new HashSet<PlatformInteractingBehaviour>
             {
-                { typeof(StandardPlatform), new StandardInteractingBehaviour(ctx) },
-                { typeof(AbyssPlatfrom), new AbyssInteractingBehaviour(ctx) },
-                { typeof(AbyssLargePlatform), new AbyssLargeInteractingBehaviour(ctx) },
-                { typeof(FencePlatform), new FenceInteractingBehaviour(ctx) },
-                { typeof(SawPlatform), new SawInteractingBehaviour(ctx) },
-                { typeof(TurnLeftPlatform), new TurnLeftInteractingBehaviour(ctx) },
-                { typeof(TurnRightPlatform), new TurnRightInteractingBehaviour(ctx) },
+                new StandardInteractingBehaviour(ctx),
+                new AbyssInteractingBehaviour(ctx),
+                new AbyssLargeInteractingBehaviour(ctx),
+                new FenceInteractingBehaviour(ctx),
+                new SawInteractingBehaviour(ctx),
+                new TurnLeftInteractingBehaviour(ctx),
+                new TurnRightInteractingBehaviour(ctx),
             };
         }
 
-        private void OnPlayerInterracted(Type platformType)
+        private void OnPlayerInterracted(Type behaviourType)
         {
-            if (_interactingSystems.TryGetValue(platformType, out PlatformInteractingBehaviour interactSystem))
-            {
-                interactSystem.InteractWithPlayer();
-            }
+            var behaviour = _interactingBehaviours.FirstOrDefault(s => s.GetType() == behaviourType);
+            behaviour.InteractWithPlayer();
         }
 
         private void InitPlayer()

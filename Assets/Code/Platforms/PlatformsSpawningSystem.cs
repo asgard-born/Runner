@@ -24,17 +24,17 @@ namespace Code.Platforms
             _levelConfigs = levelConfigs;
         }
 
-        public Platform SpawnImmediately(Transform parent, Action<Type> enteredCallback)
+        public Platform SpawnImmediately(Transform parent, Action<Type> interactionCallback)
         {
             for (var i = 0; i < _levelConfigs.startPlatformsCount; i++)
             {
-                _lastPlatform = CreatePlatform(parent, _lastPlatform, enteredCallback);
+                _lastPlatform = CreatePlatform(parent, _lastPlatform, interactionCallback);
             }
 
             return _platforms.First.Value;
         }
 
-        public async void StartSpawningCycleAsync(Transform parent, Action<Type> enteredCallback)
+        public async void StartSpawningCycleAsync(Transform parent, Action<Type> interactionCallback)
         {
             while (_spawnCount < _levelConfigs.allPlatformsCount)
             {
@@ -46,13 +46,13 @@ namespace Code.Platforms
                     _platforms.RemoveFirst();
                 }
 
-                _lastPlatform = CreatePlatform(parent, _lastPlatform, enteredCallback);
+                _lastPlatform = CreatePlatform(parent, _lastPlatform, interactionCallback);
 
                 await Task.Delay((int)(_levelConfigs.spawnPlatformsDelaySec * 1000));
             }
         }
 
-        private Platform CreatePlatform(Transform parent, Platform previousPlatform, Action<Type> enteredCallback)
+        private Platform CreatePlatform(Transform parent, Platform previousPlatform, Action<Type> interactionCallback)
         {
             var platformToSpawn = CalculatePlatformToSpawn();
 
@@ -81,7 +81,7 @@ namespace Code.Platforms
 
             nextPlatform.transform.position = nextPosition;
             nextPlatform.transform.parent = parent;
-            nextPlatform.OnInterractedByPlayer += enteredCallback;
+            nextPlatform.OnInterractedWithPlayer += interactionCallback;
 
             _spawnCount++;
 

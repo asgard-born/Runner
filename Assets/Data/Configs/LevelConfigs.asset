@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fff46d450fd547ba82c05f5bd64dcbc2, type: 3}
   m_Name: LevelConfigs
   m_EditorClassIdentifier: 
-  startPlatformsCount: 30
-  spawnPlatformsDelaySec: 0.6
+  startPlatformsCount: 50
+  spawnPlatformsDelaySec: 0.8
   runDelaySec: 1.2
-  allPlatformsCount: 250
-  maxPlatformsInTime: 50
+  allPlatformsCount: 400
+  maxPlatformsInTime: 100
   platformChances:
   - platform: {fileID: 8241224829057444074, guid: 7f81833f86bc38942b9f38b27a421447, type: 3}
     chance: 0.4
@@ -29,6 +29,6 @@ MonoBehaviour:
   - platform: {fileID: 3297746797329169710, guid: 9aabaed72b57fec48a61fc76979f600a, type: 3}
     chance: 0.2
   - platform: {fileID: 4760468436822903129, guid: a6da067a0a83f7e42861c9930ec5379d, type: 3}
-    chance: 0.03
+    chance: 0.07
   - platform: {fileID: 6116486953119759579, guid: 4e2674c06505c2445ab690b5f8af8744, type: 3}
-    chance: 0.03
+    chance: 0.07

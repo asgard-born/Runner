@@ -5,16 +5,17 @@ namespace Code.Platforms.Abstract
 {
     public abstract class Platform : PoolObject, IDisposable
     {
-        public Action<Type> OnInterractedByPlayer;
+        public Action<Type> OnInterractedWithPlayer;
+        protected Type _behaviourType;
 
         protected virtual void OnPlayerInteraction()
         {
-            OnInterractedByPlayer?.Invoke(this.GetType());
+            OnInterractedWithPlayer?.Invoke(_behaviourType);
         }
 
         public void Dispose()
         {
-            OnInterractedByPlayer = null;
+            OnInterractedWithPlayer = null;
         }
     }
 }
