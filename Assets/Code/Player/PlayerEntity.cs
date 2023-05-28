@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Code.Player
 {
@@ -9,6 +11,8 @@ namespace Code.Player
         private Rigidbody _rigidbody;
         private Ctx _ctx;
         private float distToGround;
+        private int _currentJumpingCount;
+        private bool _hasStartJumping;
 
         public struct Ctx
         {
@@ -22,11 +26,21 @@ namespace Code.Player
             distToGround = _collider.bounds.extents.y;
         }
 
-        public void TryJump()
+        public async void TryJump()
         {
-            if (!IsGrounded()) return;
-            
+            if ((_currentJumpingCount == 0 && !IsGrounded()) || _currentJumpingCount >= _ctx.sessionStats.maxJumpingTimes)
+            {
+                _hasStartJumping = false;
+                return;
+            }
+
+            _hasStartJumping = true;
+            _currentJumpingCount += 1;
             _rigidbody.AddForce(Vector3.up * _ctx.sessionStats.jumpForce, ForceMode.VelocityChange);
+
+            await Task.Delay(100);
+
+            _hasStartJumping = false;
         }
 
         public void StartRun()
@@ -51,11 +65,22 @@ namespace Code.Player
 
         private void Update()
         {
-            IsGrounded();
-
             if (_canRun)
             {
                 Run();
+            }
+        }
+
+        private void LateUpdate()
+        {
+            CheckForJumpingState();
+        }
+
+        private void CheckForJumpingState()
+        {
+            if (IsGrounded() && !_hasStartJumping)
+            {
+                _currentJumpingCount = 0;
             }
         }
 
@@ -67,12 +92,12 @@ namespace Code.Player
 
         private bool IsGrounded()
         {
-            return Physics.Raycast(transform.position, -Vector3.up, distToGround + .1f);
+            return Physics.Raycast(transform.position, -Vector3.up, distToGround + .001f);
         }
 
         private bool IsFalling()
         {
-            return (!IsGrounded() && _rigidbody.velocity.y < 0);
+            return !IsGrounded() && _rigidbody.velocity.y < 0;
         }
     }
 }

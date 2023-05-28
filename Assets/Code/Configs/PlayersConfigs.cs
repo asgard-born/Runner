@@ -10,5 +10,6 @@ namespace Code.Configs
         public float cameraSmooth = 1.5f;
         public int initialSpeed = 15;
         public float jumpForce = 4;
+        public int maxJumpingTimes = 2;
     }
 }

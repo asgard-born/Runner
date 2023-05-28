@@ -10,6 +10,7 @@ namespace Code
         private readonly Ctx _ctx;
         public float currentSpeed { get; private set; }
         public float jumpForce { get; private set; }
+        public int maxJumpingTimes { get; private set; }
 
         public struct Ctx
         {
@@ -20,8 +21,10 @@ namespace Code
         public SessionStats(Ctx ctx)
         {
             _ctx = ctx;
+            
             currentSpeed = _ctx.playersConfigs.initialSpeed;
             jumpForce = _ctx.playersConfigs.jumpForce;
+            maxJumpingTimes = _ctx.playersConfigs.maxJumpingTimes;
         }
         
         public void AddPlatformCount(PlatformType platformType)
