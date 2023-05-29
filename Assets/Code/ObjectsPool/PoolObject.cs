@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Code.ObjectsPool
 {
     public class PoolObject : MonoBehaviour
     {
-        public Transform poolParent;
+        [NonSerialized] public Transform poolParent;
         public void ReturnToPool()
         {
             gameObject.SetActive(false);

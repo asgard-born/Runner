@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Code.CameraLogic;
 using Code.Configs;
 using Code.Platforms;
-using Code.Platforms.Concrete;
+using Code.Platforms.Essences;
 using Code.PlatformsBehaviour;
 using Code.PlatformsBehaviour.Abstract;
 using Code.Player;
@@ -72,6 +72,7 @@ namespace Code
         private void InitPlatforms()
         {
             _poolsConfigs.Initialize();
+
             _platformsSpawningSystem = new PlatformsSpawningSystem(_levelConfigs);
             _playerSpawnPoint = _platformsSpawningSystem.SpawnImmediately(_platformsParent, OnPlayerInterracted).transform;
             _platformsSpawningSystem.StartSpawningCycleAsync(_platformsParent, OnPlayerInterracted);

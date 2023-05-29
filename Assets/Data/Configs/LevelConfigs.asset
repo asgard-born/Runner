@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fff46d450fd547ba82c05f5bd64dcbc2, type: 3}
   m_Name: LevelConfigs
   m_EditorClassIdentifier: 
+  firstGuaranteedPlatformTypes: 0a
+  cannotDublicatePlatformTypes: 141e
+  firstGuaranteedPlatformsCount: 5
   startPlatformsCount: 50
   spawnPlatformsDelaySec: 0.8
   runDelaySec: 1.2
@@ -19,16 +22,16 @@ MonoBehaviour:
   maxPlatformsInTime: 100
   platformChances:
   - platform: {fileID: 8241224829057444074, guid: 7f81833f86bc38942b9f38b27a421447, type: 3}
-    chance: 0.4
+    chance: 0.3
   - platform: {fileID: 1841572096132251726, guid: fbbf5e82f28f4e641a7ec126bb1f9774, type: 3}
-    chance: 0.2
+    chance: 0.07
   - platform: {fileID: 6077061347227549584, guid: 640193f5945a08840b5b1b5d6e5b6d2b, type: 3}
-    chance: 0.2
+    chance: 0.07
   - platform: {fileID: 3826019054915317681, guid: 45f5400485e4bd045876b11ef1c3e1c1, type: 3}
-    chance: 0.2
+    chance: 0.1
   - platform: {fileID: 3297746797329169710, guid: 9aabaed72b57fec48a61fc76979f600a, type: 3}
-    chance: 0.2
+    chance: 0.1
   - platform: {fileID: 4760468436822903129, guid: a6da067a0a83f7e42861c9930ec5379d, type: 3}
-    chance: 0.03
+    chance: 0.02
   - platform: {fileID: 6116486953119759579, guid: 4e2674c06505c2445ab690b5f8af8744, type: 3}
-    chance: 0.03
+    chance: 0.02

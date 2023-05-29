@@ -1,12 +1,17 @@
 ﻿using System;
 using Code.ObjectsPool;
+using Code.Platforms.Essences;
+using UnityEngine;
 
 namespace Code.Platforms.Abstract
 {
     public abstract class Platform : PoolObject, IDisposable
     {
-        public Action<Type> OnInterractedWithPlayer;
+        [SerializeField] protected PlatformType _platformType;
         protected Type _behaviourType;
+
+        public Action<Type> OnInterractedWithPlayer;
+        public PlatformType platformType => _platformType;
 
         protected virtual void OnPlayerInteraction()
         {

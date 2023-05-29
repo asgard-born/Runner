@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Code.Configs;
+using Code.Configs.Essences;
 using Code.ObjectsPool;
 using Code.Platforms.Abstract;
 using Code.Platforms.Concrete;
+using Code.Platforms.Essences;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -26,9 +28,25 @@ namespace Code.Platforms
 
         public Platform SpawnImmediately(Transform parent, Action<Type> interactionCallback)
         {
-            for (var i = 0; i < _levelConfigs.startPlatformsCount; i++)
+            for (var i = 0; i < _levelConfigs.firstGuaranteedPlatformsCount; i++)
             {
-                _lastPlatform = CreatePlatform(parent, _lastPlatform, interactionCallback);
+                _lastPlatform = CreatePlatformWithRestrictions(parent, interactionCallback, _levelConfigs.firstGuaranteedPlatforms, true);
+            }
+
+            var countToInitialSpawn = _levelConfigs.startPlatformsCount - _levelConfigs.firstGuaranteedPlatformsCount;
+
+            for (var i = 0; i < countToInitialSpawn; i++)
+            {
+                var cannotDublicatePlatforms = _levelConfigs.cannotDublicatePlatforms;
+                
+                if (cannotDublicatePlatforms.Contains(_lastPlatform.platformType))
+                {
+                    _lastPlatform = CreatePlatformWithRestrictions(parent, interactionCallback, cannotDublicatePlatforms, false);
+                }
+                else
+                {
+                    _lastPlatform = CreatePlatform(parent, interactionCallback);
+                }
             }
 
             return _platforms.First.Value;
@@ -46,34 +64,61 @@ namespace Code.Platforms
                     _platforms.RemoveFirst();
                 }
 
-                _lastPlatform = CreatePlatform(parent, _lastPlatform, interactionCallback);
+                var cannotDublicatePlatforms = _levelConfigs.cannotDublicatePlatforms;
+                
+                if (cannotDublicatePlatforms.Contains(_lastPlatform.platformType))
+                {
+                    _lastPlatform = CreatePlatformWithRestrictions(parent, interactionCallback, cannotDublicatePlatforms, false);
+                }
+                else
+                {
+                    _lastPlatform = CreatePlatform(parent, interactionCallback);
+                }
 
                 await Task.Delay((int)(_levelConfigs.spawnPlatformsDelaySec * 1000));
             }
         }
 
-        private Platform CreatePlatform(Transform parent, Platform previousPlatform, Action<Type> interactionCallback)
+        private Platform CreatePlatformWithRestrictions(Transform parent, Action<Type> interactionCallback, HashSet<PlatformType> types, bool isAvailable)
         {
-            var platformToSpawn = CalculatePlatformToSpawn();
+            PlatformChance[] platformChances = FilterPlatformsToSpawnByTypes(types, isAvailable);
+            Platform platformToSpawn = CalculatePlatformToSpawn(platformChances);
 
             if (platformToSpawn == null)
             {
                 Debug.LogError("Cannot spawn platform, check the Platform's chances in Current level's configs");
             }
 
+            return Spawn(platformToSpawn, parent, interactionCallback);
+        }
+
+        private Platform CreatePlatform(Transform parent, Action<Type> interactionCallback)
+        {
+            Platform platformToSpawn = CalculatePlatformToSpawn(_levelConfigs.platformChances);
+
+            if (platformToSpawn == null)
+            {
+                Debug.LogError("Cannot spawn platform, check the Platform's chances in Current level's configs");
+            }
+
+            return Spawn(platformToSpawn, parent, interactionCallback);
+        }
+        
+        private Platform Spawn(Platform platformToSpawn, Transform parent, Action<Type> interactionCallback)
+        {
             var type = platformToSpawn.GetType();
 
             var nextPlatform = (Platform)PoolsManager.GetObject(type);
 
             Vector3 nextPosition = parent.position;
 
-            if (previousPlatform != null)
+            if (_lastPlatform != null)
             {
-                nextPosition = CalculatePositionForPlatform(previousPlatform, nextPlatform);
+                nextPosition = CalculatePositionForPlatform(_lastPlatform, nextPlatform);
 
-                nextPlatform.transform.rotation = previousPlatform.transform.rotation;
+                nextPlatform.transform.rotation = _lastPlatform.transform.rotation;
 
-                if (previousPlatform is TurnPlatform previousTurnedPlatform)
+                if (_lastPlatform is TurnPlatform previousTurnedPlatform)
                 {
                     CalculateRotationForPlatform(previousTurnedPlatform, nextPlatform);
                 }
@@ -120,9 +165,10 @@ namespace Code.Platforms
             return position;
         }
 
-        private Platform CalculatePlatformToSpawn()
+        private Platform CalculatePlatformToSpawn(PlatformChance[] platformChances)
         {
-            var chances = _levelConfigs.platformChances.OrderBy(x => x.chance);
+            var chances = platformChances.OrderBy(platformChance => platformChance.chance);
+
             var sum = chances.Sum(x => x.chance);
 
             var randomNumber = Random.Range(0, sum);
@@ -140,6 +186,18 @@ namespace Code.Platforms
             }
 
             return null;
+        }
+
+        private PlatformChance[] FilterPlatformsToSpawnByTypes(HashSet<PlatformType> types, bool isAvailable = true)
+        {
+            if (types != null && types.Count > 0)
+            {
+                var platformChances = _levelConfigs.platformChances.Where(p => isAvailable ? types.Contains(p.platform.platformType) : !types.Contains(p.platform.platformType)).ToArray();
+
+                return platformChances;
+            }
+
+            return _levelConfigs.platformChances.ToArray();
         }
     }
 }

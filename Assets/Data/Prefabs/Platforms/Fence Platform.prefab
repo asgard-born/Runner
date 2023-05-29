@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 6142365802768269188}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 0.08, z: 2}
+  m_LocalScale: {x: 1.5, y: 0.08, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4ef4ef8e5e342ae9afe0ca7208a0420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolParent: {fileID: 0}
+  _platformType: 50
 --- !u!33 &6142365802768269208
 MeshFilter:
   m_ObjectHideFlags: 0

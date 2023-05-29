@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Code.Player
@@ -63,7 +62,7 @@ namespace Code.Player
             _rigidbody = GetComponent<Rigidbody>();
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             if (_canRun)
             {
@@ -87,7 +86,7 @@ namespace Code.Player
         private void Run()
         {
             var speed = _ctx.sessionStats.currentSpeed;
-            _rigidbody.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);
+            _rigidbody.MovePosition(transform.position + transform.forward * speed * Time.fixedDeltaTime);
         }
 
         private bool IsGrounded()
