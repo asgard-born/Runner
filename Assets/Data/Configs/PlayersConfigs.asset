@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 072c7a026fa7429d8dde54c07ebdde37, type: 3}
   m_Name: PlayersConfigs
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 877733442804245539, guid: bae5aa0261aa4e147b9b9afa269a1bac, type: 3}
+  playerPrefab: {fileID: 8706411172060818193, guid: 60a70c239708781458c23f25cad654f7, type: 3}
   cameraSmooth: 2.5
   initialSpeed: 5
   jumpForce: 5

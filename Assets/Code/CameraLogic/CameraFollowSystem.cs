@@ -4,8 +4,8 @@ namespace Code.CameraLogic
 {
     public class CameraFollowSystem : MonoBehaviour
     {
-        private readonly Vector3 positionOffset = new Vector3(0, 2, -6);
-        private readonly Vector3 rotationOffset = Vector3.right * 11.236f;
+        private readonly Vector3 positionOffset = new Vector3(0, 4, -6);
+        private readonly Vector3 rotationOffset = Vector3.right * 15;
         
         private Ctx _ctx;
 

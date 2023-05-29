@@ -24,7 +24,7 @@ MonoBehaviour:
   - platform: {fileID: 8241224829057444074, guid: 7f81833f86bc38942b9f38b27a421447, type: 3}
     chance: 0.3
   - platform: {fileID: 1841572096132251726, guid: fbbf5e82f28f4e641a7ec126bb1f9774, type: 3}
-    chance: 0.07
+    chance: 0.03
   - platform: {fileID: 6077061347227549584, guid: 640193f5945a08840b5b1b5d6e5b6d2b, type: 3}
     chance: 0.07
   - platform: {fileID: 3826019054915317681, guid: 45f5400485e4bd045876b11ef1c3e1c1, type: 3}
