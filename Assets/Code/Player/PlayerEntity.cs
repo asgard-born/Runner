@@ -8,13 +8,23 @@ namespace Code.Player
     {
         [SerializeField] private AnimationSystem _animationSystem;
 
+        private enum State
+        {
+            None,
+            Running,
+            Jumping,
+            Falling,
+            FallingOut,
+        }
+
         private Collider _collider;
         private bool _canRun;
         private Rigidbody _rigidbody;
         private Ctx _ctx;
         private float distToGround;
         private int _currentJumpingCount;
-        private bool _hasStartJumping;
+
+        private State _currentState;
 
         public struct Ctx
         {
@@ -28,23 +38,18 @@ namespace Code.Player
             distToGround = _collider.bounds.extents.y;
         }
 
-        public async void TryJump()
+        public void TryJump()
         {
             if ((_currentJumpingCount == 0 && !IsGrounded()) || _currentJumpingCount >= _ctx.sessionStats.maxJumpingTimes)
             {
-                _hasStartJumping = false;
-
                 return;
             }
 
-            _hasStartJumping = true;
             _currentJumpingCount += 1;
             _rigidbody.AddForce(Vector3.up * _ctx.sessionStats.jumpForce, ForceMode.VelocityChange);
             _animationSystem.PlayJump();
 
-            await Task.Delay(100);
-
-            _hasStartJumping = false;
+            _currentState = State.Jumping;
         }
 
         public void StartRun()
@@ -71,21 +76,49 @@ namespace Code.Player
         private void Update()
         {
             CheckState();
+
+            Debug.Log("CURRENT: " + _currentState);
         }
 
         private void CheckState()
         {
-            if (IsGrounded())
+            switch (_currentState)
             {
-                _animationSystem.PlayRun();
-            }
-            else if (IsNearGround())
-            {
-                _animationSystem.PlayLanding();
-            }
-            else if (IsFalling())
-            {
-                _animationSystem.PlayFalling();
+                case State.Running:
+                    _animationSystem.PlayRun();
+
+                    if (IsFallingOut())
+                    {
+                        _currentState = State.FallingOut;
+                    }
+
+                    break;
+
+                case State.Jumping:
+                    if (IsFalling())
+                    {
+                        _currentState = State.Falling;
+                    }
+
+                    break;
+
+                case State.Falling:
+                    if (IsGrounded())
+                    {
+                        _currentJumpingCount = 0;
+                        _currentState = State.Running;
+                    }
+                    else if (IsFallingOut())
+                    {
+                        _currentState = State.FallingOut;
+                    }
+
+                    break;
+
+                case State.FallingOut:
+                    _animationSystem.PlayFalling();
+
+                    break;
             }
         }
 
@@ -97,19 +130,6 @@ namespace Code.Player
             }
         }
 
-        private void LateUpdate()
-        {
-            CheckForJumpingState();
-        }
-
-        private void CheckForJumpingState()
-        {
-            if (IsGrounded() && !_hasStartJumping)
-            {
-                _currentJumpingCount = 0;
-            }
-        }
-
         private void Run()
         {
             var speed = _ctx.sessionStats.currentSpeed;
@@ -118,17 +138,25 @@ namespace Code.Player
 
         private bool IsGrounded()
         {
-            return Physics.Raycast(transform.position, -Vector3.up, distToGround + .001f);
+            if (Physics.Raycast(transform.position + new Vector3(0, 0.2f, 0), Vector3.down, .2f))
+            {
+                if (_rigidbody.velocity.y <= 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private bool IsFalling()
         {
-            return !IsGrounded() && _rigidbody.velocity.y < 0 && _rigidbody.position.y < 0;
+            return _rigidbody.velocity.y < 0;
         }
 
-        private bool IsNearGround()
+        private bool IsFallingOut()
         {
-            return Physics.Raycast(transform.position, -Vector3.up, distToGround + .01f);
+            return IsFalling() && _rigidbody.position.y < 0;
         }
     }
 }

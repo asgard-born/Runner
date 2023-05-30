@@ -9,13 +9,11 @@ namespace Code.Player
         private static readonly int _running = Animator.StringToHash("Running");
         private static readonly int _jumping = Animator.StringToHash("Jumping");
         private static readonly int _falling = Animator.StringToHash("Falling");
-        private static readonly int _landing = Animator.StringToHash("Landing");
 
         public void PlayIdle()
         {
             _animator.SetBool(_idle, true);
             _animator.SetBool(_running, false);
-            _animator.SetBool(_landing, false);
             _animator.SetBool(_jumping, false);
         }
         
@@ -34,22 +32,14 @@ namespace Code.Player
                 _animator.Play(_jumping, -1, 0f);
             }
             
-            _animator.SetBool(_running, false);
             _animator.SetBool(_jumping, true);
+            _animator.SetBool(_running, false);
         }
 
         public void PlayFalling()
         {
             _animator.SetBool(_falling, true);
             _animator.SetBool(_running, false);
-            _animator.SetBool(_landing, false);
-            _animator.SetBool(_jumping, false);
-        }
-        public void PlayLanding()
-        {
-            _animator.SetBool(_landing, true);
-            _animator.SetBool(_running, true);
-            _animator.SetBool(_falling, false);
             _animator.SetBool(_jumping, false);
         }
     }
