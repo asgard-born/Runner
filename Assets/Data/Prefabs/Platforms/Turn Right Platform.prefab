@@ -47,10 +47,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fa7a757e448413a9b8a2afac9be3c46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poolParent: {fileID: 0}
+  _platformType: 70
+  _passingZone: {fileID: 0}
+  _interactionZone: {fileID: 4193957665603457079}
   _firstPartTransform: {fileID: 2197142039769242522}
   _lastPartTransform: {fileID: 1982804011849853654}
-  _triggerZone: {fileID: 4193957665603457079}
 --- !u!33 &937048210716120938
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -185,7 +186,7 @@ GameObject:
   - component: {fileID: 1355472936620231557}
   - component: {fileID: 4193957665603457079}
   m_Layer: 0
-  m_Name: Trigger Zone
+  m_Name: Interaction Zone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

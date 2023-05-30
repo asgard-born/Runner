@@ -15,5 +15,5 @@ MonoBehaviour:
   playerPrefab: {fileID: 8706411172060818193, guid: 60a70c239708781458c23f25cad654f7, type: 3}
   cameraSmooth: 2.5
   initialSpeed: 5
-  jumpForce: 6
+  jumpForce: 4
   maxJumpingTimes: 2

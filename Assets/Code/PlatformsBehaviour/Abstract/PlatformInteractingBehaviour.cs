@@ -1,4 +1,5 @@
 ﻿using Code.Player;
+using Code.Session;
 
 namespace Code.PlatformsBehaviour.Abstract
 {
@@ -8,7 +9,7 @@ namespace Code.PlatformsBehaviour.Abstract
 
         public struct Ctx
         {
-            public SessionStats sessionStats;
+            public SessionListener sessionListener;
             public PlayerEntity playerEntity;
         }
 

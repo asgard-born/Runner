@@ -1,5 +1,4 @@
-﻿using Code.Platforms.Helpers;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Code.Platforms.Abstract
 {
@@ -7,14 +6,8 @@ namespace Code.Platforms.Abstract
     {
         [SerializeField] private Transform _firstPartTransform;
         [SerializeField] private Transform _lastPartTransform;
-        [SerializeField] private PlatformTriggerZone _triggerZone;
+
         public Transform firstTransform => _firstPartTransform;
         public Transform lastPartTransform => _lastPartTransform;
-        
-
-        private void Awake()
-        {
-            _triggerZone.OnPlayerEntered += OnPlayerInteraction;
-        }
     }
 }

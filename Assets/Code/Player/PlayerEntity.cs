@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using Code.Session;
 using UnityEngine;
 
 namespace Code.Player
@@ -28,7 +27,7 @@ namespace Code.Player
 
         public struct Ctx
         {
-            public SessionStats sessionStats;
+            public SessionListener sessionListener;
         }
 
         public void Init(Ctx ctx)
@@ -40,13 +39,13 @@ namespace Code.Player
 
         public void TryJump()
         {
-            if ((_currentJumpingCount == 0 && !IsGrounded()) || _currentJumpingCount >= _ctx.sessionStats.maxJumpingTimes)
+            if ((_currentJumpingCount == 0 && !IsGrounded()) || _currentJumpingCount >= _ctx.sessionListener.maxJumpingTimes)
             {
                 return;
             }
 
             _currentJumpingCount += 1;
-            _rigidbody.AddForce(Vector3.up * _ctx.sessionStats.jumpForce, ForceMode.VelocityChange);
+            _rigidbody.AddForce(Vector3.up * _ctx.sessionListener.jumpForce, ForceMode.VelocityChange);
             _animationSystem.PlayJump();
 
             _currentState = State.Jumping;
@@ -132,7 +131,7 @@ namespace Code.Player
 
         private void Run()
         {
-            var speed = _ctx.sessionStats.currentSpeed;
+            var speed = _ctx.sessionListener.currentSpeed;
             _rigidbody.MovePosition(transform.position + transform.forward * speed * Time.fixedDeltaTime);
         }
 
@@ -156,7 +155,7 @@ namespace Code.Player
 
         private bool IsFallingOut()
         {
-            return IsFalling() && _rigidbody.position.y < 0;
+            return IsFalling() && _rigidbody.position.y < _ctx.sessionListener.valueYToFallOut;
         }
     }
 }

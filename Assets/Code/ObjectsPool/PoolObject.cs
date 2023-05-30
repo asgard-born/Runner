@@ -6,6 +6,7 @@ namespace Code.ObjectsPool
     public class PoolObject : MonoBehaviour
     {
         [NonSerialized] public Transform poolParent;
+
         public void ReturnToPool()
         {
             gameObject.SetActive(false);
