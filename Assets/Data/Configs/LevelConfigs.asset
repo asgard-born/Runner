@@ -14,15 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   firstGuaranteedPlatformTypes: 0a
   cannotDublicatePlatformTypes: 141e32
-  firstGuaranteedPlatformsCount: 4
-  startPlatformsCount: 40
+  firstGuaranteedPlatformsCount: 1
+  startPlatformsCount: 5
   spawnPlatformsDelaySec: 0.8
   runDelaySec: 1.2
-  allPlatformsCount: 100
-  maxPlatformsInTime: 50
+  allPlatformsCount: 20
+  maxPlatformsInTime: 10
   platformChances:
   - platform: {fileID: 8241224829057444074, guid: 7f81833f86bc38942b9f38b27a421447, type: 3}
-    chance: 0.3
+    chance: 0.1
   - platform: {fileID: 1841572096132251726, guid: fbbf5e82f28f4e641a7ec126bb1f9774, type: 3}
     chance: 0.03
   - platform: {fileID: 6077061347227549584, guid: 640193f5945a08840b5b1b5d6e5b6d2b, type: 3}

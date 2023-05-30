@@ -12,8 +12,8 @@ using Code.PlatformsBehaviour.Abstract;
 using Code.Player;
 using Code.PlayersInput;
 using Code.Session;
-using Code.UI;
-using Code.UI.Presenters;
+using Code.UI.Screens;
+using Code.UI.Views;
 using UnityEngine;
 
 namespace Code
@@ -31,15 +31,17 @@ namespace Code
 
         [Space] [Header("UI")] [SerializeField] private WinView _winView;
         [SerializeField] private LooseView _looseView;
+        [SerializeField] private Canvas _canvas;
 
         private SessionListener _sessionListener;
         private Transform _playerSpawnPoint;
         private PlayerEntity _player;
         private PlatformsSpawningSystem _platformsSpawningSystem;
         private PlatformInteractingBehaviour _platformInteractingBehaviour;
-
         private HashSet<PlatformInteractingBehaviour> _interactingBehaviours;
-        private SessionPresenter _sessionPresenter;
+
+        private LooseScreen _looseScreen;
+        private WinScreen _winScreen;
 
         private void Awake()
         {
@@ -71,13 +73,21 @@ namespace Code
 
         private void InitUI()
         {
-            var ctx = new SessionPresenter.Ctx
+            var winCtx = new WinScreen.Ctx
             {
-                winView = _winView,
-                looseView = _looseView
+                viewPrefab = _winView,
+                canvas = _canvas.transform,
             };
 
-            _sessionPresenter = new SessionPresenter(ctx);
+            _winScreen = new WinScreen(winCtx);
+
+            var looseCtx = new LooseScreen.Ctx
+            {
+                viewPrefab = _looseView,
+                canvas = _canvas.transform,
+            };
+
+            _looseScreen = new LooseScreen(looseCtx);
         }
 
         private void InitInputSystem()
@@ -120,6 +130,12 @@ namespace Code
 
         private void OnGameWin(ConcurrentDictionary<PlatformType, int> passedPlatforms)
         {
+            _winScreen.Show(passedPlatforms);
+        }
+
+        private void OnGameLoose()
+        {
+            _looseScreen.Show();
         }
 
         private void InitCamera()

@@ -1,19 +1,9 @@
 using UnityEngine;
 
-namespace Code.UI
+namespace Code.UI.Views
 {
     public class LooseView : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
-        {
         
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
     }
 }
