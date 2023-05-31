@@ -8,6 +8,7 @@ namespace Code.Player
     public class PlayerController : MonoBehaviour
     {
         [SerializeField] private AnimationSystem _animationSystem;
+        [SerializeField] private GameObject _immuneObject;
 
         private bool _canRun;
         private Rigidbody _rigidbody;
@@ -18,6 +19,7 @@ namespace Code.Player
         private PlayerStats _stats;
 
         private Action<float> _onLivesChangedCallback;
+        private Action<float, float> _onSpeedChangedCallback;
 
         private enum State
         {
@@ -32,6 +34,7 @@ namespace Code.Player
         {
             public PlayersConfigs playersConfigs;
             public Action<float> onLivesChangedCallback;
+            public Action<float, float> onSpeedChangedCallback;
             public Action deathCallback;
             public Transform playerSpawnPoint;
         }
@@ -49,6 +52,8 @@ namespace Code.Player
             _stats = new PlayerStats(playerStatsCtx);
 
             _onLivesChangedCallback = ctx.onLivesChangedCallback;
+            _onSpeedChangedCallback = ctx.onSpeedChangedCallback;
+            _immuneObject.SetActive(false);
         }
 
         public void TryJump()
@@ -91,8 +96,10 @@ namespace Code.Player
             }
         }
 
-        public void Hit()
+        public void TryHit()
         {
+            if (_stats.immuneValue > 0) return;
+
             _stats.RemoveLifes(1);
             _animationSystem.PlayDamage();
             _onLivesChangedCallback?.Invoke(-1);
@@ -111,6 +118,21 @@ namespace Code.Player
         private void Update()
         {
             CheckState();
+            UpdateImmune();
+        }
+
+        private void UpdateImmune()
+        {
+            if (_stats.immuneValue > 0)
+            {
+                _stats.immuneValue -= Time.deltaTime;
+
+                if (_stats.immuneValue <= 0)
+                {
+                    _stats.immuneValue = 0;
+                    RemoveImmune();
+                }
+            }
         }
 
         private void CheckState()
@@ -197,18 +219,43 @@ namespace Code.Player
             switch (boosterType)
             {
                 case BoosterType.Heart:
-                    _onLivesChangedCallback?.Invoke(value);
-                    _stats.AddLifes((int)value);
+                    AddLives(value);
+
                     break;
-                
+
                 case BoosterType.Immune:
-                    _stats.AddImmune((int)value);
+                    AddImmune(value);
+
                     break;
-                
+
                 case BoosterType.Speed:
-                    _stats.AddSpeed(value);
+                    ChangeSpeed(value);
+
                     break;
             }
+        }
+
+        private void ChangeSpeed(float value)
+        {
+            _onSpeedChangedCallback?.Invoke(_stats.currentSpeed, value);
+            _stats.ChangeSpeed(value);
+        }
+
+        private void AddLives(float value)
+        {
+            _onLivesChangedCallback?.Invoke(value);
+            _stats.AddLives((int)value);
+        }
+
+        private void AddImmune(float value)
+        {
+            _immuneObject.SetActive(true);
+            _stats.AddImmune(value);
+        }
+
+        private void RemoveImmune()
+        {
+            _immuneObject.SetActive(false);
         }
     }
 }

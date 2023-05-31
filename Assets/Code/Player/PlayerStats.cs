@@ -11,7 +11,7 @@ namespace Code.Player
         public float valueYToFallOut { get; private set; }
 
         public int maxJumpingTimes { get; private set; }
-        public bool hasImmune { get; private set; }
+        public float immuneValue;
 
         public int currentLives { get; private set; }
 
@@ -34,7 +34,7 @@ namespace Code.Player
             valueYToFallOut = _ctx.playerSpawnPoint.position.y - 2f;
         }
 
-        public void AddLifes(int value)
+        public void AddLives(int value)
         {
             value = Mathf.Abs(value);
             
@@ -47,15 +47,9 @@ namespace Code.Player
             currentLives -= value;
         }
 
-        public void AddSpeed(float value)
+        public void ChangeSpeed(float value)
         {
-            value = Mathf.Abs(value);
             currentSpeed += value;
-        }
-
-        public void ReduceSpeed(float value)
-        {
-            currentSpeed -= value;
         }
 
         public void SetDefaultSpeed()
@@ -63,12 +57,10 @@ namespace Code.Player
             currentSpeed = initialSpeed;
         }
 
-        public void AddImmune(int value)
+        public void AddImmune(float value)
         {
-        }
-
-        public void ResetImmune()
-        {
+            value = Mathf.Abs(value);
+            immuneValue = value;
         }
     }
 }

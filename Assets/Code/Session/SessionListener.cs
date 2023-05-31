@@ -9,6 +9,7 @@ namespace Code.Session
     public class SessionListener
     {
         public Action<ConcurrentDictionary<PlatformType, int>> onWin;
+        public float spawnPlatformsDelaySec;
 
         private readonly Ctx _ctx;
         private int _passedPlatformsCount;
@@ -22,6 +23,7 @@ namespace Code.Session
         public SessionListener(Ctx ctx)
         {
             _ctx = ctx;
+            spawnPlatformsDelaySec = _ctx.levelConfigs.spawnPlatformsDelaySec;
         }
 
         public void AddPassedPlatform(PlatformType platformType)
@@ -35,6 +37,13 @@ namespace Code.Session
             {
                 onWin?.Invoke(_passedPlatformsDictionary);
             }
+        }
+
+        public void OnSpeedChanged(float previousValue, float factor)
+        {
+            var newValue = previousValue + factor;
+            var proportion = previousValue / newValue;
+            spawnPlatformsDelaySec *= proportion;
         }
     }
 }

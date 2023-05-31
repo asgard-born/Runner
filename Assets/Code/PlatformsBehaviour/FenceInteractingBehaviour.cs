@@ -14,7 +14,7 @@ namespace Code.PlatformsBehaviour
 
         public override void InteractWithPlayer()
         {
-            _player.Hit();
+            _player.TryHit();
         }
     }
 }

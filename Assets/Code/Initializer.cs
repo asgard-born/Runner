@@ -73,8 +73,8 @@ namespace Code
         private void StartLevel()
         {
             InitBonuses();
-            InitPlatforms();
             InitSession();
+            InitPlatforms();
             InitPlayer();
             InitCamera();
             InitInputSystem();
@@ -149,6 +149,7 @@ namespace Code
                 platforms = _platforms,
                 levelConfigs = _levelConfigs,
                 spawnedCallback = OnPlatformSpawned,
+                sessionListener = _sessionListener,
                 interactionCallback = OnPlayerInterracted,
                 passingCallback = OnPlayerPassed
             };
@@ -244,10 +245,16 @@ namespace Code
                 playersConfigs = _playersConfigs,
                 playerSpawnPoint = _playerSpawnPoint,
                 onLivesChangedCallback = OnLivesChanged,
+                onSpeedChangedCallback = OnSpeedChanged,
                 deathCallback = OnGameLoose
             };
 
             _player.Init(ctx);
+        }
+
+        private void OnSpeedChanged(float previousValue, float factor)
+        {
+            _sessionListener.OnSpeedChanged(previousValue, factor);
         }
 
         private void OnLivesChanged(float value)
