@@ -146,7 +146,7 @@ namespace Code
             };
 
             _platformsDestroyingSystem = new PlatformsDestroyingSystem(destroyingSystemCtx);
-            // _platformsDestroyingSystem.StartDestroyingCycleAsync();
+            _platformsDestroyingSystem.StartDestroyingCycleAsync();
         }
 
         private void OnPlayerPassed(PlatformType passedType)
@@ -158,12 +158,10 @@ namespace Code
         {
             var ctx = new SessionListener.Ctx
             {
-                playersConfigs = _playersConfigs,
                 levelConfigs = _levelConfigs
             };
 
             _sessionListener = new SessionListener(ctx);
-            _sessionListener.SetYValueToFallOut(_playerSpawnPoint.position.y - 2f);
 
             _sessionListener.onWin += OnGameWin;
         }
@@ -224,6 +222,7 @@ namespace Code
 
         private void InitPlayer()
         {
+            
             _player = Instantiate(_playersConfigs.playerPrefab);
             _player.transform.position = _playerSpawnPoint.position + _playerSpawnOffset;
 

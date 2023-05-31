@@ -2,14 +2,12 @@
 
 namespace Data.Imported.Gems_Ultimate_Pack.Scripts
 {
-    public class AnimationScript : MonoBehaviour {
-
-        public bool isAnimated = false;
-
-        public bool isRotating = false;
-        public bool isFloating = false;
-        public bool isScaling = false;
-
+    public class AnimationScript : MonoBehaviour
+    {
+        public bool isAnimated;
+        public bool isRotating;
+        public bool isFloating;
+        public bool isScaling;
         public Vector3 rotationAngle;
         public float rotationSpeed;
 
@@ -17,7 +15,7 @@ namespace Data.Imported.Gems_Ultimate_Pack.Scripts
         private bool goingUp = true;
         public float floatRate;
         private float floatTimer;
-   
+
         public Vector3 startScale;
         public Vector3 endScale;
 
@@ -26,24 +24,16 @@ namespace Data.Imported.Gems_Ultimate_Pack.Scripts
         public float scaleRate;
         private float scaleTimer;
 
-        // Use this for initialization
-        void Start () {
-	
-        }
-	
-        // Update is called once per frame
-        void Update () {
-
-       
-        
-            if(isAnimated)
+        private void Update()
+        {
+            if (isAnimated)
             {
-                if(isRotating)
+                if (isRotating)
                 {
                     transform.Rotate(rotationAngle * rotationSpeed * Time.deltaTime);
                 }
 
-                if(isFloating)
+                if (isFloating)
                 {
                     floatTimer += Time.deltaTime;
                     Vector3 moveDir = new Vector3(0.0f, 0.0f, floatSpeed);
@@ -56,7 +46,7 @@ namespace Data.Imported.Gems_Ultimate_Pack.Scripts
                         floatSpeed = -floatSpeed;
                     }
 
-                    else if(!goingUp && floatTimer >= floatRate)
+                    else if (!goingUp && floatTimer >= floatRate)
                     {
                         goingUp = true;
                         floatTimer = 0;
@@ -64,7 +54,7 @@ namespace Data.Imported.Gems_Ultimate_Pack.Scripts
                     }
                 }
 
-                if(isScaling)
+                if (isScaling)
                 {
                     scaleTimer += Time.deltaTime;
 
@@ -77,10 +67,17 @@ namespace Data.Imported.Gems_Ultimate_Pack.Scripts
                         transform.localScale = Vector3.Lerp(transform.localScale, startScale, scaleSpeed * Time.deltaTime);
                     }
 
-                    if(scaleTimer >= scaleRate)
+                    if (scaleTimer >= scaleRate)
                     {
-                        if (scalingUp) { scalingUp = false; }
-                        else if (!scalingUp) { scalingUp = true; }
+                        if (scalingUp)
+                        {
+                            scalingUp = false;
+                        }
+                        else if (!scalingUp)
+                        {
+                            scalingUp = true;
+                        }
+
                         scaleTimer = 0;
                     }
                 }

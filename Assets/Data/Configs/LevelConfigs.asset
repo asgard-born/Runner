@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   firstGuaranteedPlatformTypes: 0a
   cannotDublicatePlatformTypes: 141e32
-  blocksTypesToCalculateOnFinish: 141e2832
+  platformTypesToCalculateOnFinish: 141e2832
   firstGuaranteedPlatformsCount: 3
   startPlatformsCount: 5
   spawnPlatformsDelaySec: 0.5

@@ -9,8 +9,8 @@ namespace Code.Platforms.Abstract
     public abstract class Platform : PoolObject, IDisposable
     {
         [SerializeField] protected PlatformType _platformType;
-        [SerializeField] private PlatformTriggerZone _passingZone;
-        [SerializeField] private PlatformTriggerZone _interactionZone;
+        [SerializeField] private TriggerZone _passingZone;
+        [SerializeField] private TriggerZone _interactionZone;
 
         protected virtual void Awake()
         {

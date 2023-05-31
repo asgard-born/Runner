@@ -10,19 +10,25 @@ namespace Code.Configs
     [CreateAssetMenu(menuName = "Configs/LevelConfigs", fileName = "LevelConfigs")]
     public class LevelConfigs : ScriptableObject
     {
+        [Header("Platforms")]
         [SerializeField] private PlatformType[] firstGuaranteedPlatformTypes;
         [SerializeField] private PlatformType[] cannotDublicatePlatformTypes;
-        [SerializeField] private PlatformType[] blocksTypesToCalculateOnFinish;
+        [SerializeField] private PlatformType[] platformTypesToCalculateOnFinish;
         
-        public int firstGuaranteedPlatformsCount = 5;
-        public int startPlatformsCount = 50;
-        public float spawnPlatformsDelaySec = .8f;
+        public int firstGuaranteedPlatformsCount = 3;
+        public int startPlatformsCount = 5;
+        public float spawnPlatformsDelaySec = .4f;
         public float destroyPlatformsDelaySec = 1.5f;
-        public float runDelaySec = 1.2f;
-        public int allPlatformsCount = 400;
-        public int maxPlatformsInTime = 100;
-        public PlatformChance[] platformChances;
+        public int allPlatformsCount = 25;
+        public int maxPlatformsInTime = 10;
         public FinishPlatform finishPlatform;
+        public PlatformChance[] platformChances;
+        
+        [Space, Header("Start")]
+        public float runDelaySec = 1.2f;
+        
+        [Space, Header("Bonuses")]
+        public BonusChance[] bonusChances;
 
         public HashSet<PlatformType> firstGuaranteedPlatforms;
         public HashSet<PlatformType> cannotDublicatePlatforms;
@@ -35,18 +41,18 @@ namespace Code.Configs
             CheckForErrorsInCount();
             CalculateTotalChance();
 
-            firstGuaranteedPlatforms = MakePlatformListUnique(firstGuaranteedPlatformTypes);
-            cannotDublicatePlatforms = MakePlatformListUnique(cannotDublicatePlatformTypes);
-            blocksToCalculateOnFinish = MakePlatformListUnique(blocksTypesToCalculateOnFinish);
+            firstGuaranteedPlatforms = MakePlatformArrayUnique(firstGuaranteedPlatformTypes);
+            cannotDublicatePlatforms = MakePlatformArrayUnique(cannotDublicatePlatformTypes);
+            blocksToCalculateOnFinish = MakePlatformArrayUnique(platformTypesToCalculateOnFinish);
         }
 
-        private HashSet<PlatformType> MakePlatformListUnique(IList<PlatformType> listToCheck)
+        private HashSet<PlatformType> MakePlatformArrayUnique(IList<PlatformType> listToCheck)
         {
             var filteredGuaranteedPlatformTypes = listToCheck.Where(x => x != PlatformType.None);
 
             return new HashSet<PlatformType>(filteredGuaranteedPlatformTypes.Distinct());
         }
-
+        
         private void CheckForErrorsInCount()
         {
             if (firstGuaranteedPlatformsCount > startPlatformsCount)

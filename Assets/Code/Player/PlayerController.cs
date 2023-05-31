@@ -1,4 +1,5 @@
 ﻿using System;
+using Code.Bonuses.Essences;
 using Code.Configs;
 using Code.Session;
 using UnityEngine;
@@ -14,8 +15,9 @@ namespace Code.Player
         private Ctx _ctx;
         private int _currentJumpingCount;
         private int _maxJumpingTimes;
-        private int _currentLives;
+
         private State _currentState;
+        private PlayerStats _stats;
 
         private enum State
         {
@@ -29,15 +31,23 @@ namespace Code.Player
         public struct Ctx
         {
             public PlayersConfigs playersConfigs;
+            public LevelConfigs levelConfigs;
             public SessionListener sessionListener;
             public Action deathCallback;
+            public Transform playerSpawnPoint;
         }
 
         public void Init(Ctx ctx)
         {
             _ctx = ctx;
-            _currentLives = _ctx.playersConfigs.lives;
-            _maxJumpingTimes = _ctx.sessionListener.maxJumpingTimes;
+
+            var playerStatsCtx = new PlayerStats.Ctx
+            {
+                playersConfigs = _ctx.playersConfigs,
+                playerSpawnPoint = ctx.playerSpawnPoint
+            };
+
+            _stats = new PlayerStats(playerStatsCtx);
         }
 
         public void TryJump()
@@ -48,7 +58,7 @@ namespace Code.Player
             }
 
             _currentJumpingCount += 1;
-            _rigidbody.AddForce(Vector3.up * _ctx.sessionListener.jumpForce, ForceMode.VelocityChange);
+            _rigidbody.AddForce(Vector3.up * _stats.jumpForce, ForceMode.VelocityChange);
             _animationSystem.PlayJump();
 
             _currentState = State.Jumping;
@@ -82,10 +92,10 @@ namespace Code.Player
 
         public void Hit()
         {
-            _currentLives--;
+            _stats.RemoveLifes(1);
             _animationSystem.PlayDamage();
 
-            if (_currentLives <= 0)
+            if (_stats.currentLives <= 0)
             {
                 _ctx.deathCallback?.Invoke();
             }
@@ -153,7 +163,7 @@ namespace Code.Player
 
         private void Run()
         {
-            var speed = _ctx.sessionListener.currentSpeed;
+            var speed = _stats.currentSpeed;
             _rigidbody.MovePosition(transform.position + transform.forward * speed * Time.fixedDeltaTime);
         }
 
@@ -177,7 +187,25 @@ namespace Code.Player
 
         private bool IsFallingOut()
         {
-            return IsFalling() && _rigidbody.position.y < _ctx.sessionListener.valueYToFallOut;
+            return IsFalling() && _rigidbody.position.y < _stats.valueYToFallOut;
+        }
+
+        public void TakeBonus(BonusType bonusType, int value)
+        {
+            switch (bonusType)
+            {
+                case BonusType.Heart:
+                    _stats.AddLifes(value);
+                    break;
+                
+                case BonusType.Immune:
+                    _stats.AddImmune(value);
+                    break;
+                
+                case BonusType.Speed:
+                    _stats.AddSpeed(value);
+                    break;
+            }
         }
     }
 }

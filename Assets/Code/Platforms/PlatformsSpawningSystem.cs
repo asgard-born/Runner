@@ -118,45 +118,6 @@ namespace Code.Platforms
             return Spawn(platformToSpawn, parent, interactionCallback, passingCallback);
         }
 
-        private Platform Spawn(Platform platformToSpawn, Transform parent, Action<Type> interactionCallback = null, Action<PlatformType> passingCallback = null)
-        {
-            var type = platformToSpawn.GetType();
-
-            var nextPlatform = (Platform)PoolsManager.GetObject(type);
-
-            Vector3 nextPosition = parent.position;
-
-            if (_lastPlatform != null)
-            {
-                nextPosition = CalculatePositionForPlatform(_lastPlatform, nextPlatform);
-
-                nextPlatform.transform.rotation = _lastPlatform.transform.rotation;
-
-                if (_lastPlatform is TurnPlatform previousTurnedPlatform)
-                {
-                    CalculateRotationForPlatform(previousTurnedPlatform, nextPlatform);
-                }
-            }
-
-            nextPlatform.transform.position = nextPosition;
-            nextPlatform.transform.parent = parent;
-
-            if (interactionCallback != null)
-            {
-                nextPlatform.OnInterractedWithPlayer += interactionCallback;
-            }
-
-            if (passingCallback != null)
-            {
-                nextPlatform.OnPassedByPlayer += passingCallback;
-            }
-
-            _spawnCount++;
-            _platforms.AddLast(nextPlatform);
-
-            return nextPlatform;
-        }
-
         private void CalculateRotationForPlatform(TurnPlatform previousTurnedPlatform, Platform nextPlatform)
         {
             if (previousTurnedPlatform is TurnLeftPlatform)
@@ -220,6 +181,46 @@ namespace Code.Platforms
             }
 
             return _levelConfigs.platformChances.ToArray();
+        }
+        
+        private Platform Spawn(Platform platformToSpawn, Transform parent, Action<Type> interactionCallback = null, Action<PlatformType> passingCallback = null)
+        {
+            var type = platformToSpawn.GetType();
+
+            var nextPlatform = (Platform)PoolsManager.GetObject(type);
+
+            Vector3 nextPosition = parent.position;
+
+            if (_lastPlatform != null)
+            {
+                nextPosition = CalculatePositionForPlatform(_lastPlatform, nextPlatform);
+
+                nextPlatform.transform.rotation = _lastPlatform.transform.rotation;
+
+                if (_lastPlatform is TurnPlatform previousTurnedPlatform)
+                {
+                    CalculateRotationForPlatform(previousTurnedPlatform, nextPlatform);
+                }
+            }
+
+            nextPlatform.transform.position = nextPosition;
+            nextPlatform.transform.parent = parent;
+
+            if (interactionCallback != null)
+            {
+                nextPlatform.OnInterractedWithPlayer += interactionCallback;
+            }
+
+            if (passingCallback != null)
+            {
+                nextPlatform.OnPassedByPlayer += passingCallback;
+            }
+
+            _spawnCount++;
+            _platforms.AddLast(nextPlatform);
+            
+
+            return nextPlatform;
         }
     }
 }

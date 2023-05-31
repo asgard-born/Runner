@@ -14,7 +14,7 @@ namespace Code.ObjectsPool
         {
             _pools = newPools;
             _objectsParent = new GameObject();
-            _objectsParent.name = "Platforms Pool";
+            _objectsParent.name = "Pool objects";
 
             foreach (var pool in _pools.Values.Where(pool => pool.prefab != null))
             {
@@ -23,20 +23,20 @@ namespace Code.ObjectsPool
             }
         }
 
-        public static PoolObject GetObject(Type type)
+        public static PoolObject GetObject(Type type, bool isActive = true)
         {
             PoolObject result = null;
 
             if (_pools.TryGetValue(type, out var poolInfo))
             {
                 result = poolInfo.pool.GetObject();
-                result.gameObject.SetActive(true);
+                result.gameObject.SetActive(isActive);
             }
 
             return result;
         }
 
-        public static PoolObject GetObject(Type type, Vector3 position, Quaternion rotation)
+        public static PoolObject GetObject(Type type, Vector3 position, Quaternion rotation, bool isActive = true)
         {
             PoolObject result = null;
 
@@ -45,7 +45,7 @@ namespace Code.ObjectsPool
                 result = poolInfo.pool.GetObject();
                 result.transform.position = position;
                 result.transform.rotation = rotation;
-                result.gameObject.SetActive(true);
+                result.gameObject.SetActive(isActive);
             }
 
             return result;
