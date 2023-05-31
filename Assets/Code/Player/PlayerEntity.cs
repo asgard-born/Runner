@@ -75,8 +75,6 @@ namespace Code.Player
         private void Update()
         {
             CheckState();
-
-            Debug.Log("CURRENT: " + _currentState);
         }
 
         private void CheckState()
@@ -156,6 +154,16 @@ namespace Code.Player
         private bool IsFallingOut()
         {
             return IsFalling() && _rigidbody.position.y < _ctx.sessionListener.valueYToFallOut;
+        }
+
+        public void Stop(bool withAnimation = false)
+        {
+            _canRun = false;
+
+            if (withAnimation)
+            {
+                _animationSystem.PlayIdle();
+            }
         }
     }
 }

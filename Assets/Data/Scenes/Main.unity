@@ -476,7 +476,7 @@ GameObject:
   - component: {fileID: 1528448815}
   - component: {fileID: 1528448814}
   m_Layer: 0
-  m_Name: Enter Point
+  m_Name: Initializer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

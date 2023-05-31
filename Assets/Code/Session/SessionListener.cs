@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using Code.Configs;
 using Code.Platforms.Essences;
+using UnityEngine;
 
 namespace Code.Session
 {
@@ -40,6 +41,8 @@ namespace Code.Session
         {
             _passedPlatformsDictionary.AddOrUpdate(platformType, 1, (id, count) => count + 1);
             _passedPlatformsCount++;
+            
+            Debug.Log($"PASSED: {platformType}, all {_passedPlatformsCount}");
 
             if (_passedPlatformsCount >= _ctx.levelConfigs.allPlatformsCount)
             {

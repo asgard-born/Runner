@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _platformName: {fileID: 2562436305650637296}
-  _count: {fileID: 8057221203751436253}
+  _amount: {fileID: 8057221203751436253}
 --- !u!114 &8221608678402530876
 MonoBehaviour:
   m_ObjectHideFlags: 0

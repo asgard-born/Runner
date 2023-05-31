@@ -17,13 +17,22 @@ namespace Code.Platforms
     {
         private LevelConfigs _levelConfigs;
         private int _spawnCount;
-        private readonly LinkedList<Platform> _platforms = new LinkedList<Platform>();
+        private readonly LinkedList<Platform> _platforms;
         private const int _leftYAngle = 270;
         private Platform _lastPlatform;
+        private readonly Ctx _ctx;
 
-        public PlatformsSpawningSystem(LevelConfigs levelConfigs)
+        public struct Ctx
         {
-            _levelConfigs = levelConfigs;
+            public LinkedList<Platform> platforms;
+            public LevelConfigs levelConfigs;
+        }
+
+        public PlatformsSpawningSystem(Ctx ctx)
+        {
+            _ctx = ctx;
+            _platforms = ctx.platforms;
+            _levelConfigs = _ctx.levelConfigs;
         }
 
         public Platform SpawnImmediately(Transform parent, Action<Type> interactionCallback, Action<PlatformType> passingCallback)
@@ -56,27 +65,31 @@ namespace Code.Platforms
         {
             while (_spawnCount < _levelConfigs.allPlatformsCount)
             {
-                if (_platforms.Count >= _levelConfigs.maxPlatformsInTime)
+                if (_levelConfigs.allPlatformsCount - _spawnCount > 1)
                 {
-                    var firstPlatform = _platforms.First.Value;
-                    firstPlatform.ReturnToPool();
-                    firstPlatform.Dispose();
-                    _platforms.RemoveFirst();
-                }
-
-                var cannotDublicatePlatforms = _levelConfigs.cannotDublicatePlatforms;
-
-                if (cannotDublicatePlatforms.Contains(_lastPlatform.platformType))
-                {
-                    _lastPlatform = CreatePlatformWithRestrictions(parent, interactionCallback, passingCallback, cannotDublicatePlatforms, false);
+                    await CreateAveragePlatformAsync(parent, interactionCallback, passingCallback);
                 }
                 else
                 {
-                    _lastPlatform = CreatePlatform(parent, interactionCallback, passingCallback);
+                    Spawn(_levelConfigs.finishPlatform, parent, null, passingCallback);
                 }
-
-                await Task.Delay((int)(_levelConfigs.spawnPlatformsDelaySec * 1000));
             }
+        }
+
+        private async Task CreateAveragePlatformAsync(Transform parent, Action<Type> interactionCallback, Action<PlatformType> passingCallback)
+        {
+            var cannotDublicatePlatforms = _levelConfigs.cannotDublicatePlatforms;
+
+            if (cannotDublicatePlatforms.Contains(_lastPlatform.platformType))
+            {
+                _lastPlatform = CreatePlatformWithRestrictions(parent, interactionCallback, passingCallback, cannotDublicatePlatforms, false);
+            }
+            else
+            {
+                _lastPlatform = CreatePlatform(parent, interactionCallback, passingCallback);
+            }
+
+            await Task.Delay((int)(_levelConfigs.spawnPlatformsDelaySec * 1000));
         }
 
         private Platform CreatePlatformWithRestrictions(Transform parent, Action<Type> interactionCallback, Action<PlatformType> passingCallback, HashSet<PlatformType> types, bool isAvailable)
@@ -104,7 +117,7 @@ namespace Code.Platforms
             return Spawn(platformToSpawn, parent, interactionCallback, passingCallback);
         }
 
-        private Platform Spawn(Platform platformToSpawn, Transform parent, Action<Type> interactionCallback, Action<PlatformType> passingCallback)
+        private Platform Spawn(Platform platformToSpawn, Transform parent, Action<Type> interactionCallback = null, Action<PlatformType> passingCallback = null)
         {
             var type = platformToSpawn.GetType();
 
@@ -126,11 +139,18 @@ namespace Code.Platforms
 
             nextPlatform.transform.position = nextPosition;
             nextPlatform.transform.parent = parent;
-            nextPlatform.OnInterractedWithPlayer += interactionCallback;
-            nextPlatform.OnPassedByPlayer += passingCallback;
+
+            if (interactionCallback != null)
+            {
+                nextPlatform.OnInterractedWithPlayer += interactionCallback;
+            }
+
+            if (passingCallback != null)
+            {
+                nextPlatform.OnPassedByPlayer += passingCallback;
+            }
 
             _spawnCount++;
-
             _platforms.AddLast(nextPlatform);
 
             return nextPlatform;

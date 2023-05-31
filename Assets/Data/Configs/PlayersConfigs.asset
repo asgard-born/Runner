@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 8706411172060818193, guid: 60a70c239708781458c23f25cad654f7, type: 3}
   cameraSmooth: 2.5
-  initialSpeed: 4
-  jumpForce: 4
+  initialSpeed: 5
+  jumpForce: 4.5
   maxJumpingTimes: 2

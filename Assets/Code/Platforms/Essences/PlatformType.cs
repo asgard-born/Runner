@@ -1,6 +1,5 @@
 ﻿namespace Code.Platforms.Essences
 {
-    
     public enum PlatformType : byte
     {
         None = 0,
@@ -11,5 +10,6 @@
         Fence = 50,
         TurnLeft = 60,
         TurnRight = 70,
+        Finish = 250
     }
 }

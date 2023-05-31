@@ -12,7 +12,7 @@ namespace Code.Platforms.Abstract
         [SerializeField] private PlatformTriggerZone _passingZone;
         [SerializeField] private PlatformTriggerZone _interactionZone;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             if (_passingZone != null)
             {

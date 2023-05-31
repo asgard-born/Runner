@@ -5,8 +5,10 @@ namespace Code.Platforms.Concrete
 {
     public class SawPlatform : Platform
     {
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             _behaviourType = typeof(SawInteractingBehaviour);
         }
     }

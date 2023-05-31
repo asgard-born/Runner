@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Code.CameraLogic;
 using Code.Configs;
 using Code.Platforms;
+using Code.Platforms.Abstract;
 using Code.Platforms.Essences;
 using Code.PlatformsBehaviour;
 using Code.PlatformsBehaviour.Abstract;
@@ -18,7 +19,7 @@ using UnityEngine;
 
 namespace Code
 {
-    public class EnterPoint : MonoBehaviour
+    public class Initializer : MonoBehaviour
     {
         [SerializeField] private Transform _platformsParent;
         [SerializeField] private Vector3 _playerSpawnOffset;
@@ -37,15 +38,17 @@ namespace Code
         private Transform _playerSpawnPoint;
         private PlayerEntity _player;
         private PlatformsSpawningSystem _platformsSpawningSystem;
+        private PlatformsDestroyingSystem _platformsDestroyingSystem;
         private PlatformInteractingBehaviour _platformInteractingBehaviour;
         private HashSet<PlatformInteractingBehaviour> _interactingBehaviours;
+        private readonly LinkedList<Platform> _platforms = new LinkedList<Platform>();
 
         private LooseScreen _looseScreen;
         private WinScreen _winScreen;
 
         private void Awake()
         {
-            Initialize();
+            StartLevel();
         }
 
         private void Start()
@@ -60,15 +63,23 @@ namespace Code
             _player.StartRun();
         }
 
-        private void Initialize()
+        private void StartLevel()
         {
             InitPlatforms();
             InitSession();
             InitPlayer();
             InitCamera();
-            InitPlatformInteractingSystems();
+            InitInteractingWithPlatformBehaviours();
             InitInputSystem();
             InitUI();
+        }
+
+        private void RestartLevel()
+        {
+        }
+
+        private void FinishLevel()
+        {
         }
 
         private void InitUI()
@@ -104,9 +115,24 @@ namespace Code
         {
             _poolsConfigs.Initialize();
 
-            _platformsSpawningSystem = new PlatformsSpawningSystem(_levelConfigs);
+            var spawningSystemCtx = new PlatformsSpawningSystem.Ctx
+            {
+                platforms = _platforms,
+                levelConfigs = _levelConfigs
+            };
+
+            _platformsSpawningSystem = new PlatformsSpawningSystem(spawningSystemCtx);
             _playerSpawnPoint = _platformsSpawningSystem.SpawnImmediately(_platformsParent, OnPlayerInterracted, OnPlayerPassed).transform;
             _platformsSpawningSystem.StartSpawningCycleAsync(_platformsParent, OnPlayerInterracted, OnPlayerPassed);
+
+            var destroyingSystemCtx = new PlatformsDestroyingSystem.Ctx
+            {
+                platforms = _platforms,
+                levelConfigs = _levelConfigs
+            };
+
+            _platformsDestroyingSystem = new PlatformsDestroyingSystem(destroyingSystemCtx);
+            // _platformsDestroyingSystem.StartDestroyingCycleAsync();
         }
 
         private void OnPlayerPassed(PlatformType passedType)
@@ -130,11 +156,13 @@ namespace Code
 
         private void OnGameWin(ConcurrentDictionary<PlatformType, int> passedPlatforms)
         {
+            _player.Stop(true);
             _winScreen.Show(passedPlatforms);
         }
 
         private void OnGameLoose()
         {
+            _player.Stop();
             _looseScreen.Show();
         }
 
@@ -149,7 +177,7 @@ namespace Code
             _cameraSystem.Initialize(cameraCtx);
         }
 
-        private void InitPlatformInteractingSystems()
+        private void InitInteractingWithPlatformBehaviours()
         {
             var ctx = new PlatformInteractingBehaviour.Ctx
             {

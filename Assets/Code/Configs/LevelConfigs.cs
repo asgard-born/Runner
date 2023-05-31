@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Code.Configs.Essences;
+using Code.Platforms.Concrete;
 using Code.Platforms.Essences;
 using UnityEngine;
 
@@ -14,10 +15,12 @@ namespace Code.Configs
         public int firstGuaranteedPlatformsCount = 5;
         public int startPlatformsCount = 50;
         public float spawnPlatformsDelaySec = .8f;
+        public float destroyPlatformsDelaySec = 1.5f;
         public float runDelaySec = 1.2f;
         public int allPlatformsCount = 400;
         public int maxPlatformsInTime = 100;
         public PlatformChance[] platformChances;
+        public FinishPlatform finishPlatform;
 
         public HashSet<PlatformType> firstGuaranteedPlatforms;
         public HashSet<PlatformType> cannotDublicatePlatforms;
