@@ -8,6 +8,7 @@ using Code.ObjectsPool;
 using Code.Platforms.Abstract;
 using Code.Platforms.Concrete;
 using Code.Platforms.Essences;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -89,7 +90,7 @@ namespace Code.Platforms
                 _lastPlatform = CreatePlatform(parent, interactionCallback, passingCallback);
             }
 
-            await Task.Delay((int)(_levelConfigs.spawnPlatformsDelaySec * 1000));
+            await UniTask.Delay((int)(_levelConfigs.spawnPlatformsDelaySec * 1000));
         }
 
         private Platform CreatePlatformWithRestrictions(Transform parent, Action<Type> interactionCallback, Action<PlatformType> passingCallback, HashSet<PlatformType> types, bool isAvailable)

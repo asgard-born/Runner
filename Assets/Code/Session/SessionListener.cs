@@ -19,8 +19,6 @@ namespace Code.Session
         private readonly Ctx _ctx;
         private int _passedPlatformsCount;
         private ConcurrentDictionary<PlatformType, int> _passedPlatformsDictionary = new ConcurrentDictionary<PlatformType, int>();
-        
-        public ConcurrentDictionary<PlatformType, int> passedPlatformsDictionary => _passedPlatformsDictionary;
 
         public struct Ctx
         {

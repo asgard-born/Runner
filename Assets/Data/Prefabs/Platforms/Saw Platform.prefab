@@ -11,8 +11,10 @@ GameObject:
   - component: {fileID: 2586000838360381389}
   - component: {fileID: 2586000838361184237}
   - component: {fileID: 2586000838362150189}
+  - component: {fileID: 1143158627155407369}
+  - component: {fileID: 5329184595744832842}
   m_Layer: 0
-  m_Name: PP_Saw_Used_05_Iron
+  m_Name: Saw
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2586000838360214509}
   m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
-  m_LocalPosition: {x: -0.058, y: 2.62, z: -0.004}
+  m_LocalPosition: {x: -0.058, y: 2.62, z: 0.117}
   m_LocalScale: {x: 1.3364, y: 67.068016, z: 2.2197}
   m_Children: []
   m_Father: {fileID: 3297746797329169705}
@@ -81,6 +83,31 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &1143158627155407369
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2586000838360214509}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.69763607, y: 0.1558793, z: 0.012226112}
+  m_Center: {x: 0.043035265, y: -0.0022779403, z: -0.00006452087}
+--- !u!114 &5329184595744832842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2586000838360214509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cacffea1c764152899d4faf39d48446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3121528494981027661
 GameObject:
   m_ObjectHideFlags: 0
@@ -219,7 +246,7 @@ Transform:
   m_GameObject: {fileID: 3297746797329169704}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 0.08, z: 6}
+  m_LocalScale: {x: 1.5, y: 0.08, z: 8}
   m_Children:
   - {fileID: 8283984836940045426}
   - {fileID: 2586000838360381389}
@@ -240,7 +267,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _platformType: 40
   _passingZone: {fileID: 5394330908542023551}
-  _interactionZone: {fileID: 0}
+  _interactionZone: {fileID: 5329184595744832842}
 --- !u!33 &3297746797329169716
 MeshFilter:
   m_ObjectHideFlags: 0

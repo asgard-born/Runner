@@ -48,6 +48,7 @@ namespace Code.Platforms.Abstract
         public void Dispose()
         {
             OnInterractedWithPlayer = null;
+            OnPassedByPlayer = null;
         }
     }
 }

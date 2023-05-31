@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Code.Configs;
 using Code.Platforms.Abstract;
+using Cysharp.Threading.Tasks;
 
 namespace Code.Platforms
 {
@@ -31,7 +32,7 @@ namespace Code.Platforms
 
             while (true)
             {
-                if (_platforms.Count >= _levelConfigs.maxPlatformsInTime)
+                if (_platforms.Count > _levelConfigs.maxPlatformsInTime)
                 {
                     var firstPlatform = _platforms.First.Value;
                     firstPlatform.ReturnToPool();
@@ -39,7 +40,7 @@ namespace Code.Platforms
                     _platforms.RemoveFirst();
                 }
 
-                await Task.Delay((int)(_levelConfigs.destroyPlatformsDelaySec * 1000));
+                await UniTask.Delay((int)(_levelConfigs.destroyPlatformsDelaySec * 1000));
             }
         }
     }

@@ -25,6 +25,11 @@ namespace Code.Player
             _animator.SetBool(_falling, false);
         }
 
+        public void PlayDamage()
+        {
+            
+        }
+        
         public void PlayJump()
         {
             if (_animator.GetBool(_jumping))

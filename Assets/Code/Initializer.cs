@@ -15,6 +15,7 @@ using Code.PlayersInput;
 using Code.Session;
 using Code.UI.Screens;
 using Code.UI.Views;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Code
@@ -58,7 +59,7 @@ namespace Code
 
         private async void StartLevelAsync()
         {
-            await Task.Delay((int)(_levelConfigs.runDelaySec * 1000));
+            await UniTask.Delay((int)(_levelConfigs.runDelaySec * 1000));
 
             _player.StartRun();
         }
@@ -132,7 +133,7 @@ namespace Code
             };
 
             _platformsDestroyingSystem = new PlatformsDestroyingSystem(destroyingSystemCtx);
-            // _platformsDestroyingSystem.StartDestroyingCycleAsync();
+            _platformsDestroyingSystem.StartDestroyingCycleAsync();
         }
 
         private void OnPlayerPassed(PlatformType passedType)
