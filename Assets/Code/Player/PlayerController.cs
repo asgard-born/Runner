@@ -1,11 +1,21 @@
-﻿using Code.Session;
+﻿using System;
+using Code.Configs;
+using Code.Session;
 using UnityEngine;
 
 namespace Code.Player
 {
-    public class PlayerEntity : MonoBehaviour
+    public class PlayerController : MonoBehaviour
     {
         [SerializeField] private AnimationSystem _animationSystem;
+
+        private bool _canRun;
+        private Rigidbody _rigidbody;
+        private Ctx _ctx;
+        private int _currentJumpingCount;
+        private int _maxJumpingTimes;
+        private int _currentLives;
+        private State _currentState;
 
         private enum State
         {
@@ -16,30 +26,23 @@ namespace Code.Player
             FallingOut,
         }
 
-        private Collider _collider;
-        private bool _canRun;
-        private Rigidbody _rigidbody;
-        private Ctx _ctx;
-        private float distToGround;
-        private int _currentJumpingCount;
-
-        private State _currentState;
-
         public struct Ctx
         {
+            public PlayersConfigs playersConfigs;
             public SessionListener sessionListener;
+            public Action deathCallback;
         }
 
         public void Init(Ctx ctx)
         {
-            _collider = GetComponent<Collider>();
             _ctx = ctx;
-            distToGround = _collider.bounds.extents.y;
+            _currentLives = _ctx.playersConfigs.lives;
+            _maxJumpingTimes = _ctx.sessionListener.maxJumpingTimes;
         }
 
         public void TryJump()
         {
-            if ((_currentJumpingCount == 0 && !IsGrounded()) || _currentJumpingCount >= _ctx.sessionListener.maxJumpingTimes)
+            if ((_currentJumpingCount == 0 && !IsGrounded()) || _currentJumpingCount >= _maxJumpingTimes)
             {
                 return;
             }
@@ -65,6 +68,27 @@ namespace Code.Player
         public void RotateRight()
         {
             transform.Rotate(Vector3.up * 90);
+        }
+
+        public void Stop(bool withAnimation = false)
+        {
+            _canRun = false;
+
+            if (withAnimation)
+            {
+                _animationSystem.PlayIdle();
+            }
+        }
+
+        public void Hit()
+        {
+            _currentLives--;
+            _animationSystem.PlayDamage();
+
+            if (_currentLives <= 0)
+            {
+                _ctx.deathCallback?.Invoke();
+            }
         }
 
         private void Awake()
@@ -154,16 +178,6 @@ namespace Code.Player
         private bool IsFallingOut()
         {
             return IsFalling() && _rigidbody.position.y < _ctx.sessionListener.valueYToFallOut;
-        }
-
-        public void Stop(bool withAnimation = false)
-        {
-            _canRun = false;
-
-            if (withAnimation)
-            {
-                _animationSystem.PlayIdle();
-            }
         }
     }
 }

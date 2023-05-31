@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Code.CameraLogic;
 using Code.Configs;
 using Code.Platforms;
@@ -27,23 +26,26 @@ namespace Code
         [SerializeField] private CameraFollowSystem _cameraSystem;
         [SerializeField] private InputSystem _inputSystem;
 
-        [Space] [Header("Configs")] [SerializeField] private LevelConfigs _levelConfigs;
+        [Space] [Header("Configs")]
+        [SerializeField] private LevelConfigs _levelConfigs;
         [SerializeField] private PlayersConfigs _playersConfigs;
         [SerializeField] private PoolsConfigs _poolsConfigs;
 
-        [Space] [Header("UI")] [SerializeField] private WinView _winView;
+        [Space] [Header("UI")]
+        [SerializeField] private HUDView _hudView;
+        [SerializeField] private WinView _winView;
         [SerializeField] private LooseView _looseView;
         [SerializeField] private Canvas _canvas;
 
         private SessionListener _sessionListener;
         private Transform _playerSpawnPoint;
-        private PlayerEntity _player;
+        private PlayerController _player;
         private PlatformsSpawningSystem _platformsSpawningSystem;
         private PlatformsDestroyingSystem _platformsDestroyingSystem;
-        private PlatformInteractingBehaviour _platformInteractingBehaviour;
-        private HashSet<PlatformInteractingBehaviour> _interactingBehaviours;
         private readonly LinkedList<Platform> _platforms = new LinkedList<Platform>();
+        private HashSet<PlatformInteractingBehaviour> _interactingBehaviours;
 
+        private HUDScreen _hudScreen;
         private LooseScreen _looseScreen;
         private WinScreen _winScreen;
 
@@ -70,9 +72,9 @@ namespace Code
             InitSession();
             InitPlayer();
             InitCamera();
-            InitInteractingWithPlatformBehaviours();
             InitInputSystem();
             InitUI();
+            InitInteractingWithPlatformBehaviours();
         }
 
         private void RestartLevel()
@@ -85,8 +87,19 @@ namespace Code
 
         private void InitUI()
         {
+            var hudCtx = new HUDScreen.Ctx
+            {
+                viewPrefab = _hudView,
+                canvas = _canvas.transform,
+                initLives = _playersConfigs.lives
+            };
+
+            _hudScreen = new HUDScreen(hudCtx);
+            _hudScreen.Show();
+
             var winCtx = new WinScreen.Ctx
             {
+                blocksToCalculateOnFinish = _levelConfigs.blocksToCalculateOnFinish,
                 viewPrefab = _winView,
                 canvas = _canvas.transform,
             };
@@ -133,7 +146,7 @@ namespace Code
             };
 
             _platformsDestroyingSystem = new PlatformsDestroyingSystem(destroyingSystemCtx);
-            _platformsDestroyingSystem.StartDestroyingCycleAsync();
+            // _platformsDestroyingSystem.StartDestroyingCycleAsync();
         }
 
         private void OnPlayerPassed(PlatformType passedType)
@@ -180,20 +193,26 @@ namespace Code
 
         private void InitInteractingWithPlatformBehaviours()
         {
-            var ctx = new PlatformInteractingBehaviour.Ctx
+            var fenceCtx = new FenceInteractingBehaviour.Ctx
             {
-                playerEntity = _player,
-                sessionListener = _sessionListener
+                player = _player,
+                hudScreen = _hudScreen
+            };
+
+            var sawCtx = new SawInteractingBehaviour.Ctx
+            {
+                player = _player,
+                hudScreen = _hudScreen
             };
 
             _interactingBehaviours = new HashSet<PlatformInteractingBehaviour>
             {
-                new AbyssInteractingBehaviour(ctx),
-                new AbyssLargeInteractingBehaviour(ctx),
-                new FenceInteractingBehaviour(ctx),
-                new SawInteractingBehaviour(ctx),
-                new TurnLeftInteractingBehaviour(ctx),
-                new TurnRightInteractingBehaviour(ctx),
+                new AbyssInteractingBehaviour(OnGameLoose),
+                new AbyssLargeInteractingBehaviour(OnGameLoose),
+                new FenceInteractingBehaviour(fenceCtx),
+                new SawInteractingBehaviour(sawCtx),
+                new TurnLeftInteractingBehaviour(_player),
+                new TurnRightInteractingBehaviour(_player),
             };
         }
 
@@ -208,9 +227,11 @@ namespace Code
             _player = Instantiate(_playersConfigs.playerPrefab);
             _player.transform.position = _playerSpawnPoint.position + _playerSpawnOffset;
 
-            var ctx = new PlayerEntity.Ctx
+            var ctx = new PlayerController.Ctx
             {
-                sessionListener = _sessionListener
+                playersConfigs = _playersConfigs,
+                sessionListener = _sessionListener,
+                deathCallback = OnGameLoose
             };
 
             _player.Init(ctx);

@@ -10,7 +10,7 @@ namespace Code.Platforms.Helpers
         
         private void OnTriggerEnter(Collider other)
         {
-            var player = other.GetComponent<PlayerEntity>();
+            var player = other.GetComponent<PlayerController>();
 
             if (player != null)
             {

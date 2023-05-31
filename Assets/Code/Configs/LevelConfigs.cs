@@ -10,8 +10,10 @@ namespace Code.Configs
     [CreateAssetMenu(menuName = "Configs/LevelConfigs", fileName = "LevelConfigs")]
     public class LevelConfigs : ScriptableObject
     {
-        public PlatformType[] firstGuaranteedPlatformTypes;
-        public PlatformType[] cannotDublicatePlatformTypes;
+        [SerializeField] private PlatformType[] firstGuaranteedPlatformTypes;
+        [SerializeField] private PlatformType[] cannotDublicatePlatformTypes;
+        [SerializeField] private PlatformType[] blocksTypesToCalculateOnFinish;
+        
         public int firstGuaranteedPlatformsCount = 5;
         public int startPlatformsCount = 50;
         public float spawnPlatformsDelaySec = .8f;
@@ -24,6 +26,7 @@ namespace Code.Configs
 
         public HashSet<PlatformType> firstGuaranteedPlatforms;
         public HashSet<PlatformType> cannotDublicatePlatforms;
+        public HashSet<PlatformType> blocksToCalculateOnFinish;
 
         private HashSet<PlatformType> hashSetTypes;
 
@@ -34,6 +37,7 @@ namespace Code.Configs
 
             firstGuaranteedPlatforms = MakePlatformListUnique(firstGuaranteedPlatformTypes);
             cannotDublicatePlatforms = MakePlatformListUnique(cannotDublicatePlatformTypes);
+            blocksToCalculateOnFinish = MakePlatformListUnique(blocksTypesToCalculateOnFinish);
         }
 
         private HashSet<PlatformType> MakePlatformListUnique(IList<PlatformType> listToCheck)

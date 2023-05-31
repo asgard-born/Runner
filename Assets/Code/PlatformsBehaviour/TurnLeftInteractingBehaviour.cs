@@ -1,16 +1,20 @@
 ﻿using Code.PlatformsBehaviour.Abstract;
+using Code.Player;
 
 namespace Code.PlatformsBehaviour
 {
     public class TurnLeftInteractingBehaviour : PlatformInteractingBehaviour
     {
-        public TurnLeftInteractingBehaviour(Ctx ctx) : base(ctx)
+        private readonly PlayerController _player;
+
+        public TurnLeftInteractingBehaviour(PlayerController player)
         {
+            _player = player;
         }
 
         public override void InteractWithPlayer()
         {
-            _ctx.playerEntity.RotateLeft();
+            _player.RotateLeft();
         }
     }
 }

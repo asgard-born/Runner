@@ -1,15 +1,20 @@
-﻿using Code.PlatformsBehaviour.Abstract;
+﻿using System;
+using Code.PlatformsBehaviour.Abstract;
 
 namespace Code.PlatformsBehaviour
 {
     public class AbyssLargeInteractingBehaviour : PlatformInteractingBehaviour
     {
-        public AbyssLargeInteractingBehaviour(Ctx ctx) : base(ctx)
+        private Action _callback;
+
+        public AbyssLargeInteractingBehaviour(Action callback)
         {
+            _callback = callback;
         }
 
         public override void InteractWithPlayer()
         {
+            _callback?.Invoke();
         }
     }
 }
