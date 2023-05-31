@@ -32,9 +32,7 @@ namespace Code.Configs
 
         public HashSet<PlatformType> firstGuaranteedPlatforms;
         public HashSet<PlatformType> cannotDublicatePlatforms;
-        public HashSet<PlatformType> blocksToCalculateOnFinish;
-
-        private HashSet<PlatformType> hashSetTypes;
+        public HashSet<PlatformType> platformsToCalculateOnFinish;
 
         private void OnValidate()
         {
@@ -43,7 +41,7 @@ namespace Code.Configs
 
             firstGuaranteedPlatforms = MakePlatformArrayUnique(firstGuaranteedPlatformTypes);
             cannotDublicatePlatforms = MakePlatformArrayUnique(cannotDublicatePlatformTypes);
-            blocksToCalculateOnFinish = MakePlatformArrayUnique(platformTypesToCalculateOnFinish);
+            platformsToCalculateOnFinish = MakePlatformArrayUnique(platformTypesToCalculateOnFinish);
         }
 
         private HashSet<PlatformType> MakePlatformArrayUnique(IList<PlatformType> listToCheck)

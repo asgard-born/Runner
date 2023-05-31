@@ -1,5 +1,5 @@
 ﻿using System;
-using Code.Bonuses.Essences;
+using Code.Boosters.Essences;
 using Code.Configs;
 using UnityEngine;
 
@@ -17,6 +17,8 @@ namespace Code.Player
         private State _currentState;
         private PlayerStats _stats;
 
+        private Action<float> _onLivesChangedCallback;
+
         private enum State
         {
             None,
@@ -29,6 +31,7 @@ namespace Code.Player
         public struct Ctx
         {
             public PlayersConfigs playersConfigs;
+            public Action<float> onLivesChangedCallback;
             public Action deathCallback;
             public Transform playerSpawnPoint;
         }
@@ -44,6 +47,8 @@ namespace Code.Player
             };
 
             _stats = new PlayerStats(playerStatsCtx);
+
+            _onLivesChangedCallback = ctx.onLivesChangedCallback;
         }
 
         public void TryJump()
@@ -90,6 +95,7 @@ namespace Code.Player
         {
             _stats.RemoveLifes(1);
             _animationSystem.PlayDamage();
+            _onLivesChangedCallback?.Invoke(-1);
 
             if (_stats.currentLives <= 0)
             {
@@ -186,19 +192,20 @@ namespace Code.Player
             return IsFalling() && _rigidbody.position.y < _stats.valueYToFallOut;
         }
 
-        public void TakeBonus(BonusType bonusType, int value)
+        public void TakeBonus(BoosterType boosterType, float value)
         {
-            switch (bonusType)
+            switch (boosterType)
             {
-                case BonusType.Heart:
-                    _stats.AddLifes(value);
+                case BoosterType.Heart:
+                    _onLivesChangedCallback?.Invoke(value);
+                    _stats.AddLifes((int)value);
                     break;
                 
-                case BonusType.Immune:
-                    _stats.AddImmune(value);
+                case BoosterType.Immune:
+                    _stats.AddImmune((int)value);
                     break;
                 
-                case BonusType.Speed:
+                case BoosterType.Speed:
                     _stats.AddSpeed(value);
                     break;
             }

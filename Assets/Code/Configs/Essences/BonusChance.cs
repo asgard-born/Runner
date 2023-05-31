@@ -1,12 +1,12 @@
 ﻿using System;
-using Code.Bonuses.Essences;
+using Code.Boosters.Abstract;
 
 namespace Code.Configs.Essences
 {
     [Serializable]
     public struct BonusChance
     {
-        public BonusType bonusType;
+        public Booster _booster;
         public float chance;
     }
 }

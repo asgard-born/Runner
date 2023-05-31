@@ -25,15 +25,17 @@ namespace Code.UI.Screens
             _view = Object.Instantiate(_ctx.viewPrefab, _ctx.canvas);
             _view.Show(_ctx.initLives);
         }
-        
-        public void AddLife()
-        {
-            _view.AddLife();
-        }
 
-        public void RemoveLife()
+        public void UpdateLives(int value)
         {
-            _view.RemoveLife();
+            if (value > 0)
+            {
+                _view.AddLives(value);
+            }
+            else
+            {
+                _view.RemoveLives(value);
+            }
         }
 
         public void Hide()

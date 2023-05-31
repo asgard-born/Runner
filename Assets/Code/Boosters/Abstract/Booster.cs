@@ -1,15 +1,15 @@
-﻿using Code.Bonuses.Essences;
+﻿using Code.Boosters.Essences;
 using Code.ObjectsPool;
 using Code.Platforms.Helpers;
 using Code.Player;
 using UnityEngine;
 
-namespace Code.Bonuses
+namespace Code.Boosters.Abstract
 {
-    public abstract class Bonus : PoolObject
+    public abstract class Booster : PoolObject
     {
-        public int value { get; private set; }
-        public BonusType bonusType;
+        public float value;
+        public BoosterType boosterType;
         public TriggerZone triggerZone;
 
         private void Awake()
@@ -19,13 +19,13 @@ namespace Code.Bonuses
 
         private void OnTaken(PlayerController player)
         {
-            player.TakeBonus(bonusType, value);
+            player.TakeBonus(boosterType, value);
             ReturnToPool();
         }
 
         public void Update()
         {
-            transform.Rotate(Vector3.up * 10 * Time.deltaTime);
+            transform.Rotate(Vector3.forward * 10 * Time.deltaTime);
         }
     }
 }

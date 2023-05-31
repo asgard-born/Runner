@@ -22,25 +22,34 @@ namespace Code.Platforms
         private const int _leftYAngle = 270;
         private Platform _lastPlatform;
         private readonly Ctx _ctx;
+        private readonly Action<Platform> _spawnedCallback;
+        private readonly Action<Type> _interactionCallback;
+        private readonly Action<PlatformType> _passingCallback;
 
         public struct Ctx
         {
             public LinkedList<Platform> platforms;
             public LevelConfigs levelConfigs;
+            public Action<Platform> spawnedCallback;
+            public Action<Type> interactionCallback;
+            public Action<PlatformType> passingCallback;
         }
 
         public PlatformsSpawningSystem(Ctx ctx)
         {
             _ctx = ctx;
+            _spawnedCallback = ctx.spawnedCallback;
+            _interactionCallback = ctx.interactionCallback;
+            _passingCallback = ctx.passingCallback;
             _platforms = ctx.platforms;
             _levelConfigs = _ctx.levelConfigs;
         }
 
-        public Platform SpawnImmediately(Transform parent, Action<Type> interactionCallback, Action<PlatformType> passingCallback)
+        public Platform SpawnImmediately(Transform parent)
         {
             for (var i = 0; i < _levelConfigs.firstGuaranteedPlatformsCount; i++)
             {
-                _lastPlatform = CreatePlatformWithRestrictions(parent, interactionCallback, passingCallback, _levelConfigs.firstGuaranteedPlatforms, true);
+                _lastPlatform = CreatePlatformWithRestrictions(parent, _levelConfigs.firstGuaranteedPlatforms, true);
             }
 
             var countToInitialSpawn = _levelConfigs.startPlatformsCount - _levelConfigs.firstGuaranteedPlatformsCount;
@@ -51,49 +60,49 @@ namespace Code.Platforms
 
                 if (cannotDublicatePlatforms.Contains(_lastPlatform.platformType))
                 {
-                    _lastPlatform = CreatePlatformWithRestrictions(parent, interactionCallback, passingCallback, cannotDublicatePlatforms, false);
+                    _lastPlatform = CreatePlatformWithRestrictions(parent, cannotDublicatePlatforms, false);
                 }
                 else
                 {
-                    _lastPlatform = CreatePlatform(parent, interactionCallback, passingCallback);
+                    _lastPlatform = CreatePlatform(parent);
                 }
             }
 
             return _platforms.First.Value;
         }
 
-        public async void StartSpawningCycleAsync(Transform parent, Action<Type> interactionCallback, Action<PlatformType> passingCallback)
+        public async void StartSpawningCycleAsync(Transform parent)
         {
             while (_spawnCount < _levelConfigs.allPlatformsCount)
             {
                 if (_levelConfigs.allPlatformsCount - _spawnCount > 1)
                 {
-                    await CreateAveragePlatformAsync(parent, interactionCallback, passingCallback);
+                    await CreateAveragePlatformAsync(parent);
                 }
                 else
                 {
-                    Spawn(_levelConfigs.finishPlatform, parent, null, passingCallback);
+                    Spawn(_levelConfigs.finishPlatform, parent);
                 }
             }
         }
 
-        private async Task CreateAveragePlatformAsync(Transform parent, Action<Type> interactionCallback, Action<PlatformType> passingCallback)
+        private async Task CreateAveragePlatformAsync(Transform parent)
         {
             var cannotDublicatePlatforms = _levelConfigs.cannotDublicatePlatforms;
 
             if (cannotDublicatePlatforms.Contains(_lastPlatform.platformType))
             {
-                _lastPlatform = CreatePlatformWithRestrictions(parent, interactionCallback, passingCallback, cannotDublicatePlatforms, false);
+                _lastPlatform = CreatePlatformWithRestrictions(parent, cannotDublicatePlatforms, false);
             }
             else
             {
-                _lastPlatform = CreatePlatform(parent, interactionCallback, passingCallback);
+                _lastPlatform = CreatePlatform(parent);
             }
 
             await UniTask.Delay((int)(_levelConfigs.spawnPlatformsDelaySec * 1000));
         }
 
-        private Platform CreatePlatformWithRestrictions(Transform parent, Action<Type> interactionCallback, Action<PlatformType> passingCallback, HashSet<PlatformType> types, bool isAvailable)
+        private Platform CreatePlatformWithRestrictions(Transform parent, HashSet<PlatformType> types, bool isAvailable)
         {
             PlatformChance[] platformChances = FilterPlatformsToSpawnByTypes(types, isAvailable);
             Platform platformToSpawn = CalculatePlatformToSpawn(platformChances);
@@ -103,10 +112,10 @@ namespace Code.Platforms
                 Debug.LogError("Cannot spawn platform, check the Platform's chances in Current level's configs");
             }
 
-            return Spawn(platformToSpawn, parent, interactionCallback, passingCallback);
+            return Spawn(platformToSpawn, parent);
         }
 
-        private Platform CreatePlatform(Transform parent, Action<Type> interactionCallback, Action<PlatformType> passingCallback)
+        private Platform CreatePlatform(Transform parent)
         {
             Platform platformToSpawn = CalculatePlatformToSpawn(_levelConfigs.platformChances);
 
@@ -115,7 +124,7 @@ namespace Code.Platforms
                 Debug.LogError("Cannot spawn platform, check the Platform's chances in Current level's configs");
             }
 
-            return Spawn(platformToSpawn, parent, interactionCallback, passingCallback);
+            return Spawn(platformToSpawn, parent);
         }
 
         private void CalculateRotationForPlatform(TurnPlatform previousTurnedPlatform, Platform nextPlatform)
@@ -151,11 +160,8 @@ namespace Code.Platforms
         private Platform CalculatePlatformToSpawn(PlatformChance[] platformChances)
         {
             var chances = platformChances.OrderBy(platformChance => platformChance.chance);
-
             var sum = chances.Sum(x => x.chance);
-
             var randomNumber = Random.Range(0, sum);
-
             var currentSumm = 0f;
 
             foreach (var platformChance in chances)
@@ -182,8 +188,8 @@ namespace Code.Platforms
 
             return _levelConfigs.platformChances.ToArray();
         }
-        
-        private Platform Spawn(Platform platformToSpawn, Transform parent, Action<Type> interactionCallback = null, Action<PlatformType> passingCallback = null)
+
+        private Platform Spawn(Platform platformToSpawn, Transform parent)
         {
             var type = platformToSpawn.GetType();
 
@@ -206,19 +212,19 @@ namespace Code.Platforms
             nextPlatform.transform.position = nextPosition;
             nextPlatform.transform.parent = parent;
 
-            if (interactionCallback != null)
+            if (_interactionCallback != null)
             {
-                nextPlatform.OnInterractedWithPlayer += interactionCallback;
+                nextPlatform.OnInterractedWithPlayer += _interactionCallback;
             }
 
-            if (passingCallback != null)
+            if (_passingCallback != null)
             {
-                nextPlatform.OnPassedByPlayer += passingCallback;
+                nextPlatform.OnPassedByPlayer += _passingCallback;
             }
 
             _spawnCount++;
             _platforms.AddLast(nextPlatform);
-            
+            _spawnedCallback?.Invoke(nextPlatform);
 
             return nextPlatform;
         }

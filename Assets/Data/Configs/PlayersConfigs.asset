@@ -17,3 +17,4 @@ MonoBehaviour:
   initialSpeed: 5
   jumpForce: 4.5
   maxJumpingTimes: 2
+  lives: 5

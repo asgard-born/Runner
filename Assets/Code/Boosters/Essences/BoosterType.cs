@@ -1,6 +1,6 @@
-﻿namespace Code.Bonuses.Essences
+﻿namespace Code.Boosters.Essences
 {
-    public enum BonusType : byte
+    public enum BoosterType : byte
     {
         None = 0,
         Heart = 10,

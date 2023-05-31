@@ -12,22 +12,29 @@ namespace Code.UI.Views
 
         public void Show(int lives)
         {
-            for (var i = 0; i < lives; i++)
+            AddLives(lives);
+        }
+
+        public void AddLives(int value)
+        {
+            for (var i = 0; i < value; i++)
             {
-                AddLife();
+                _lives.AddLast(Instantiate(_lifePrefab, _content));
             }
         }
 
-        public void AddLife()
+        public void RemoveLives(int value)
         {
-            _lives.AddLast(Instantiate(_lifePrefab, _content));
-        }
+            value = Mathf.Abs(value);
+            
+            for (var i = 0; i < value; i++)
+            {
+                if (_lives.Count == 0) return;
 
-        public void RemoveLife()
-        {
-            var life = _lives.Last.Value;
-            Destroy(life.gameObject);
-            _lives.RemoveLast();
+                var life = _lives.Last.Value;
+                Destroy(life.gameObject);
+                _lives.RemoveLast();
+            }
         }
     }
 }

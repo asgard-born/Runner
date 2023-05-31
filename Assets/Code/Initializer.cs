@@ -2,10 +2,12 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Code.Boosters;
 using Code.CameraLogic;
 using Code.Configs;
 using Code.Platforms;
 using Code.Platforms.Abstract;
+using Code.Platforms.Concrete;
 using Code.Platforms.Essences;
 using Code.PlatformsBehaviour;
 using Code.PlatformsBehaviour.Abstract;
@@ -42,6 +44,7 @@ namespace Code
         private PlayerController _player;
         private PlatformsSpawningSystem _platformsSpawningSystem;
         private PlatformsDestroyingSystem _platformsDestroyingSystem;
+        private SpawnBonusSystem _spawnBonusSystem;
         
         private HashSet<PlatformInteractingBehaviour> _interactingBehaviours;
         private readonly LinkedList<Platform> _platforms = new LinkedList<Platform>();
@@ -69,13 +72,24 @@ namespace Code
 
         private void StartLevel()
         {
+            InitBonuses();
             InitPlatforms();
             InitSession();
             InitPlayer();
             InitCamera();
             InitInputSystem();
             InitUI();
-            InitInteractingWithPlatformBehaviours();
+            InitInteractingBehaviours();
+        }
+
+        private void InitBonuses()
+        {
+            var ctx = new SpawnBonusSystem.Ctx
+            {
+                levelConfigs = _levelConfigs
+            };
+                
+            _spawnBonusSystem = new SpawnBonusSystem(ctx);
         }
 
         private void RestartLevel()
@@ -100,7 +114,7 @@ namespace Code
 
             var winCtx = new WinScreen.Ctx
             {
-                blocksToCalculateOnFinish = _levelConfigs.blocksToCalculateOnFinish,
+                blocksToCalculateOnFinish = _levelConfigs.platformsToCalculateOnFinish,
                 viewPrefab = _winView,
                 canvas = _canvas.transform,
             };
@@ -133,12 +147,15 @@ namespace Code
             var spawningSystemCtx = new PlatformsSpawningSystem.Ctx
             {
                 platforms = _platforms,
-                levelConfigs = _levelConfigs
+                levelConfigs = _levelConfigs,
+                spawnedCallback = OnPlatformSpawned,
+                interactionCallback = OnPlayerInterracted,
+                passingCallback = OnPlayerPassed
             };
 
             _platformsSpawningSystem = new PlatformsSpawningSystem(spawningSystemCtx);
-            _playerSpawnPoint = _platformsSpawningSystem.SpawnImmediately(_platformsParent, OnPlayerInterracted, OnPlayerPassed).transform;
-            _platformsSpawningSystem.StartSpawningCycleAsync(_platformsParent, OnPlayerInterracted, OnPlayerPassed);
+            _playerSpawnPoint = _platformsSpawningSystem.SpawnImmediately(_platformsParent).transform;
+            _platformsSpawningSystem.StartSpawningCycleAsync(_platformsParent);
 
             var destroyingSystemCtx = new PlatformsDestroyingSystem.Ctx
             {
@@ -148,6 +165,14 @@ namespace Code
 
             _platformsDestroyingSystem = new PlatformsDestroyingSystem(destroyingSystemCtx);
             _platformsDestroyingSystem.StartDestroyingCycleAsync();
+        }
+
+        private void OnPlatformSpawned(Platform platform)
+        {
+            if (platform is StandardPlatform standardPlatform)
+            {
+                _spawnBonusSystem.TrySpawnBonus(standardPlatform);
+            }
         }
 
         private void OnPlayerPassed(PlatformType passedType)
@@ -190,26 +215,14 @@ namespace Code
             _cameraSystem.Initialize(cameraCtx);
         }
 
-        private void InitInteractingWithPlatformBehaviours()
+        private void InitInteractingBehaviours()
         {
-            var fenceCtx = new FenceInteractingBehaviour.Ctx
-            {
-                player = _player,
-                hudScreen = _hudScreen
-            };
-
-            var sawCtx = new SawInteractingBehaviour.Ctx
-            {
-                player = _player,
-                hudScreen = _hudScreen
-            };
-
             _interactingBehaviours = new HashSet<PlatformInteractingBehaviour>
             {
                 new AbyssInteractingBehaviour(OnGameLoose),
                 new AbyssLargeInteractingBehaviour(OnGameLoose),
-                new FenceInteractingBehaviour(fenceCtx),
-                new SawInteractingBehaviour(sawCtx),
+                new FenceInteractingBehaviour(_player),
+                new SawInteractingBehaviour(_player),
                 new TurnLeftInteractingBehaviour(_player),
                 new TurnRightInteractingBehaviour(_player),
             };
@@ -230,10 +243,16 @@ namespace Code
             {
                 playersConfigs = _playersConfigs,
                 playerSpawnPoint = _playerSpawnPoint,
+                onLivesChangedCallback = OnLivesChanged,
                 deathCallback = OnGameLoose
             };
 
             _player.Init(ctx);
+        }
+
+        private void OnLivesChanged(float value)
+        {
+            _hudScreen.UpdateLives((int)value);
         }
     }
 }
