@@ -26,12 +26,12 @@ namespace Code
         [SerializeField] private CameraFollowSystem _cameraSystem;
         [SerializeField] private InputSystem _inputSystem;
 
-        [Space] [Header("Configs")]
+        [Space, Header("Configs")]
         [SerializeField] private LevelConfigs _levelConfigs;
         [SerializeField] private PlayersConfigs _playersConfigs;
         [SerializeField] private PoolsConfigs _poolsConfigs;
 
-        [Space] [Header("UI")]
+        [Space, Header("UI")]
         [SerializeField] private HUDView _hudView;
         [SerializeField] private WinView _winView;
         [SerializeField] private LooseView _looseView;
@@ -42,8 +42,9 @@ namespace Code
         private PlayerController _player;
         private PlatformsSpawningSystem _platformsSpawningSystem;
         private PlatformsDestroyingSystem _platformsDestroyingSystem;
-        private readonly LinkedList<Platform> _platforms = new LinkedList<Platform>();
+        
         private HashSet<PlatformInteractingBehaviour> _interactingBehaviours;
+        private readonly LinkedList<Platform> _platforms = new LinkedList<Platform>();
 
         private HUDScreen _hudScreen;
         private LooseScreen _looseScreen;
@@ -222,14 +223,13 @@ namespace Code
 
         private void InitPlayer()
         {
-            
             _player = Instantiate(_playersConfigs.playerPrefab);
             _player.transform.position = _playerSpawnPoint.position + _playerSpawnOffset;
 
             var ctx = new PlayerController.Ctx
             {
                 playersConfigs = _playersConfigs,
-                sessionListener = _sessionListener,
+                playerSpawnPoint = _playerSpawnPoint,
                 deathCallback = OnGameLoose
             };
 

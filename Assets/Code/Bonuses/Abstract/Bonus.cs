@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Code.Bonuses
 {
-    public class Bonus : PoolObject
+    public abstract class Bonus : PoolObject
     {
         public int value { get; private set; }
         public BonusType bonusType;

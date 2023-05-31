@@ -1,7 +1,6 @@
 ﻿using System;
 using Code.Bonuses.Essences;
 using Code.Configs;
-using Code.Session;
 using UnityEngine;
 
 namespace Code.Player
@@ -14,7 +13,6 @@ namespace Code.Player
         private Rigidbody _rigidbody;
         private Ctx _ctx;
         private int _currentJumpingCount;
-        private int _maxJumpingTimes;
 
         private State _currentState;
         private PlayerStats _stats;
@@ -31,8 +29,6 @@ namespace Code.Player
         public struct Ctx
         {
             public PlayersConfigs playersConfigs;
-            public LevelConfigs levelConfigs;
-            public SessionListener sessionListener;
             public Action deathCallback;
             public Transform playerSpawnPoint;
         }
@@ -52,7 +48,7 @@ namespace Code.Player
 
         public void TryJump()
         {
-            if ((_currentJumpingCount == 0 && !IsGrounded()) || _currentJumpingCount >= _maxJumpingTimes)
+            if ((_currentJumpingCount == 0 && !IsGrounded()) || _currentJumpingCount >= _stats.maxJumpingTimes)
             {
                 return;
             }

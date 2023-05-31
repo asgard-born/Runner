@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4552845965557520229}
-  - component: {fileID: 4563832952127676329}
-  - component: {fileID: 4571565759725948287}
   - component: {fileID: 4548847510300420099}
   - component: {fileID: 4548847510300420098}
+  - component: {fileID: 4563832952127676329}
+  - component: {fileID: 4571565759725948287}
   - component: {fileID: 4548847510300420109}
   m_Layer: 0
   m_Name: Immune Bonus
@@ -35,6 +35,32 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!114 &4548847510300420099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4549564936910995321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b20b9cfcea148e3a2b5f15b14b39eed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bonusType: 20
+  triggerZone: {fileID: 4548847510300420098}
+--- !u!114 &4548847510300420098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4549564936910995321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cacffea1c764152899d4faf39d48446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!33 &4563832952127676329
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -84,32 +110,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4548847510300420099
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4549564936910995321}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77b292e37c934995be634bf9e2468df0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bonusType: 20
-  triggerZone: {fileID: 4548847510300420098}
---- !u!114 &4548847510300420098
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4549564936910995321}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cacffea1c764152899d4faf39d48446, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &4548847510300420109
 BoxCollider:
   m_ObjectHideFlags: 0

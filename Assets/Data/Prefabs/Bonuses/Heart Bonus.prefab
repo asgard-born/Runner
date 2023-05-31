@@ -9,11 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9034741905266878862}
+  - component: {fileID: 9038702568301947458}
+  - component: {fileID: 6006401549337676242}
   - component: {fileID: 9014747738278273386}
   - component: {fileID: 9024750189691709742}
-  - component: {fileID: 9038702568301947458}
   - component: {fileID: 8969236759076436010}
-  - component: {fileID: 6006401549337676242}
   m_Layer: 0
   m_Name: Heart Bonus
   m_TagString: Untagged
@@ -35,6 +35,32 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!114 &9038702568301947458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9037705865764879512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904e59268e03494892a5dde3811ba71b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bonusType: 10
+  triggerZone: {fileID: 6006401549337676242}
+--- !u!114 &6006401549337676242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9037705865764879512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cacffea1c764152899d4faf39d48446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!33 &9014747738278273386
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -84,20 +110,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &9038702568301947458
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9037705865764879512}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77b292e37c934995be634bf9e2468df0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bonusType: 10
-  triggerZone: {fileID: 6006401549337676242}
 --- !u!65 &8969236759076436010
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -111,15 +123,3 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.7888498, y: 1.7012801, z: 2.0000002}
   m_Center: {x: -0.00000059604645, y: 0, z: 0}
---- !u!114 &6006401549337676242
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9037705865764879512}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cacffea1c764152899d4faf39d48446, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
