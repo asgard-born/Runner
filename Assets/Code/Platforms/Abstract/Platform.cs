@@ -39,21 +39,37 @@ namespace Code.Platforms.Abstract
 
         protected virtual void OnPlayerPassed()
         {
+            _passingZone.SetEnable(false);
             OnPassedByPlayer?.Invoke(this);
         }
 
         protected virtual void OnPlayerInteraction()
         {
+            _interactionZone.SetEnable(false);
+
             if (behaviourType != null)
             {
                 OnInterractedWithPlayer?.Invoke(this);
             }
         }
 
+        public override void Init()
+        {
+            if (_passingZone != null)
+            {
+                _passingZone.SetEnable(true);
+            }
+
+            if (_interactionZone != null)
+            {
+                _interactionZone.SetEnable(true);
+            }
+        }
+
         public void Dispose()
         {
             ReturnToPool();
-            
+
             OnInterractedWithPlayer = null;
             OnPassedByPlayer = null;
         }

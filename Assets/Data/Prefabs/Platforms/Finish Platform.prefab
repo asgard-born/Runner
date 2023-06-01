@@ -108,6 +108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cacffea1c764152899d4faf39d48446, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _trigger: {fileID: 2433885147600201821}
 --- !u!1 &1393729833137221336
 GameObject:
   m_ObjectHideFlags: 0
@@ -162,6 +163,7 @@ MonoBehaviour:
   _passingZone: {fileID: 8794140261088511617}
   _interactionZone: {fileID: 0}
   _respawnPoint: {fileID: 3153172332694602311}
+  _checkingPoint: {fileID: 0}
 --- !u!33 &1764762246578138594
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -264,8 +266,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7446199010036407679}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.2, z: -0.45}
-  m_LocalScale: {x: 0.6666667, y: 12.5, z: 0.083333336}
+  m_LocalPosition: {x: -0.013, y: 1.2, z: -0.423}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1871863919992610458}
   m_RootOrder: 2

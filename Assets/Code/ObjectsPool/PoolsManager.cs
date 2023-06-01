@@ -31,6 +31,7 @@ namespace Code.ObjectsPool
             {
                 result = poolInfo.pool.GetObject();
                 result.gameObject.SetActive(isActive);
+                result.Init();
             }
 
             return result;
@@ -45,6 +46,7 @@ namespace Code.ObjectsPool
                 result = poolInfo.pool.GetObject();
                 result.transform.position = position;
                 result.transform.rotation = rotation;
+                result.Init();
                 result.gameObject.SetActive(isActive);
             }
 

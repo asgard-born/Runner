@@ -13,5 +13,10 @@ namespace Code.ObjectsPool
             transform.position = poolParent.position;
             transform.parent = poolParent;
         }
+
+        public virtual void Init()
+        {
+            
+        }
     }
 }

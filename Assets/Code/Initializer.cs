@@ -215,7 +215,7 @@ namespace Code
             _winScreen.Show(passedPlatforms);
         }
 
-        private void GameOver()
+        private void OnGameLoose()
         {
             _player.Stop();
             _looseScreen.Show();
@@ -263,7 +263,7 @@ namespace Code
                 playerSpawnPoint = _playerSpawnPoint,
                 onLivesChangedCallback = OnLivesChanged,
                 onSpeedChangedCallback = OnSpeedChanged,
-                deathCallback = GameOver
+                deathCallback = OnGameLoose
             };
 
             _player.Init(ctx);

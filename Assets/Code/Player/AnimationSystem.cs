@@ -15,6 +15,7 @@ namespace Code.Player
         {
             _animator.SetBool(_idle, true);
             _animator.SetBool(_running, false);
+            _animator.SetBool(_falling, false);
             _animator.SetBool(_jumping, false);
         }
         

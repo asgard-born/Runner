@@ -26,6 +26,7 @@ namespace Code.Player
         private Action<float, float> _onSpeedChangedCallback;
         public Platform currentPlatform;
         private Coroutine _resumeSpeedRoutine;
+        private CapsuleCollider _collider;
 
         private enum State
         {
@@ -98,6 +99,7 @@ namespace Code.Player
             }
 
             _resumeSpeedRoutine = StartCoroutine(StartResumeSpeed(currentSpeed));
+            _collider.enabled = true;
 
             StartRun();
         }
@@ -112,7 +114,7 @@ namespace Code.Player
             while (time >= 0)
             {
                 time -= Time.deltaTime;
-                _stats.ChangeSpeed(Time.deltaTime);
+                _stats.ChangeSpeed(Time.deltaTime * speedToAdd / _timeSecSpeedRemaining);
 
                 yield return new WaitForEndOfFrame();
             }
@@ -159,6 +161,8 @@ namespace Code.Player
             }
 
             _rigidbody.isKinematic = true;
+            _collider.enabled = false;
+            _currentState = State.None;
             _canRun = false;
 
             if (withAnimation)
@@ -185,6 +189,7 @@ namespace Code.Player
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
+            _collider = GetComponent<CapsuleCollider>();
         }
 
         private void Update()
