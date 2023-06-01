@@ -14,7 +14,7 @@ namespace Code.UI.Screens
 
         public struct Ctx
         {
-            public LooseView viewPrefab;
+            public string viewPath;
             public Transform canvas;
             public Action restartCallback;
             public Action continueCallback;
@@ -29,7 +29,8 @@ namespace Code.UI.Screens
 
         public void Show()
         {
-            _view = Object.Instantiate(_ctx.viewPrefab, _ctx.canvas);
+            var prefab = Resources.Load<LooseView>(_ctx.viewPath);
+            _view = Object.Instantiate(prefab, _ctx.canvas);
             _view.restartButton.onClick.AddListener(() => _onRestartClicked?.Invoke());
             _view.continueButton.onClick.AddListener(() => _onContinueClicked?.Invoke());
         }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Code.Boosters;
@@ -15,7 +14,6 @@ using Code.Player;
 using Code.PlayersInput;
 using Code.Session;
 using Code.UI.Screens;
-using Code.UI.Views;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -33,11 +31,9 @@ namespace Code
         [SerializeField] private LevelConfigs _levelConfigs;
         [SerializeField] private PlayersConfigs _playersConfigs;
         [SerializeField] private PoolsConfigs _poolsConfigs;
+        [SerializeField] private ResourcesConfigs _resourcesConfigs;
 
         [Space, Header("UI")]
-        [SerializeField] private HUDView _hudView;
-        [SerializeField] private WinView _winView;
-        [SerializeField] private LooseView _looseView;
         [SerializeField] private Canvas _canvas;
 
         private SessionListener _sessionListener;
@@ -111,7 +107,7 @@ namespace Code
         {
             var hudCtx = new HUDScreen.Ctx
             {
-                viewPrefab = _hudView,
+                viewPath = _resourcesConfigs.hudViewPath,
                 canvas = _canvas.transform,
                 initLives = _playersConfigs.lives
             };
@@ -122,7 +118,7 @@ namespace Code
             var winCtx = new WinScreen.Ctx
             {
                 blocksToCalculateOnFinish = _levelConfigs.platformsToCalculateOnFinish,
-                viewPrefab = _winView,
+                viewPath = _resourcesConfigs.winViewPath,
                 canvas = _canvas.transform,
                 nextLevelCallback = NextLevel
             };
@@ -131,7 +127,7 @@ namespace Code
 
             var looseCtx = new LooseScreen.Ctx
             {
-                viewPrefab = _looseView,
+                viewPath = _resourcesConfigs.looseViewPath,
                 canvas = _canvas.transform,
                 continueCallback = Respawn,
                 restartCallback = RestartLevel
@@ -254,7 +250,9 @@ namespace Code
 
         private void InitPlayer()
         {
-            _player = Instantiate(_playersConfigs.playerPrefab);
+            var prefab = Resources.Load<PlayerController>(_resourcesConfigs.characterPath);
+
+            _player = Instantiate(prefab);
             _player.transform.position = _playerSpawnPoint.transform.position + _playerSpawnOffset;
 
             var ctx = new PlayerController.Ctx

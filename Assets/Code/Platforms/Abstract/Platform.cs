@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Code.Platforms.Abstract
 {
-    public abstract class Platform : PoolObject, IDisposable
+    public abstract class Platform : PoolObject, IDisposable, IEquatable<Platform>
     {
         [SerializeField] protected PlatformType _platformType;
         [SerializeField] private TriggerZone _passingZone;
@@ -72,6 +72,50 @@ namespace Code.Platforms.Abstract
 
             OnInterractedWithPlayer = null;
             OnPassedByPlayer = null;
+        }
+
+        public bool Equals(Platform other)
+        {
+            if (ReferenceEquals(null, other))
+                return false;
+
+            if (ReferenceEquals(this, other))
+                return true;
+
+            return _platformType == other._platformType && _passingZone == other._passingZone && _interactionZone == other._interactionZone && _respawnPoint == other.respawnPoint &&
+                   _checkingPoint == other._checkingPoint && Equals(OnInterractedWithPlayer, other.OnInterractedWithPlayer) && Equals(OnPassedByPlayer, other.OnPassedByPlayer) && behaviourType == other.behaviourType;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+                return false;
+
+            if (ReferenceEquals(this, obj))
+                return true;
+
+            if (obj.GetType() != this.GetType())
+                return false;
+
+            return Equals((Platform)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = base.GetHashCode();
+                hashCode = (hashCode * 397) ^ (int)_platformType;
+                hashCode = (hashCode * 397) ^ (_passingZone != null ? _passingZone.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (_interactionZone != null ? _interactionZone.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (_respawnPoint != null ? _respawnPoint.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (_checkingPoint != null ? _checkingPoint.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (OnInterractedWithPlayer != null ? OnInterractedWithPlayer.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (OnPassedByPlayer != null ? OnPassedByPlayer.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (behaviourType != null ? behaviourType.GetHashCode() : 0);
+
+                return hashCode;
+            }
         }
     }
 }

@@ -501,9 +501,7 @@ MonoBehaviour:
   _levelConfigs: {fileID: 11400000, guid: 61e4b77eb1a9b6e4dbf380f96c6e8aa1, type: 2}
   _playersConfigs: {fileID: 11400000, guid: 642e5374e978199448a2faecc43ba12b, type: 2}
   _poolsConfigs: {fileID: 11400000, guid: eec40383e087af94b887a22466782dd8, type: 2}
-  _hudView: {fileID: 2720068636946032386, guid: 3463b28872b4cb04cb039df710e47471, type: 3}
-  _winView: {fileID: 4705802543313065470, guid: 9242b6cb0bf56d245901e3c6791a2163, type: 3}
-  _looseView: {fileID: 675549156230755572, guid: 1712ba48572872440a94ea990e527bc1, type: 3}
+  _resourcesConfigs: {fileID: 11400000, guid: 89f4b89c67675e447bee0a280f7ae1fd, type: 2}
   _canvas: {fileID: 2086679329}
 --- !u!4 &1528448815
 Transform:

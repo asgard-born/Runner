@@ -18,7 +18,7 @@ namespace Code.UI.Screens
         public struct Ctx
         {
             public HashSet<PlatformType> blocksToCalculateOnFinish;
-            public WinView viewPrefab;
+            public string viewPath;
             public Transform canvas;
             public Action nextLevelCallback;
         }
@@ -31,9 +31,10 @@ namespace Code.UI.Screens
 
         public void Show(ConcurrentDictionary<PlatformType, int> platformsCount)
         {
+            var prefab = Resources.Load<WinView>(_ctx.viewPath);
+            _view = Object.Instantiate(prefab, _ctx.canvas);
+            
             var blocksToShow = platformsCount.Where(x => _ctx.blocksToCalculateOnFinish.Contains(x.Key)).ToDictionary(x => x.Key, x => x.Value);
-
-            _view = Object.Instantiate(_ctx.viewPrefab, _ctx.canvas);
             _view.Init(blocksToShow);
             _view.nextLevelButton.onClick.AddListener(() => _onNextLevelClicked?.Invoke());
         }

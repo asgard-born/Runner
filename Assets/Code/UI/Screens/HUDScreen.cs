@@ -10,7 +10,7 @@ namespace Code.UI.Screens
 
         public struct Ctx
         {
-            public HUDView viewPrefab;
+            public string viewPath;
             public Transform canvas;
             public int initLives;
         }
@@ -22,7 +22,8 @@ namespace Code.UI.Screens
 
         public void Show()
         {
-            _view = Object.Instantiate(_ctx.viewPrefab, _ctx.canvas);
+            var prefab = Resources.Load<HUDView>(_ctx.viewPath);
+            _view = Object.Instantiate(prefab, _ctx.canvas);
             _view.Show(_ctx.initLives);
         }
 

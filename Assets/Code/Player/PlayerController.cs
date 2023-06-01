@@ -74,16 +74,22 @@ namespace Code.Player
             var getNext = false;
 
             Platform platformToSpawn = currentPlatform;
-            LinkedListNode<Platform> curNode = platforms.Find(currentPlatform).Next;
 
-            while (curNode != null && (curNode.Value is AbyssPlatfrom || curNode.Value is AbyssLargePlatform))
+            if (platforms.Contains(currentPlatform))
             {
+                LinkedListNode<Platform> curNode = platforms.Find(currentPlatform);
+
                 curNode = curNode.Next;
-            }
 
-            if (curNode != null)
-            {
-                platformToSpawn = curNode.Value;
+                while (curNode != null && (curNode.Value is AbyssPlatfrom || curNode.Value is AbyssLargePlatform))
+                {
+                    curNode = curNode.Next;
+                }
+
+                if (curNode != null)
+                {
+                    platformToSpawn = curNode.Value;
+                }
             }
 
             transform.position = platformToSpawn.respawnPoint.position;
