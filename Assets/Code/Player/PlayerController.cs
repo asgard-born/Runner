@@ -124,12 +124,12 @@ namespace Code.Player
 
                 yield return new WaitForEndOfFrame();
             }
-
-            ;
         }
 
         public void TryJump()
         {
+            if (_currentState == State.None) return;
+            
             if ((_currentJumpingCount == 0 && !IsGrounded()) || _currentJumpingCount >= _stats.maxJumpingTimes)
             {
                 return;
