@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c16d587bcc84d1b9e51a07744152866, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: 1.5
+  value: 1.2
   boosterType: 30
   triggerZone: {fileID: 8232497718032219905}
 --- !u!114 &8232497718032219905
@@ -62,6 +62,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cacffea1c764152899d4faf39d48446, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _trigger: {fileID: 0}
 --- !u!33 &1395747244954949126
 MeshFilter:
   m_ObjectHideFlags: 0
