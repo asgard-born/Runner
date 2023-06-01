@@ -9,7 +9,7 @@ namespace Code.Platforms.Concrete
         {
             base.Awake();
 
-            _behaviourType = typeof(FenceInteractingBehaviour);
+            behaviourType = typeof(FenceInteractingBehaviour);
         }
     }
 }

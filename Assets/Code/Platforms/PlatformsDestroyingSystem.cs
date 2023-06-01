@@ -9,7 +9,7 @@ namespace Code.Platforms
     {
         private readonly LinkedList<Platform> _platforms;
         private readonly LevelConfigs _levelConfigs;
-        private bool _hasStarted;
+        private bool _canRemove = true;
 
         public struct Ctx
         {
@@ -25,22 +25,33 @@ namespace Code.Platforms
 
         public async void StartDestroyingCycleAsync()
         {
-            if (_hasStarted) return;
-
-            _hasStarted = true;
-
             while (true)
             {
+                if (!_canRemove)
+                {
+                    await UniTask.Delay(500);
+                    continue;
+                }
+
                 if (_platforms.Count > _levelConfigs.maxPlatformsInTime)
                 {
                     var firstPlatform = _platforms.First.Value;
-                    firstPlatform.ReturnToPool();
                     firstPlatform.Dispose();
                     _platforms.RemoveFirst();
                 }
 
                 await UniTask.Delay((int)(_levelConfigs.destroyPlatformsDelaySec * 1000));
             }
+        }
+
+        public void Pause()
+        {
+            _canRemove = false;
+        }
+
+        public void Resume()
+        {
+            _canRemove = true;
         }
     }
 }

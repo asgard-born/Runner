@@ -1,11 +1,14 @@
 using System.Collections.Generic;
 using Code.Platforms.Essences;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Code.UI.Views
 {
     public class WinView : MonoBehaviour
     {
+        public Button nextLevelButton;
+        
         [SerializeField] private Transform _content;
         [SerializeField] private PlatformScoreItemUI _platformScoreItem;
 

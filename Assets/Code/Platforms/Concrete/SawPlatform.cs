@@ -9,7 +9,7 @@ namespace Code.Platforms.Concrete
         {
             base.Awake();
 
-            _behaviourType = typeof(SawInteractingBehaviour);
+            behaviourType = typeof(SawInteractingBehaviour);
         }
     }
 }

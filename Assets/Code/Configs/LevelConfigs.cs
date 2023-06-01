@@ -25,7 +25,7 @@ namespace Code.Configs
         public PlatformChance[] platformChances;
         
         [Space, Header("Start")]
-        public float runDelaySec = 1.2f;
+        public float startDelaySec = 1.2f;
         
         [Space, Header("Bonuses")]
         public BonusChance[] bonusChances;

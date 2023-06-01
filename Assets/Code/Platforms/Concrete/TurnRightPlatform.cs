@@ -7,7 +7,7 @@ namespace Code.Platforms.Concrete
     {
         private void Start()
         {
-            _behaviourType = typeof(TurnRightInteractingBehaviour);
+            behaviourType = typeof(TurnRightInteractingBehaviour);
         }
     }
 }

@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: LevelConfigs
   m_EditorClassIdentifier: 
   firstGuaranteedPlatformTypes: 0a
-  cannotDublicatePlatformTypes: 141e32
+  cannotDublicatePlatformTypes: 141e
   platformTypesToCalculateOnFinish: 141e2832
   firstGuaranteedPlatformsCount: 3
   startPlatformsCount: 5
   spawnPlatformsDelaySec: 0.5
-  destroyPlatformsDelaySec: 1.5
-  allPlatformsCount: 25
+  destroyPlatformsDelaySec: 2
+  allPlatformsCount: 30
   maxPlatformsInTime: 10
   finishPlatform: {fileID: 1393729833137221337, guid: 80617fa9ffa8ea642a1bcdd159001322, type: 3}
   platformChances:
@@ -34,14 +34,14 @@ MonoBehaviour:
   - platform: {fileID: 3297746797329169710, guid: 9aabaed72b57fec48a61fc76979f600a, type: 3}
     chance: 0.08
   - platform: {fileID: 4760468436822903129, guid: a6da067a0a83f7e42861c9930ec5379d, type: 3}
-    chance: 0.025
+    chance: 0.08
   - platform: {fileID: 6116486953119759579, guid: 4e2674c06505c2445ab690b5f8af8744, type: 3}
-    chance: 0.025
-  runDelaySec: 1.2
+    chance: 0.08
+  startDelaySec: 1.2
   bonusChances:
   - _booster: {fileID: 9038702568301947458, guid: bf1d4d6a24533824c9eca36080a7fade, type: 3}
     chance: 0.2
   - _booster: {fileID: 4548847510300420099, guid: 4a420e4493bcab042bec946ade30416d, type: 3}
-    chance: 0.3
+    chance: 0.1
   - _booster: {fileID: 7184905246765966952, guid: fc6dfbac4de23ae4a8be89cb76704a9f, type: 3}
-    chance: 0.2
+    chance: 0.1

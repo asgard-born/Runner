@@ -18,6 +18,7 @@ using Code.UI.Screens;
 using Code.UI.Views;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Code
 {
@@ -40,7 +41,7 @@ namespace Code
         [SerializeField] private Canvas _canvas;
 
         private SessionListener _sessionListener;
-        private Transform _playerSpawnPoint;
+        private Platform _playerSpawnPoint;
         private PlayerController _player;
         private PlatformsSpawningSystem _platformsSpawningSystem;
         private PlatformsDestroyingSystem _platformsDestroyingSystem;
@@ -65,7 +66,7 @@ namespace Code
 
         private async void StartLevelAsync()
         {
-            await UniTask.Delay((int)(_levelConfigs.runDelaySec * 1000));
+            await UniTask.Delay((int)(_levelConfigs.startDelaySec * 1000));
 
             _player.StartRun();
         }
@@ -78,7 +79,7 @@ namespace Code
             InitPlayer();
             InitCamera();
             InitInputSystem();
-            InitUI();
+            InitScreens();
             InitInteractingBehaviours();
         }
 
@@ -91,16 +92,22 @@ namespace Code
                 
             _spawnBonusSystem = new SpawnBonusSystem(ctx);
         }
+        
+        private void Respawn()
+        {
+            _player.Respawn(_platforms);
+            _platformsSpawningSystem.Resume();
+            _platformsDestroyingSystem.Resume();
+            
+            _looseScreen.Hide();
+        }
 
         private void RestartLevel()
         {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
-        private void FinishLevel()
-        {
-        }
-
-        private void InitUI()
+        private void InitScreens()
         {
             var hudCtx = new HUDScreen.Ctx
             {
@@ -117,6 +124,7 @@ namespace Code
                 blocksToCalculateOnFinish = _levelConfigs.platformsToCalculateOnFinish,
                 viewPrefab = _winView,
                 canvas = _canvas.transform,
+                nextLevelCallback = NextLevel
             };
 
             _winScreen = new WinScreen(winCtx);
@@ -125,9 +133,16 @@ namespace Code
             {
                 viewPrefab = _looseView,
                 canvas = _canvas.transform,
+                continueCallback = Respawn,
+                restartCallback = RestartLevel
             };
 
             _looseScreen = new LooseScreen(looseCtx);
+        }
+
+        private void NextLevel()
+        {
+            RestartLevel();
         }
 
         private void InitInputSystem()
@@ -155,7 +170,7 @@ namespace Code
             };
 
             _platformsSpawningSystem = new PlatformsSpawningSystem(spawningSystemCtx);
-            _playerSpawnPoint = _platformsSpawningSystem.SpawnImmediately(_platformsParent).transform;
+            _playerSpawnPoint = _platformsSpawningSystem.SpawnImmediately(_platformsParent);
             _platformsSpawningSystem.StartSpawningCycleAsync(_platformsParent);
 
             var destroyingSystemCtx = new PlatformsDestroyingSystem.Ctx
@@ -176,9 +191,10 @@ namespace Code
             }
         }
 
-        private void OnPlayerPassed(PlatformType passedType)
+        private void OnPlayerPassed(Platform passedPlatform)
         {
-            _sessionListener.AddPassedPlatform(passedType);
+            _sessionListener.AddPassedPlatform(passedPlatform.platformType);
+            _player.currentPlatform = passedPlatform;
         }
 
         private void InitSession()
@@ -199,10 +215,13 @@ namespace Code
             _winScreen.Show(passedPlatforms);
         }
 
-        private void OnGameLoose()
+        private void GameOver()
         {
             _player.Stop();
             _looseScreen.Show();
+            
+            _platformsSpawningSystem.Pause();
+            _platformsDestroyingSystem.Pause();
         }
 
         private void InitCamera()
@@ -220,8 +239,6 @@ namespace Code
         {
             _interactingBehaviours = new HashSet<PlatformInteractingBehaviour>
             {
-                new AbyssInteractingBehaviour(OnGameLoose),
-                new AbyssLargeInteractingBehaviour(OnGameLoose),
                 new FenceInteractingBehaviour(_player),
                 new SawInteractingBehaviour(_player),
                 new TurnLeftInteractingBehaviour(_player),
@@ -229,16 +246,16 @@ namespace Code
             };
         }
 
-        private void OnPlayerInterracted(Type behaviourType)
+        private void OnPlayerInterracted(Platform platform)
         {
-            var behaviour = _interactingBehaviours.FirstOrDefault(s => s.GetType() == behaviourType);
-            behaviour.InteractWithPlayer();
+            var behaviour = _interactingBehaviours.FirstOrDefault(s => s.GetType() == platform.behaviourType);
+            behaviour.InteractWithPlayer(platform);
         }
 
         private void InitPlayer()
         {
             _player = Instantiate(_playersConfigs.playerPrefab);
-            _player.transform.position = _playerSpawnPoint.position + _playerSpawnOffset;
+            _player.transform.position = _playerSpawnPoint.transform.position + _playerSpawnOffset;
 
             var ctx = new PlayerController.Ctx
             {
@@ -246,7 +263,7 @@ namespace Code
                 playerSpawnPoint = _playerSpawnPoint,
                 onLivesChangedCallback = OnLivesChanged,
                 onSpeedChangedCallback = OnSpeedChanged,
-                deathCallback = OnGameLoose
+                deathCallback = GameOver
             };
 
             _player.Init(ctx);

@@ -40,7 +40,10 @@ namespace Code.UI.Screens
 
         public void Hide()
         {
-            Object.Destroy(_view);
+            if (_view != null)
+            {
+                Object.Destroy(_view.gameObject);
+            }
         }
     }
 }

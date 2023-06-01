@@ -1,4 +1,5 @@
-﻿using Code.PlatformsBehaviour.Abstract;
+﻿using Code.Platforms.Abstract;
+using Code.PlatformsBehaviour.Abstract;
 using Code.Player;
 
 namespace Code.PlatformsBehaviour
@@ -12,7 +13,7 @@ namespace Code.PlatformsBehaviour
             _player = player;
         }
 
-        public override void InteractWithPlayer()
+        public override void InteractWithPlayer(Platform platform)
         {
             _player.RotateRight();
         }

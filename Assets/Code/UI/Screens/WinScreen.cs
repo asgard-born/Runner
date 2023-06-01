@@ -1,9 +1,11 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Code.Platforms.Essences;
 using Code.UI.Views;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Code.UI.Screens
 {
@@ -11,17 +13,20 @@ namespace Code.UI.Screens
     {
         private readonly Ctx _ctx;
         private WinView _view;
+        private Action _onNextLevelClicked;
 
         public struct Ctx
         {
-            public HashSet<PlatformType> blocksToCalculateOnFinish; 
+            public HashSet<PlatformType> blocksToCalculateOnFinish;
             public WinView viewPrefab;
             public Transform canvas;
+            public Action nextLevelCallback;
         }
 
         public WinScreen(Ctx ctx)
         {
             _ctx = ctx;
+            _onNextLevelClicked = _ctx.nextLevelCallback;
         }
 
         public void Show(ConcurrentDictionary<PlatformType, int> platformsCount)
@@ -30,11 +35,15 @@ namespace Code.UI.Screens
 
             _view = Object.Instantiate(_ctx.viewPrefab, _ctx.canvas);
             _view.Init(blocksToShow);
+            _view.nextLevelButton.onClick.AddListener(() => _onNextLevelClicked?.Invoke());
         }
 
         public void Hide()
         {
-            Object.Destroy(_view);
+            if (_view != null)
+            {
+                Object.Destroy(_view.gameObject);
+            }
         }
     }
 }

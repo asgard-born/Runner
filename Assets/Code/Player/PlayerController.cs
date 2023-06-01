@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using Code.Boosters.Essences;
 using Code.Configs;
+using Code.Platforms.Abstract;
+using Code.Platforms.Concrete;
 using UnityEngine;
 
 namespace Code.Player
@@ -20,6 +24,8 @@ namespace Code.Player
 
         private Action<float> _onLivesChangedCallback;
         private Action<float, float> _onSpeedChangedCallback;
+        public Platform currentPlatform;
+        private Coroutine _resumeSpeedRoutine;
 
         private enum State
         {
@@ -36,12 +42,14 @@ namespace Code.Player
             public Action<float> onLivesChangedCallback;
             public Action<float, float> onSpeedChangedCallback;
             public Action deathCallback;
-            public Transform playerSpawnPoint;
+            public Platform playerSpawnPoint;
         }
 
         public void Init(Ctx ctx)
         {
             _ctx = ctx;
+
+            currentPlatform = _ctx.playerSpawnPoint;
 
             var playerStatsCtx = new PlayerStats.Ctx
             {
@@ -54,6 +62,62 @@ namespace Code.Player
             _onLivesChangedCallback = ctx.onLivesChangedCallback;
             _onSpeedChangedCallback = ctx.onSpeedChangedCallback;
             _immuneObject.SetActive(false);
+        }
+
+        public void Respawn(LinkedList<Platform> platforms)
+        {
+            AddLives(1);
+            _immuneObject.SetActive(false);
+            _currentJumpingCount = 0;
+
+            var getNext = false;
+
+            Platform platformToSpawn = currentPlatform;
+            LinkedListNode<Platform> curNode = platforms.Find(currentPlatform).Next;
+
+            while (curNode != null && (curNode.Value is AbyssPlatfrom || curNode.Value is AbyssLargePlatform))
+            {
+                curNode = curNode.Next;
+            }
+
+            if (curNode != null)
+            {
+                platformToSpawn = curNode.Value;
+            }
+
+            transform.position = platformToSpawn.respawnPoint.position;
+            _rigidbody.isKinematic = false;
+
+            var currentSpeed = _stats.currentSpeed;
+            var slowSpeed = currentSpeed / 2;
+            _stats.SetSpeed(slowSpeed);
+
+            if (_resumeSpeedRoutine != null)
+            {
+                StopCoroutine(_resumeSpeedRoutine);
+            }
+
+            _resumeSpeedRoutine = StartCoroutine(StartResumeSpeed(currentSpeed));
+
+            StartRun();
+        }
+
+        private const float _timeSecSpeedRemaining = 2.5f;
+
+        private IEnumerator StartResumeSpeed(float previousSpeed)
+        {
+            var speedToAdd = previousSpeed - _stats.currentSpeed;
+            var time = _timeSecSpeedRemaining;
+
+            while (time >= 0)
+            {
+                time -= Time.deltaTime;
+                _stats.ChangeSpeed(Time.deltaTime);
+
+                yield return new WaitForEndOfFrame();
+            }
+
+            ;
         }
 
         public void TryJump()
@@ -72,6 +136,7 @@ namespace Code.Player
 
         public void StartRun()
         {
+            _currentState = State.Running;
             _canRun = true;
             _animationSystem.PlayRun();
         }
@@ -88,6 +153,12 @@ namespace Code.Player
 
         public void Stop(bool withAnimation = false)
         {
+            if (_resumeSpeedRoutine != null)
+            {
+                StopCoroutine(_resumeSpeedRoutine);
+            }
+
+            _rigidbody.isKinematic = true;
             _canRun = false;
 
             if (withAnimation)
@@ -99,14 +170,15 @@ namespace Code.Player
         public void TryHit()
         {
             if (_stats.immuneValue > 0) return;
+            if (_stats.currentLives == 0) return;
 
             _stats.RemoveLifes(1);
             _animationSystem.PlayDamage();
             _onLivesChangedCallback?.Invoke(-1);
 
-            if (_stats.currentLives <= 0)
+            if (_stats.currentLives == 0)
             {
-                _ctx.deathCallback?.Invoke();
+                Death();
             }
         }
 
@@ -172,9 +244,22 @@ namespace Code.Player
 
                 case State.FallingOut:
                     _animationSystem.PlayFalling();
+                    Death();
+                    _currentState = State.None;
 
                     break;
             }
+        }
+
+        private void Death()
+        {
+            if (_stats.currentLives > 0)
+            {
+                _onLivesChangedCallback?.Invoke(-_stats.currentLives);
+                _stats.RemoveLifes(_stats.currentLives);
+            }
+
+            _ctx.deathCallback?.Invoke();
         }
 
         private void FixedUpdate()

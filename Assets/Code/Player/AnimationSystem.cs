@@ -9,6 +9,7 @@ namespace Code.Player
         private static readonly int _running = Animator.StringToHash("Running");
         private static readonly int _jumping = Animator.StringToHash("Jumping");
         private static readonly int _falling = Animator.StringToHash("Falling");
+        private static readonly int _damage = Animator.StringToHash("Damage");
 
         public void PlayIdle()
         {
@@ -27,7 +28,7 @@ namespace Code.Player
 
         public void PlayDamage()
         {
-            
+            _animator.SetTrigger(_damage);
         }
         
         public void PlayJump()

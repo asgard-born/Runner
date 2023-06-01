@@ -11,6 +11,11 @@ namespace Code.Platforms.Abstract
         [SerializeField] protected PlatformType _platformType;
         [SerializeField] private TriggerZone _passingZone;
         [SerializeField] private TriggerZone _interactionZone;
+        [SerializeField] private Transform _respawnPoint;
+        [SerializeField] private Transform _checkingPoint;
+
+        public Transform respawnPoint => _respawnPoint;
+        public Transform checkingPoint => _checkingPoint;
 
         protected virtual void Awake()
         {
@@ -25,28 +30,30 @@ namespace Code.Platforms.Abstract
             }
         }
 
-        protected Type _behaviourType;
+        public Type behaviourType { get; protected set; }
 
-        public Action<Type> OnInterractedWithPlayer;
-        public Action<PlatformType> OnPassedByPlayer;
+        public Action<Platform> OnInterractedWithPlayer;
+        public Action<Platform> OnPassedByPlayer;
 
         public PlatformType platformType => _platformType;
 
         protected virtual void OnPlayerPassed()
         {
-            OnPassedByPlayer?.Invoke(_platformType);
+            OnPassedByPlayer?.Invoke(this);
         }
 
         protected virtual void OnPlayerInteraction()
         {
-            if (_behaviourType != null)
+            if (behaviourType != null)
             {
-                OnInterractedWithPlayer?.Invoke(_behaviourType);
+                OnInterractedWithPlayer?.Invoke(this);
             }
         }
 
         public void Dispose()
         {
+            ReturnToPool();
+            
             OnInterractedWithPlayer = null;
             OnPassedByPlayer = null;
         }

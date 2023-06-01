@@ -1,4 +1,5 @@
 ﻿using Code.Configs;
+using Code.Platforms.Abstract;
 using UnityEngine;
 
 namespace Code.Player
@@ -12,6 +13,7 @@ namespace Code.Player
 
         public int maxJumpingTimes { get; private set; }
         public float immuneValue;
+        public float resumeSpeedValue;
 
         public int currentLives { get; private set; }
 
@@ -20,7 +22,7 @@ namespace Code.Player
         public struct Ctx
         {
             public PlayersConfigs playersConfigs;
-            public Transform playerSpawnPoint;
+            public Platform playerSpawnPoint;
         }
 
         public PlayerStats(Ctx ctx)
@@ -31,13 +33,13 @@ namespace Code.Player
             maxJumpingTimes = _ctx.playersConfigs.maxJumpingTimes;
             initialSpeed = currentSpeed = _ctx.playersConfigs.initialSpeed;
             jumpForce = _ctx.playersConfigs.jumpForce;
-            valueYToFallOut = _ctx.playerSpawnPoint.position.y - 2f;
+            valueYToFallOut = _ctx.playerSpawnPoint.transform.position.y - 2f;
         }
 
         public void AddLives(int value)
         {
             value = Mathf.Abs(value);
-            
+
             currentLives += value;
         }
 
@@ -50,6 +52,11 @@ namespace Code.Player
         public void ChangeSpeed(float value)
         {
             currentSpeed += value;
+        }
+        
+        public void SetSpeed(float value)
+        {
+            currentSpeed = value;
         }
 
         public void SetDefaultSpeed()

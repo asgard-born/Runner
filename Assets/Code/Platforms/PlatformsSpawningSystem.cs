@@ -24,8 +24,11 @@ namespace Code.Platforms
         private Platform _lastPlatform;
         private readonly Ctx _ctx;
         private readonly Action<Platform> _spawnedCallback;
-        private readonly Action<Type> _interactionCallback;
-        private readonly Action<PlatformType> _passingCallback;
+        private readonly Action<Platform> _interactionCallback;
+        private readonly Action<Platform> _passingCallback;
+        private bool _canSpawn = true;
+        private static int _minDistanceForSides = 60;
+        private static int _minDistanceForFront = 30;
 
         public struct Ctx
         {
@@ -33,8 +36,8 @@ namespace Code.Platforms
             public LevelConfigs levelConfigs;
             public SessionListener sessionListener;
             public Action<Platform> spawnedCallback;
-            public Action<Type> interactionCallback;
-            public Action<PlatformType> passingCallback;
+            public Action<Platform> interactionCallback;
+            public Action<Platform> passingCallback;
         }
 
         public PlatformsSpawningSystem(Ctx ctx)
@@ -45,6 +48,16 @@ namespace Code.Platforms
             _passingCallback = ctx.passingCallback;
             _platforms = ctx.platforms;
             _levelConfigs = _ctx.levelConfigs;
+        }
+
+        public void Pause()
+        {
+            _canSpawn = false;
+        }
+
+        public void Resume()
+        {
+            _canSpawn = true;
         }
 
         public Platform SpawnImmediately(Transform parent)
@@ -77,6 +90,13 @@ namespace Code.Platforms
         {
             while (_spawnCount < _levelConfigs.allPlatformsCount)
             {
+                if (!_canSpawn)
+                {
+                    await UniTask.Delay(500);
+
+                    continue;
+                }
+
                 if (_levelConfigs.allPlatformsCount - _spawnCount > 1)
                 {
                     await CreateAveragePlatformAsync(parent);
@@ -90,18 +110,82 @@ namespace Code.Platforms
 
         private async Task CreateAveragePlatformAsync(Transform parent)
         {
-            var cannotDublicatePlatforms = _levelConfigs.cannotDublicatePlatforms;
+            var exceptions = _levelConfigs.cannotDublicatePlatforms;
 
-            if (cannotDublicatePlatforms.Contains(_lastPlatform.platformType))
+            if (exceptions.Contains(_lastPlatform.platformType))
             {
-                _lastPlatform = CreatePlatformWithRestrictions(parent, cannotDublicatePlatforms, false);
+                if (CheckForCrossfade(_lastPlatform.checkingPoint.forward, _minDistanceForFront) > 0)
+                {
+                    var distanceForLeft = CheckForCrossfade(-_lastPlatform.checkingPoint.right, _minDistanceForSides);
+                    var distanceForRight = CheckForCrossfade(_lastPlatform.checkingPoint.right, _minDistanceForSides);
+
+                    HashSet<PlatformType> allowed;
+
+                    if (distanceForLeft > distanceForRight)
+                    {
+                        allowed = new HashSet<PlatformType> { PlatformType.TurnLeft };
+                    }
+                    else
+                    {
+                        if (distanceForLeft == 0 && distanceForRight == 0)
+                        {
+                            allowed = new HashSet<PlatformType> { PlatformType.TurnLeft, PlatformType.TurnRight };
+                        }
+                        else
+                        {
+                            allowed = new HashSet<PlatformType> { PlatformType.TurnRight };
+                        }
+                    }
+
+                    _lastPlatform = CreatePlatformWithRestrictions(parent, allowed, true);
+                }
+                else
+                {
+                    var restrictions = CheckForSidesCrossfade(out var hasExceptions);
+
+                    if (hasExceptions)
+                    {
+                        exceptions.UnionWith(restrictions);
+                    }
+
+                    _lastPlatform = CreatePlatformWithRestrictions(parent, exceptions, false);
+                }
             }
             else
             {
-                _lastPlatform = CreatePlatform(parent);
+                var restrictions = CheckForSidesCrossfade(out var hasExceptions);
+
+                if (hasExceptions)
+                {
+                    _lastPlatform = CreatePlatformWithRestrictions(parent, restrictions, false);
+                }
+                else
+                {
+                    _lastPlatform = CreatePlatform(parent);
+                }
             }
 
             await UniTask.Delay((int)(_ctx.sessionListener.spawnPlatformsDelaySec * 1000));
+        }
+
+        private HashSet<PlatformType> CheckForSidesCrossfade(out bool hasExceptions)
+        {
+            var restrictions = new HashSet<PlatformType>();
+            hasExceptions = false;
+
+            if (CheckForCrossfade(_lastPlatform.checkingPoint.right, _minDistanceForSides) > 0)
+            {
+                hasExceptions = true;
+                restrictions.Add(PlatformType.TurnRight);
+            }
+
+            if (CheckForCrossfade(-_lastPlatform.checkingPoint.right, _minDistanceForSides) > 0)
+            {
+                hasExceptions = true;
+                restrictions.Add(PlatformType.TurnLeft);
+            }
+
+            return restrictions;
         }
 
         private Platform CreatePlatformWithRestrictions(Transform parent, HashSet<PlatformType> types, bool isAvailable)
@@ -115,6 +199,24 @@ namespace Code.Platforms
             }
 
             return Spawn(platformToSpawn, parent);
+        }
+
+        private float CheckForCrossfade(Vector3 direction, int distance)
+        {
+            var lastPlatform = _platforms.Last.Value;
+
+            if (Physics.Raycast(lastPlatform.transform.position, direction, out RaycastHit hitInfo, distance))
+            {
+                var platformInParent = hitInfo.transform.GetComponentInParent<Platform>();
+                var platform = hitInfo.transform.GetComponent<Platform>();
+
+                if (platformInParent != null || platform != null)
+                {
+                    return hitInfo.distance;
+                }
+            }
+
+            return 0;
         }
 
         private Platform CreatePlatform(Transform parent)
