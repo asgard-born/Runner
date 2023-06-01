@@ -19,7 +19,7 @@ MonoBehaviour:
   startPlatformsCount: 5
   spawnPlatformsDelaySec: 0.5
   destroyPlatformsDelaySec: 2
-  allPlatformsCount: 30
+  allPlatformsCount: 15
   maxPlatformsInTime: 10
   finishPlatform: {fileID: 1393729833137221337, guid: 80617fa9ffa8ea642a1bcdd159001322, type: 3}
   platformChances:
