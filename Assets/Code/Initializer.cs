@@ -27,14 +27,12 @@ namespace Code
         [SerializeField] private CameraFollowSystem _cameraSystem;
         [SerializeField] private InputSystem _inputSystem;
 
-        [Space, Header("Configs")]
-        [SerializeField] private LevelConfigs _levelConfigs;
+        [Space, Header("Configs")] [SerializeField] private LevelConfigs _levelConfigs;
         [SerializeField] private PlayersConfigs _playersConfigs;
         [SerializeField] private PoolsConfigs _poolsConfigs;
         [SerializeField] private ResourcesConfigs _resourcesConfigs;
 
-        [Space, Header("UI")]
-        [SerializeField] private Canvas _canvas;
+        [Space, Header("UI")] [SerializeField] private Canvas _canvas;
 
         private SessionListener _sessionListener;
         private Platform _playerSpawnPoint;
@@ -42,9 +40,10 @@ namespace Code
         private PlatformsSpawningSystem _platformsSpawningSystem;
         private PlatformsDestroyingSystem _platformsDestroyingSystem;
         private SpawnBonusSystem _spawnBonusSystem;
-        
+
         private HashSet<PlatformInteractingBehaviour> _interactingBehaviours;
         private readonly LinkedList<Platform> _platforms = new LinkedList<Platform>();
+        private ConcurrentDictionary<PlatformType, int> _passedPlatformsDictionary = new ConcurrentDictionary<PlatformType, int>();
 
         private HUDScreen _hudScreen;
         private LooseScreen _looseScreen;
@@ -85,16 +84,16 @@ namespace Code
             {
                 levelConfigs = _levelConfigs
             };
-                
+
             _spawnBonusSystem = new SpawnBonusSystem(ctx);
         }
-        
+
         private void Respawn()
         {
             _player.Respawn(_platforms);
             _platformsSpawningSystem.Resume();
             _platformsDestroyingSystem.Resume();
-            
+
             _looseScreen.Hide();
         }
 
@@ -191,31 +190,35 @@ namespace Code
         {
             _sessionListener.AddPassedPlatform(passedPlatform.platformType);
             _player.currentPlatform = passedPlatform;
+
+            if (passedPlatform is FinishPlatform)
+            {
+                OnGameWin();
+            }
         }
 
         private void InitSession()
         {
             var ctx = new SessionListener.Ctx
             {
+                passedPlatformsDictionary = _passedPlatformsDictionary,
                 levelConfigs = _levelConfigs
             };
 
             _sessionListener = new SessionListener(ctx);
-
-            _sessionListener.onWin += OnGameWin;
         }
 
-        private void OnGameWin(ConcurrentDictionary<PlatformType, int> passedPlatforms)
+        private void OnGameWin()
         {
             _player.Stop(true);
-            _winScreen.Show(passedPlatforms);
+            _winScreen.Show(_passedPlatformsDictionary);
         }
 
         private void OnGameLoose()
         {
             _player.Stop();
             _looseScreen.Show();
-            
+
             _platformsSpawningSystem.Pause();
             _platformsDestroyingSystem.Pause();
         }
