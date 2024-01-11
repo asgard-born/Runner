@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Code.UI.Views
+namespace UI.Views
 {
     public class LooseView : MonoBehaviour
     {

@@ -2,7 +2,7 @@
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Code.ObjectsPool
+namespace ObjectsPool
 {
     public class Pool
     {

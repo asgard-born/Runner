@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
+using UnityEngine.AddressableAssets;
 
-namespace Code.Configs
+namespace Configs
 {
     [CreateAssetMenu(menuName = "Configs/ResourcesConfigs", fileName = "ResourcesConfigs")]
     public class ResourcesConfigs : ScriptableObject
     {
-        public string characterPath;
-        public string hudViewPath;
-        public string winViewPath;
-        public string looseViewPath;
+        public AssetReference characterReference;
+        public AssetReference hudViewReference;
+        public AssetReference winViewReference;
+        public AssetReference looseViewReference;
+        public AssetReference virtualPadReference;
+
     }
 }

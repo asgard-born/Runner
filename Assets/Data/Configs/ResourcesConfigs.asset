@@ -12,7 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcd9147011244a128755f86acbb0518a, type: 3}
   m_Name: ResourcesConfigs
   m_EditorClassIdentifier: 
-  characterPath: Character
-  hudViewPath: HUD/HUDView
-  winViewPath: GameFinish/WinView
-  looseViewPath: GameFinish/LooseView
+  characterReference:
+    m_AssetGUID: 60a70c239708781458c23f25cad654f7
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  hudViewReference:
+    m_AssetGUID: 3463b28872b4cb04cb039df710e47471
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  winViewReference:
+    m_AssetGUID: 9242b6cb0bf56d245901e3c6791a2163
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  looseViewReference:
+    m_AssetGUID: 1712ba48572872440a94ea990e527bc1
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  virtualPadReference:
+    m_AssetGUID: 0698e24853afee3478ae292d92cbf9b4
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0

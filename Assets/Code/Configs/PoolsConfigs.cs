@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Code.ObjectsPool;
+using ObjectsPool;
 using UnityEngine;
 
-namespace Code.Configs
+namespace Configs
 {
     [CreateAssetMenu(menuName = "Configs/PoolsConfigs", fileName = "PoolsConfigs")]
     public class PoolsConfigs : ScriptableObject

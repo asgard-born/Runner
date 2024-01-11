@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Code.ObjectsPool
+namespace ObjectsPool
 {
     [Serializable]
     public class PoolInfo
