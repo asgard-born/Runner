@@ -12,8 +12,9 @@ namespace Character.Behaviour
 
         public struct Ctx
         {
+            public float time;
+            public EffectContainer[] effects;
             public CharacterAnimatorView animatorView;
-            public Collider collider;
             public Rigidbody rigidbody;
             public Transform transform;
             public CharacterStats stats;
@@ -25,7 +26,6 @@ namespace Character.Behaviour
         }
 
         public abstract void DoBehave();
-        
         protected abstract void OnButtonUp();
         protected abstract void OnButtonDown();
         protected abstract void OnButtonLeft();

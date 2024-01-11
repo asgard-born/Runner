@@ -1,5 +1,4 @@
-﻿using System;
-using Framework;
+﻿using Framework;
 using Framework.Reactive;
 using Shared;
 using UniRx;
@@ -22,9 +21,10 @@ namespace Character
             public CharacterStats stats;
             public AssetReference viewReference;
             public Transform spawnPoint;
-            public ReactiveEvent<BehaviourType, Type> onBehaviourAdded;
             public ReactiveCommand<Transform> onCharacterInitialized;
             public ReactiveCommand<Collider> onInterraction;
+            public ReactiveCommand<BehaviourContainer> onBehaviourChanged;
+            public ReactiveCommand<ConditionContainer> onConditionAdded;
         }
 
         public CharacterRoot(Ctx ctx)
@@ -55,8 +55,9 @@ namespace Character
                 rigidbody = _view.rigidbody,
                 animatorView = _view.animatorView,
                 spawnPoint = _ctx.spawnPoint,
-                onBehaviourAdded = _ctx.onBehaviourAdded,
-                onCharacterInitialized = _onCharacterInitialized
+                onCharacterInitialized = _onCharacterInitialized,
+                onBehaviourChanged = _ctx.onBehaviourChanged,
+                onConditionAdded = _ctx.onConditionAdded
             };
 
             AddUnsafe(new CharacterPm(ctx));

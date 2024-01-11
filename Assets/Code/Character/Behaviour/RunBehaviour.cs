@@ -81,7 +81,6 @@ namespace Character.Behaviour
         private void Stop()
         {
             _ctx.rigidbody.isKinematic = true;
-            _ctx.collider.enabled = false;
         }
 
         private void Run(float speed)

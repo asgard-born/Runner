@@ -1,13 +1,14 @@
-﻿using Character.Behaviour;
-using Shared;
+﻿using Shared;
 using UnityEngine;
 
 namespace Items
 {
-    public abstract class Item<T> : MonoBehaviour where T : CharacterBehaviour
+    public class Item : MonoBehaviour
     {
-        [SerializeField] protected BehaviourContainer<T> _behaviourType;
+        [SerializeField] protected EffectContainer[] _effects;
+        [SerializeField] protected float _timeSec;
 
-        public BehaviourContainer<T> behaviourType => _behaviourType;
+        public EffectContainer[] effects => _effects;
+        public float timeSec => _timeSec;
     }
 }

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Character.Behaviour;
+using Character.Conditions;
 using Framework;
-using Framework.Reactive;
 using Shared;
 using UniRx;
 using UnityEngine;
@@ -12,7 +12,8 @@ namespace Character
 {
     public class CharacterPm : BaseDisposable
     {
-        private Dictionary<BehaviourType, CharacterBehaviour> _behaviours = new();
+        private CharacterBehaviour _behaviour;
+        private Dictionary<ConditionName, CharacterCondition> _conditions = new();
 
         private Ctx _ctx;
         private CharacterBehaviour.Ctx _behaviourCtx;
@@ -24,7 +25,8 @@ namespace Character
             public Transform characterTransform;
             public Transform spawnPoint;
             public CharacterStats stats;
-            public ReactiveEvent<BehaviourType, Type> onBehaviourAdded;
+            public ReactiveCommand<BehaviourContainer> onBehaviourChanged;
+            public ReactiveCommand<ConditionContainer> onConditionAdded;
             public ReactiveCommand<Transform> onCharacterInitialized;
         }
 
@@ -43,56 +45,104 @@ namespace Character
             InitializeRx(ctx);
             InitializeCharacter();
 
-            AddUnsafe(Observable.EveryFixedUpdate().Subscribe(_ => DoBehave()));
+            AddUnsafe(Observable.EveryFixedUpdate().Subscribe(_ =>
+            {
+                DoBehave();
+                DoConditioning();
+            }));
+        }
+
+        private void DoConditioning()
+        {
+            foreach (var condition in _conditions.Values)
+            {
+                condition.DoConditioning();
+            }
         }
 
         private void InitializeCharacter()
         {
             _ctx.characterTransform.position = _ctx.spawnPoint.position;
             _ctx.characterTransform.rotation = _ctx.spawnPoint.rotation;
-            
-            _behaviours.Add(BehaviourType.Move, new RunBehaviour(_behaviourCtx));
 
+            _behaviour = new RunBehaviour(_behaviourCtx);
+            
             _ctx.onCharacterInitialized?.Execute(_ctx.characterTransform);
         }
 
         private void InitializeRx(Ctx ctx)
         {
-            AddUnsafe(ctx.onBehaviourAdded.SubscribeWithSkip(OnBehaviourAdded));
+            AddUnsafe(ctx.onBehaviourChanged.Subscribe(onBehaviourChanged));
+            AddUnsafe(ctx.onConditionAdded.Subscribe(OnConditionAdded));
         }
 
         private void DoBehave()
         {
-            foreach (var behaviour in _behaviours.Values)
-            {
-                behaviour.DoBehave();
-            }
+            _behaviour.DoBehave();
         }
 
-        private void OnBehaviourAdded(BehaviourType behaviourType, Type behaviour)
+        private void onBehaviourChanged(BehaviourContainer container)
         {
-            if (behaviourType == BehaviourType.None)
+            if (!container.type.IsSubclassOf(typeof(CharacterBehaviour)))
             {
-                Debug.LogError("The behaviour must be defined");
-
-                return;
-            }
-
-            if (!behaviour.IsSubclassOf(typeof(CharacterBehaviour)))
-            {
-                Debug.LogError($"The behaviour must be inherit from {nameof(CharacterBehaviour)}");
+                Debug.LogError($"The condition must be inherited from {nameof(CharacterBehaviour)}");
 
                 return;
             }
 
             ParameterExpression ctxParam = Expression.Parameter(typeof(CharacterBehaviour.Ctx), "ctx");
             NewExpression newExpression = Expression.New(typeof(CharacterBehaviour).GetConstructor(new[] { typeof(CharacterBehaviour.Ctx) }), ctxParam);
-            LambdaExpression lambda = Expression.Lambda(behaviour, newExpression);
-
+            LambdaExpression lambda = Expression.Lambda(container.type, newExpression);
             Func<CharacterBehaviour.Ctx, CharacterBehaviour> createInstance = (Func<CharacterBehaviour.Ctx, CharacterBehaviour>)lambda.Compile();
-            CharacterBehaviour instance = createInstance(_behaviourCtx);
 
-            _behaviours.Add(behaviourType, instance);
+            var ctx = new CharacterBehaviour.Ctx
+            {
+                time = container.timeSec,
+                effects = container.effects,
+                animatorView = _ctx.animatorView,
+                rigidbody = _ctx.rigidbody,
+                transform = _ctx.characterTransform,
+                stats = _ctx.stats
+            };
+            
+            CharacterBehaviour instance = createInstance(ctx);
+
+            _behaviour.Dispose();
+            _behaviour = instance;
+        }
+
+        private void OnConditionAdded(ConditionContainer container)
+        {
+            if (container.name == ConditionName.None)
+            {
+                Debug.LogError("The condition must be defined");
+
+                return;
+            }
+
+            if (!container.type.IsSubclassOf(typeof(CharacterCondition)))
+            {
+                Debug.LogError($"The condition must be inherited from {nameof(CharacterCondition)}");
+
+                return;
+            }
+
+            ParameterExpression ctxParam = Expression.Parameter(typeof(CharacterCondition.Ctx), "ctx");
+            NewExpression newExpression = Expression.New(typeof(CharacterCondition).GetConstructor(new[] { typeof(CharacterCondition.Ctx) }), ctxParam);
+            LambdaExpression lambda = Expression.Lambda(container.type, newExpression);
+            Func<CharacterCondition.Ctx, CharacterCondition> createInstance = (Func<CharacterCondition.Ctx, CharacterCondition>)lambda.Compile();
+
+            var ctx = new CharacterCondition.Ctx
+            {
+                time = container.timeSec,
+                effects = container.effects,
+                animatorView = _ctx.animatorView,
+                stats = _ctx.stats
+            };
+            
+            CharacterCondition instance = createInstance(ctx);
+
+            _conditions.Add(container.name, instance);
         }
     }
 }

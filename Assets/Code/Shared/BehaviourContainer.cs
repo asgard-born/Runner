@@ -5,28 +5,39 @@ using UnityEngine;
 namespace Shared
 {
     /// <summary>
-    /// Обертка для связки енама и типа поведения 
+    /// Обертка для связки енама с типом поведения
+    /// Подходит для передачи в события
     /// </summary>
     [Serializable]
-    public class BehaviourContainer<T> where T : CharacterBehaviour
+    public class BehaviourContainer
     {
-        [SerializeField] private BehaviourType _behaviourType;
-        [SerializeField] private T _behaviour;
+        private Type _type;
+        private EffectContainer[] _effects;
+        private float _timeSec;
 
-        public BehaviourType behaviourType => _behaviourType;
-        public T behaviour => _behaviour;
+        public Type type => _type;
+        public EffectContainer[] effects => _effects;
+        public float timeSec => _timeSec;
 
-        public BehaviourContainer(BehaviourType behaviourType, T behaviour)
+        public BehaviourContainer(Type behaviourType, EffectContainer[] effects, float timeSec)
         {
-            if (behaviourType == BehaviourType.None)
+            if (!behaviourType.IsSubclassOf(typeof(CharacterBehaviour)))
             {
-                Debug.LogError("The behaviour must be defined");
+                Debug.LogError($"The behaviour must be inherited from {nameof(CharacterBehaviour)}");
 
                 return;
             }
 
-            _behaviourType = behaviourType;
-            _behaviour = behaviour;
+            if (_timeSec <= 0)
+            {
+                Debug.LogError($"The time of behaviour {behaviourType.Name} must be greater than zero");
+
+                return;
+            }
+
+            _effects = effects;
+            _timeSec = timeSec;
+            _type = behaviourType;
         }
     }
 }

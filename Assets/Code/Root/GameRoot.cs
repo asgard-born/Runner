@@ -1,9 +1,7 @@
-﻿using System;
-using CameraLogic;
+﻿using CameraLogic;
 using Character;
 using Configs;
 using Framework;
-using Framework.Reactive;
 using Interactions;
 using Shared;
 using UI.Roots;
@@ -16,14 +14,15 @@ namespace Root
     {
         private CameraPm _cameraPm;
         private UIRoot _uiRoot;
-        
+
         private readonly Ctx _ctx;
-        
+
         private ReactiveCommand<SwipeDirection> _onMovementUpdated;
         private ReactiveCommand<Transform> _onCharacterInitialized;
         private ReactiveCommand<Collider> _onInterraction;
-        private ReactiveEvent<BehaviourType, Type> _onBehaviourAdded;
         private ReactiveCommand<GameObject> _onCrashIntoObstacle;
+        private ReactiveCommand<BehaviourContainer> _onBehaviourChanged;
+        private ReactiveCommand<ConditionContainer> _onConditionAdded;
 
         public struct Ctx
         {
@@ -46,6 +45,30 @@ namespace Root
             InitializeInteractionHandler();
         }
 
+        private void InitializeRx()
+        {
+            _onMovementUpdated = AddUnsafe(new ReactiveCommand<SwipeDirection>());
+            _onCharacterInitialized = AddUnsafe(new ReactiveCommand<Transform>());
+            _onCrashIntoObstacle = AddUnsafe(new ReactiveCommand<GameObject>());
+            _onInterraction = AddUnsafe(new ReactiveCommand<Collider>());
+            _onBehaviourChanged = AddUnsafe(new ReactiveCommand<BehaviourContainer>());
+            _onConditionAdded = AddUnsafe(new ReactiveCommand<ConditionContainer>());
+
+            AddUnsafe(_onCharacterInitialized.Subscribe(InitializeCamera));
+        }
+
+        private void InitializeInput(Ctx ctx)
+        {
+            var virtualPadEntityCtx = new VirtualPadRoot.Ctx
+            {
+                rootTransform = ctx.uiRoot,
+                virtualPadViewReference = ctx.resourcesConfigs.virtualPadReference,
+                onMovementUpdated = _onMovementUpdated,
+            };
+
+            AddUnsafe(new VirtualPadRoot(virtualPadEntityCtx));
+        }
+
         private void InitializeCharacter()
         {
             var stats = new CharacterStats(_ctx.playersConfigs.initialSpeed, _ctx.playersConfigs.jumpForce);
@@ -55,9 +78,10 @@ namespace Root
                 stats = stats,
                 viewReference = _ctx.resourcesConfigs.characterReference,
                 spawnPoint = _ctx.spawnPoint,
-                onBehaviourAdded = _onBehaviourAdded,
                 onCharacterInitialized = _onCharacterInitialized,
-                onInterraction = _onInterraction
+                onInterraction = _onInterraction,
+                onBehaviourChanged = _onBehaviourChanged,
+                onConditionAdded = _onConditionAdded
             };
 
             AddUnsafe(new CharacterRoot(characterCtx));
@@ -73,32 +97,10 @@ namespace Root
             AddUnsafe(new InteractionHandlerRoot(characterCtx));
         }
 
-        private void InitializeRx()
-        {
-            _onMovementUpdated = AddUnsafe(new ReactiveCommand<SwipeDirection>());
-            _onCharacterInitialized = AddUnsafe(new ReactiveCommand<Transform>());
-            _onBehaviourAdded = AddUnsafe(new ReactiveEvent<BehaviourType, Type>());
-            _onInterraction = AddUnsafe(new ReactiveCommand<Collider>());
-
-            AddUnsafe(_onCharacterInitialized.Subscribe(InitializeCamera));
-        }
-
         // private async void RunGameAsync()
         // {
         //     await UniTask.Delay(TimeSpan.FromSeconds(_ctx.levelConfigs.startDelaySec));
         // }
-
-        private void InitializeInput(Ctx ctx)
-        {
-            var virtualPadEntityCtx = new VirtualPadRoot.Ctx
-            {
-                rootTransform = ctx.uiRoot,
-                virtualPadViewReference = ctx.resourcesConfigs.virtualPadReference,
-                onMovementUpdated = _onMovementUpdated,
-            };
-
-            AddUnsafe(new VirtualPadRoot(virtualPadEntityCtx));
-        }
 
         private void InitializeCamera(Transform characterTransform)
         {

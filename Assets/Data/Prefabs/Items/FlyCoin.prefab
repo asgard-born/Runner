@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _behaviourType:
-    _behaviourType: 10
+    _behaviourName: 10
 --- !u!33 &1695149266354087611
 MeshFilter:
   m_ObjectHideFlags: 0
