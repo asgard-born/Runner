@@ -7,7 +7,7 @@ namespace ObjectsPool
 {
     public static class PoolsManager
     {
-        private static Dictionary<Type, PoolInfo> _pools = new Dictionary<Type, PoolInfo>();
+        private static Dictionary<Type, PoolInfo> _pools = new();
         private static GameObject _objectsParent;
 
         public static void Initialize(Dictionary<Type, PoolInfo> newPools)

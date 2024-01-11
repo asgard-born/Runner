@@ -16,7 +16,7 @@ namespace Interactions
             AddUnsafe(ctx.onInterraction.Subscribe(Handle));
         }
 
-        private void Handle(Collider gameObject)
+        private void Handle(Collider collider)
         {
             
         }

@@ -12,8 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71eea263871e4293b016e794386da026, type: 3}
   m_Name: PoolsConfigs
   m_EditorClassIdentifier: 
-  pools:
-  - prefab: {fileID: 9038702568301947458, guid: bf1d4d6a24533824c9eca36080a7fade, type: 3}
-    count: 150
-  - prefab: {fileID: 7184905246765966952, guid: fc6dfbac4de23ae4a8be89cb76704a9f, type: 3}
-    count: 150
+  pools: []
