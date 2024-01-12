@@ -1,5 +1,5 @@
 ﻿using System;
-using Shared;
+using Shared.Containers;
 
 namespace Items.Behavioural
 {

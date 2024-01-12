@@ -2,11 +2,10 @@
 using Character.Conditions;
 using UnityEngine;
 
-namespace Shared
+namespace Shared.Containers
 {
     /// <summary>
     /// Обертка для связки енама с типом состояния
-    /// Подходит для передачи в события
     /// </summary>
     [Serializable]
     public class ConditionContainer

@@ -1,5 +1,5 @@
 ﻿using ObjectsPool;
-using Shared;
+using Shared.Containers;
 using UnityEngine;
 
 namespace Items

@@ -2,11 +2,10 @@
 using Character.Behaviour;
 using UnityEngine;
 
-namespace Shared
+namespace Shared.Containers
 {
     /// <summary>
     /// Обертка для связки енама с типом поведения
-    /// Подходит для передачи в события
     /// </summary>
     [Serializable]
     public class BehaviourContainer

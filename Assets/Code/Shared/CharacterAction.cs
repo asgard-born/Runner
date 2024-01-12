@@ -6,7 +6,6 @@
     public enum CharacterAction : byte
     {
         None,
-        Moving,
         Jumping,
         Falling,
     }

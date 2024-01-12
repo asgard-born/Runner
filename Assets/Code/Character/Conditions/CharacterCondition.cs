@@ -1,5 +1,5 @@
 ﻿using Framework;
-using Shared;
+using Shared.Containers;
 
 namespace Character.Conditions
 {

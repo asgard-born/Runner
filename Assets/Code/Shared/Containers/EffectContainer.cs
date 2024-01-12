@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Shared
+namespace Shared.Containers
 {
     [Serializable]
     public struct EffectContainer

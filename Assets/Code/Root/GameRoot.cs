@@ -7,6 +7,7 @@ using Framework;
 using Framework.Reactive;
 using Interactions;
 using Shared;
+using Shared.Containers;
 using UI.Roots;
 using UniRx;
 using UnityEngine;

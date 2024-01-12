@@ -5,6 +5,7 @@ using Character.Behaviour;
 using Character.Conditions;
 using Framework;
 using Shared;
+using Shared.Containers;
 using UniRx;
 using UnityEngine;
 
@@ -56,8 +57,9 @@ namespace Character
             }));
         }
 
-        private void OnSwipe(SwipeDirection swipeDirection)
+        private void OnSwipe(SwipeDirection direction)
         {
+            _behaviour.OnSwipe(direction);
         }
 
         private void DoConditioning()

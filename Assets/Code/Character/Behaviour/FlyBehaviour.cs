@@ -12,7 +12,7 @@ namespace Character.Behaviour
         {
         }
 
-        protected override void OnSwipe(SwipeDirection swipeDirection)
+        public override void OnSwipe(SwipeDirection swipeDirection)
         {
             switch (swipeDirection)
             {

@@ -7,18 +7,18 @@ namespace Character.Behaviour
     {
         public RunBehaviour(Ctx ctx) : base(ctx)
         {
-            _currentAction = CharacterAction.Moving;
+            _isMoving = true;
         }
 
         public override void DoBehave()
         {
+            if (_isMoving)
+            {
+                OnMove();
+            }
+
             switch (_currentAction)
             {
-                case CharacterAction.Moving:
-                    OnMove();
-
-                    break;
-
                 case CharacterAction.Jumping:
                     OnJumping();
 
@@ -31,11 +31,12 @@ namespace Character.Behaviour
             }
         }
 
-        protected override void OnSwipe(SwipeDirection swipeDirection)
+        public override void OnSwipe(SwipeDirection swipeDirection)
         {
             switch (swipeDirection)
             {
                 case SwipeDirection.Left:
+                    
                     break;
 
                 case SwipeDirection.Right:
@@ -43,6 +44,7 @@ namespace Character.Behaviour
 
                 case SwipeDirection.Up:
                     TryJump(_ctx.stats.jumpForce);
+
                     break;
 
                 case SwipeDirection.Down:
@@ -50,16 +52,21 @@ namespace Character.Behaviour
             }
         }
 
+        private void MovingLeftProcess()
+        {
+            // _sideMovingSequence = DoTween
+        }
+
         private void TryJump(float jumpForce)
         {
-            if (IsGrounded())
+            if (!IsGrounded())
             {
                 return;
             }
 
             _ctx.rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
             _ctx.animatorView.PlayJump();
-            
+
             _currentAction = CharacterAction.Jumping;
         }
 
@@ -111,7 +118,7 @@ namespace Character.Behaviour
         {
             if (IsGrounded())
             {
-                _currentAction = CharacterAction.Moving;
+                
             }
             else
             {

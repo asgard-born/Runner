@@ -3,7 +3,7 @@ using Items;
 using Items.Behavioural;
 using Items.Conditional;
 using Obstacles;
-using Shared;
+using Shared.Containers;
 using UniRx;
 using UnityEngine;
 
