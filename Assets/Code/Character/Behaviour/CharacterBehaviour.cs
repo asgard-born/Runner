@@ -26,9 +26,6 @@ namespace Character.Behaviour
         }
 
         public abstract void DoBehave();
-        protected abstract void OnButtonUp();
-        protected abstract void OnButtonDown();
-        protected abstract void OnButtonLeft();
-        protected abstract void OnButtonRight();
+        protected abstract void OnSwipe(SwipeDirection swipeDirection);
     }
 }

@@ -1,7 +1,10 @@
-﻿using CameraLogic;
+﻿using System;
+using CameraLogic;
 using Character;
 using Configs;
+using Cysharp.Threading.Tasks;
 using Framework;
+using Framework.Reactive;
 using Interactions;
 using Shared;
 using UI.Roots;
@@ -17,12 +20,13 @@ namespace Root
 
         private readonly Ctx _ctx;
 
-        private ReactiveCommand<SwipeDirection> _onMovementUpdated;
+        private ReactiveCommand<SwipeDirection> _onSwipeDirection;
         private ReactiveCommand<Transform> _onCharacterInitialized;
         private ReactiveCommand<Collider> _onInterraction;
         private ReactiveCommand<GameObject> _onCrashIntoObstacle;
         private ReactiveCommand<BehaviourContainer> _onBehaviourChanged;
         private ReactiveCommand<ConditionContainer> _onConditionAdded;
+        private ReactiveTrigger _onGameRun;
 
         public struct Ctx
         {
@@ -47,12 +51,13 @@ namespace Root
 
         private void InitializeRx()
         {
-            _onMovementUpdated = AddUnsafe(new ReactiveCommand<SwipeDirection>());
+            _onSwipeDirection = AddUnsafe(new ReactiveCommand<SwipeDirection>());
             _onCharacterInitialized = AddUnsafe(new ReactiveCommand<Transform>());
             _onCrashIntoObstacle = AddUnsafe(new ReactiveCommand<GameObject>());
             _onInterraction = AddUnsafe(new ReactiveCommand<Collider>());
             _onBehaviourChanged = AddUnsafe(new ReactiveCommand<BehaviourContainer>());
             _onConditionAdded = AddUnsafe(new ReactiveCommand<ConditionContainer>());
+            _onGameRun = AddUnsafe(new ReactiveTrigger());
 
             AddUnsafe(_onCharacterInitialized.Subscribe(InitializeCamera));
         }
@@ -63,7 +68,7 @@ namespace Root
             {
                 rootTransform = ctx.uiRoot,
                 virtualPadViewReference = ctx.resourcesConfigs.virtualPadReference,
-                onMovementUpdated = _onMovementUpdated,
+                onSwipeDirection = _onSwipeDirection,
             };
 
             AddUnsafe(new VirtualPadRoot(virtualPadEntityCtx));
@@ -81,7 +86,8 @@ namespace Root
                 onCharacterInitialized = _onCharacterInitialized,
                 onInterraction = _onInterraction,
                 onBehaviourChanged = _onBehaviourChanged,
-                onConditionAdded = _onConditionAdded
+                onConditionAdded = _onConditionAdded,
+                onSwipeDirection = _onSwipeDirection
             };
 
             AddUnsafe(new CharacterRoot(characterCtx));
@@ -100,23 +106,25 @@ namespace Root
             AddUnsafe(new InteractionHandlerRoot(characterCtx));
         }
 
-        // private async void RunGameAsync()
-        // {
-        //     await UniTask.Delay(TimeSpan.FromSeconds(_ctx.levelConfigs.startDelaySec));
-        // }
+        private async void RunGameAsync()
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(_ctx.levelConfigs.startDelaySec));
+
+            _onGameRun?.Notify();
+        }
 
         private void InitializeCamera(Transform characterTransform)
         {
-            var ctx = new CameraRoot.Ctx
+            var ctx = new CameraPm.Ctx
             {
                 characterTransform = characterTransform,
-                camera = _ctx.camera,
+                cameraTransform = _ctx.camera.transform,
                 cameraSmooth = _ctx.playersConfigs.cameraSmooth,
                 positionOffset = _ctx.levelConfigs.cameraPositionOffset,
                 rotationOffset = _ctx.levelConfigs.cameraRotationOffset
             };
 
-            AddUnsafe(new CameraRoot(ctx));
+            AddUnsafe(new CameraPm(ctx));
         }
     }
 }

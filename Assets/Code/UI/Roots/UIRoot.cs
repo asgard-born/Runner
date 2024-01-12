@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Framework;
 using UI.Views;
 using UnityEngine;
@@ -25,7 +26,7 @@ namespace UI.Roots
             InitPmsAsync();
         }
 
-        private async Task InitPmsAsync()
+        private async UniTask InitPmsAsync()
         {
             var winViewprefab = await LoadAndTrackPrefab<WinView>(_ctx.winViewReference);
             _winView = Object.Instantiate(winViewprefab, _ctx.uiRoot);

@@ -1,8 +1,6 @@
 ﻿using System;
-using Character.Conditions;
 using Shared;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace Items.Conditional
 {
@@ -14,11 +12,6 @@ namespace Items.Conditional
 
         public ConditionContainer conditionContainer => _conditionContainer;
 
-        private void Start()
-        {
-            Assert.IsTrue(_conditionContainer.type.IsSubclassOf(typeof(CharacterCondition)), $"The condition must be inherited from {nameof(CharacterCondition)}");
-        }
-        
         protected void InitializeCondition(Type condition)
         {
             _conditionContainer = new ConditionContainer(_conditionName, condition, _effects, _timeSec);

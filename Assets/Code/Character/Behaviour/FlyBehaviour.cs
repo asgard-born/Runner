@@ -1,4 +1,6 @@
-﻿namespace Character.Behaviour
+﻿using Shared;
+
+namespace Character.Behaviour
 {
     public class FlyBehaviour : CharacterBehaviour
     {
@@ -10,20 +12,16 @@
         {
         }
 
-        protected override void OnButtonUp()
+        protected override void OnSwipe(SwipeDirection swipeDirection)
         {
-        }
+            switch (swipeDirection)
+            {
+                case SwipeDirection.Left:
+                    break;
 
-        protected override void OnButtonDown()
-        {
-        }
-
-        protected override void OnButtonLeft()
-        {
-        }
-
-        protected override void OnButtonRight()
-        {
+                case SwipeDirection.Right:
+                    break;
+            }
         }
     }
 }

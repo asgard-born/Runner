@@ -58,7 +58,7 @@ namespace Interactions
                         break;
                 }
                 
-                item.ReturnToPool();
+                // item.ReturnToPool();
                 return;
             }
             
@@ -66,7 +66,7 @@ namespace Interactions
 
             if (obstacle != null)
             {
-                
+                ;
             }
         }
     }

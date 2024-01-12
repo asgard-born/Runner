@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Framework.Addressables;
 using Framework.Async;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using Debug = Framework.Logging.Debug;
 using Object = UnityEngine.Object;
 
 namespace Framework
@@ -16,7 +15,7 @@ namespace Framework
         private List<IDisposable> _mainThreadDisposables;
         private List<Object> _unityObjects;
         private HashSet<IDisposableAwaiter> _operations;
-        private List<Task> _taskOperations;
+        private List<UniTask> _taskOperations;
 
         protected bool IsDisposed => _isDisposed;
 
@@ -71,7 +70,7 @@ namespace Framework
             }
         }
 
-        protected async Task<T> LoadAndTrackPrefab<T>(AssetReference reference) where T : class
+        protected async UniTask<T> LoadAndTrackPrefab<T>(AssetReference reference) where T : class
         {
             if (reference == null)
             {

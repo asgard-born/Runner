@@ -28,6 +28,7 @@ namespace Character
             public ReactiveCommand<BehaviourContainer> onBehaviourChanged;
             public ReactiveCommand<ConditionContainer> onConditionAdded;
             public ReactiveCommand<Transform> onCharacterInitialized;
+            public ReactiveCommand<SwipeDirection> onSwipeDirection;
         }
 
         public CharacterPm(Ctx ctx)
@@ -42,7 +43,10 @@ namespace Character
                 stats = ctx.stats,
             };
 
-            InitializeRx(ctx);
+            AddUnsafe(ctx.onBehaviourChanged.Subscribe(onBehaviourChanged));
+            AddUnsafe(ctx.onConditionAdded.Subscribe(OnConditionAdded));
+            AddUnsafe(ctx.onSwipeDirection.Subscribe(OnSwipe));
+            
             InitializeCharacter();
 
             AddUnsafe(Observable.EveryFixedUpdate().Subscribe(_ =>
@@ -50,6 +54,10 @@ namespace Character
                 DoBehave();
                 DoConditioning();
             }));
+        }
+
+        private void OnSwipe(SwipeDirection swipeDirection)
+        {
         }
 
         private void DoConditioning()
@@ -68,12 +76,6 @@ namespace Character
             _behaviour = new RunBehaviour(_behaviourCtx);
             
             _ctx.onCharacterInitialized?.Execute(_ctx.characterTransform);
-        }
-
-        private void InitializeRx(Ctx ctx)
-        {
-            AddUnsafe(ctx.onBehaviourChanged.Subscribe(onBehaviourChanged));
-            AddUnsafe(ctx.onConditionAdded.Subscribe(OnConditionAdded));
         }
 
         private void DoBehave()

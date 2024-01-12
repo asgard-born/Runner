@@ -17,7 +17,7 @@ namespace UI.Roots
         {
             public RectTransform rootTransform;
             public AssetReference virtualPadViewReference;
-            public ReactiveCommand<SwipeDirection> onMovementUpdated;
+            public ReactiveCommand<SwipeDirection> onSwipeDirection;
         }
 
         public VirtualPadRoot(Ctx ctx)
@@ -34,7 +34,7 @@ namespace UI.Roots
             var ctx = new VirtualPadPm.Ctx
             {
                 onSwipeRaw = _onSwipeRaw,
-                onMovementUpdated = _ctx.onMovementUpdated
+                onSwipeDirection = _ctx.onSwipeDirection
             };
 
             AddUnsafe(new VirtualPadPm(ctx));

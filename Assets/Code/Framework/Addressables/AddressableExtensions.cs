@@ -1,14 +1,13 @@
 using System;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using Debug = Framework.Logging.Debug;
 
 namespace Framework.Addressables
 {
     public static class AddressableExtensions
     {
-        public static async Task<(T asset, AddressableRetain retain)> TryLoadAsync<T>(this AssetReference reference)
+        public static async UniTask<(T asset, AddressableRetain retain)> TryLoadAsync<T>(this AssetReference reference)
         {
             if (reference == null)
             {
@@ -21,12 +20,10 @@ namespace Framework.Addressables
 
             return await LoadAssetAsync<T>(reference);
         }
-        
-        
-        public static Task<(GameObject go, AddressableRetain release)> TryLoadGameObjAsync(this AssetReference reference)
-            => reference.TryLoadAsync<GameObject>();
 
-        private static async Task<(T asset, AddressableRetain retain)> LoadAssetAsync<T>(AssetReference reference)
+        public static UniTask<(GameObject go, AddressableRetain release)> TryLoadGameObjAsync(this AssetReference reference) => reference.TryLoadAsync<GameObject>();
+
+        private static async UniTask<(T asset, AddressableRetain retain)> LoadAssetAsync<T>(AssetReference reference)
         {
             const int RETRY_INTERVAL_SECONDS = 5;
 
@@ -43,17 +40,17 @@ namespace Framework.Addressables
                         Debug.LogException(handle.OperationException);
                         UnityEngine.AddressableAssets.Addressables.Release(handle);
 
-                        await Task.Delay(TimeSpan.FromSeconds(RETRY_INTERVAL_SECONDS));
+                        await UniTask.Delay(TimeSpan.FromSeconds(RETRY_INTERVAL_SECONDS));
 
                         continue;
                     }
-                    
+
                     if (!handle.IsDone)
                     {
                         Debug.LogError($"can't instantiate addressable asset {reference}, it's undone");
                         UnityEngine.AddressableAssets.Addressables.Release(handle);
 
-                        await Task.Delay(TimeSpan.FromSeconds(RETRY_INTERVAL_SECONDS));
+                        await UniTask.Delay(TimeSpan.FromSeconds(RETRY_INTERVAL_SECONDS));
 
                         continue;
                     }
@@ -63,17 +60,7 @@ namespace Framework.Addressables
                         Debug.LogError($"can't instantiate addressable asset {reference}");
                         UnityEngine.AddressableAssets.Addressables.Release(handle);
 
-                        await Task.Delay(TimeSpan.FromSeconds(RETRY_INTERVAL_SECONDS));
-
-                        continue;
-                    }
-                    
-                    if (asset == null)
-                    {
-                        Debug.LogError($"can't find component {nameof(T)}");
-                        UnityEngine.AddressableAssets.Addressables.Release(handle);
-
-                        await Task.Delay(TimeSpan.FromSeconds(RETRY_INTERVAL_SECONDS));
+                        await UniTask.Delay(TimeSpan.FromSeconds(RETRY_INTERVAL_SECONDS));
 
                         continue;
                     }
@@ -82,7 +69,8 @@ namespace Framework.Addressables
                 }
                 catch (Exception e)
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(RETRY_INTERVAL_SECONDS));
+                    Debug.LogError($"{e.Message}");
+                    await UniTask.Delay(TimeSpan.FromSeconds(RETRY_INTERVAL_SECONDS));
                 }
             }
         }

@@ -31,33 +31,36 @@ namespace Character.Behaviour
             }
         }
 
-        protected override void OnButtonUp()
+        protected override void OnSwipe(SwipeDirection swipeDirection)
+        {
+            switch (swipeDirection)
+            {
+                case SwipeDirection.Left:
+                    break;
+
+                case SwipeDirection.Right:
+                    break;
+
+                case SwipeDirection.Up:
+                    TryJump(_ctx.stats.jumpForce);
+                    break;
+
+                case SwipeDirection.Down:
+                    break;
+            }
+        }
+
+        private void TryJump(float jumpForce)
         {
             if (IsGrounded())
             {
                 return;
             }
 
-            Jump(_ctx.stats.jumpForce);
-            _currentAction = CharacterAction.Jumping;
-        }
-
-        protected override void OnButtonDown()
-        {
-        }
-
-        protected override void OnButtonLeft()
-        {
-        }
-
-        protected override void OnButtonRight()
-        {
-        }
-
-        private void Jump(float jumpForce)
-        {
             _ctx.rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
             _ctx.animatorView.PlayJump();
+            
+            _currentAction = CharacterAction.Jumping;
         }
 
         private bool IsFalling()

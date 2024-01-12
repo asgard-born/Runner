@@ -8,11 +8,11 @@ namespace UI.Pms
     public class VirtualPadPm : BaseDisposable
     {
         private Vector2 _playerInputData;
-        private ReactiveCommand<SwipeDirection> _onInputUpdated;
+        private ReactiveCommand<SwipeDirection> _onSwipeDirection;
 
         public struct Ctx
         {
-            public ReactiveCommand<SwipeDirection> onMovementUpdated;
+            public ReactiveCommand<SwipeDirection> onSwipeDirection;
             public ReactiveCommand<(Vector2, Vector2)> onSwipeRaw;
         }
 
@@ -20,7 +20,7 @@ namespace UI.Pms
         {
             AddUnsafe(ctx.onSwipeRaw.Subscribe(UpdateInput));
             
-            _onInputUpdated = ctx.onMovementUpdated;
+            _onSwipeDirection = ctx.onSwipeDirection;
         }
 
         private void UpdateInput((Vector2 previous, Vector2 current) positions)
@@ -29,7 +29,7 @@ namespace UI.Pms
 
             SwipeDirection direction;
 
-            if (_playerInputData.x > _playerInputData.y)
+            if (Mathf.Abs(_playerInputData.x) > Mathf.Abs(_playerInputData.y))
             {
                 direction = _playerInputData.x > 0 ? SwipeDirection.Right : SwipeDirection.Left;
             }
@@ -38,7 +38,7 @@ namespace UI.Pms
                 direction = _playerInputData.y > 0 ? SwipeDirection.Up : SwipeDirection.Down;
             }
 
-            _onInputUpdated?.Execute(direction);
+            _onSwipeDirection?.Execute(direction);
         }
     }
 }

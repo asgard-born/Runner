@@ -25,6 +25,7 @@ namespace Character
             public ReactiveCommand<Collider> onInterraction;
             public ReactiveCommand<BehaviourContainer> onBehaviourChanged;
             public ReactiveCommand<ConditionContainer> onConditionAdded;
+            public ReactiveCommand<SwipeDirection> onSwipeDirection;
         }
 
         public CharacterRoot(Ctx ctx)
@@ -57,7 +58,8 @@ namespace Character
                 spawnPoint = _ctx.spawnPoint,
                 onCharacterInitialized = _onCharacterInitialized,
                 onBehaviourChanged = _ctx.onBehaviourChanged,
-                onConditionAdded = _ctx.onConditionAdded
+                onConditionAdded = _ctx.onConditionAdded,
+                onSwipeDirection = _ctx.onSwipeDirection
             };
 
             AddUnsafe(new CharacterPm(ctx));
