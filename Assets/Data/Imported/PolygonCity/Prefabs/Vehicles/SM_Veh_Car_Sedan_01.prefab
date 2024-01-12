@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 479196}
   - component: {fileID: 3347360}
   - component: {fileID: 2328318}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Sedan_Plates
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 499832}
   - component: {fileID: 3395520}
   - component: {fileID: 2376188}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Sedan_SteeringW
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 3398108}
   - component: {fileID: 2323160}
   - component: {fileID: 135375816075605608}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Sedan_Wheel_rr
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -283,7 +283,7 @@ GameObject:
   - component: {fileID: 3325342}
   - component: {fileID: 2398922}
   - component: {fileID: 135190194792382876}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Sedan_Wheel_fr
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -388,7 +388,7 @@ GameObject:
   - component: {fileID: 3388320}
   - component: {fileID: 2393980}
   - component: {fileID: 135240355930236268}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Sedan_Wheel_rl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -493,7 +493,7 @@ GameObject:
   - component: {fileID: 3305302}
   - component: {fileID: 2392736}
   - component: {fileID: 135703013768523670}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Sedan_Wheel_fl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -597,7 +597,7 @@ GameObject:
   - component: {fileID: 406904}
   - component: {fileID: 3374072}
   - component: {fileID: 2344154}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Steering_Wheel_08
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -680,7 +680,7 @@ GameObject:
   - component: {fileID: 459374}
   - component: {fileID: 3384140}
   - component: {fileID: 2355066}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Sedan_Glass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -766,7 +766,7 @@ GameObject:
   - component: {fileID: 2317488}
   - component: {fileID: 64403533157552192}
   - component: {fileID: -2032348526711186592}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Sedan_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}

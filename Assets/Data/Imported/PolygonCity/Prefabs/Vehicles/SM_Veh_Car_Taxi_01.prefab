@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 402106}
   - component: {fileID: 3309280}
   - component: {fileID: 2386232}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Taxi_Wheel_fr
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 455176}
   - component: {fileID: 3303970}
   - component: {fileID: 2368982}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Taxi_Wheel_rl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 499928}
   - component: {fileID: 3369324}
   - component: {fileID: 2393562}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Taxi_SteeringW
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 443532}
   - component: {fileID: 3391612}
   - component: {fileID: 2383200}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Taxi_Wheel_fl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -343,7 +343,7 @@ GameObject:
   - component: {fileID: 440440}
   - component: {fileID: 3303126}
   - component: {fileID: 2311848}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Taxi_Glass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -426,7 +426,7 @@ GameObject:
   - component: {fileID: 415218}
   - component: {fileID: 3348102}
   - component: {fileID: 2355778}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Taxi_Plates
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -512,7 +512,7 @@ GameObject:
   - component: {fileID: 2335232}
   - component: {fileID: 64606725248640936}
   - component: {fileID: -741464655244563863}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Taxi_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -657,7 +657,7 @@ GameObject:
   - component: {fileID: 433896}
   - component: {fileID: 3386710}
   - component: {fileID: 2314370}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Taxi_Wheel_rr
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 412770}
   - component: {fileID: 3341786}
   - component: {fileID: 2325260}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Ambo_SteeringW
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 488788}
   - component: {fileID: 3339874}
   - component: {fileID: 2392894}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Ambo_Wheel_fr
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 448186}
   - component: {fileID: 3337738}
   - component: {fileID: 2333616}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Ambo_Wheel_rl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 406608}
   - component: {fileID: 3358960}
   - component: {fileID: 2323252}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Ambo_Wheel_fl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -343,7 +343,7 @@ GameObject:
   - component: {fileID: 456644}
   - component: {fileID: 3367310}
   - component: {fileID: 2372614}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Ambo_Wheel_rr
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -426,7 +426,7 @@ GameObject:
   - component: {fileID: 420462}
   - component: {fileID: 3314422}
   - component: {fileID: 2393026}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Ambo_Glass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -512,7 +512,7 @@ GameObject:
   - component: {fileID: 2303650}
   - component: {fileID: 64087793075500760}
   - component: {fileID: -5294200360433777458}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Ambo_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -659,7 +659,7 @@ GameObject:
   - component: {fileID: 415410}
   - component: {fileID: 3315870}
   - component: {fileID: 2326082}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Ambo_Door_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -743,7 +743,7 @@ GameObject:
   - component: {fileID: 425302}
   - component: {fileID: 3339654}
   - component: {fileID: 2396186}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Ambo_Door_r_Glass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -826,7 +826,7 @@ GameObject:
   - component: {fileID: 462858}
   - component: {fileID: 3385844}
   - component: {fileID: 2365200}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Ambo_Plates
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -909,7 +909,7 @@ GameObject:
   - component: {fileID: 409978}
   - component: {fileID: 3337476}
   - component: {fileID: 2321892}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Ambo_Door_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -993,7 +993,7 @@ GameObject:
   - component: {fileID: 444242}
   - component: {fileID: 3321632}
   - component: {fileID: 2323050}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Veh_Car_Ambo_Door_l_Glass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
