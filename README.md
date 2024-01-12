@@ -1,5 +1,4 @@
 ### <u> $${\textsf{\color{violet}Project  with  Reactive-based  architecture  with  single  entry  point}}$$ </u>
 #### • Two-way communication between Pms and Views via reactive data-bindings</br>• Changes within states cause triggers for business logic to handle it</br>• Changes within Pm<i>s</i> are also change View<i>s</i> and vice versa</br>• There are no links between Pm<i>s</i> and View – they communicates through reactive events</br>• They also have no public methods. Declarative writing logic
-#### We can think of the global state as a set of reactive states in appropriate entities. When the states are changed - it triggers business logic to handle it.
 
-#### Entities: composition tree branches, that creates Pms (Presentation Models), Views and connections between them</br>Pms: business logic</br>Views: separated view logic without business logic</br>Ctx: Context – Dependency Injections, which are easy-to-change
+#### Roots: composition tree branches, that creates Pms (Presentation Models), Views and connections between them</br>Pms: business logic</br>Views: separated view logic without business logic</br>Ctx: Context – Dependency Injections, which are easy-to-change
