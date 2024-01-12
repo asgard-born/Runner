@@ -1,7 +1,7 @@
 ﻿namespace Shared
 {
     /// <summary>
-    /// Internal separation of actions within a specific behaviour
+    /// Разделения действий внутри поведений 
     /// </summary>
     public enum CharacterAction : byte
     {

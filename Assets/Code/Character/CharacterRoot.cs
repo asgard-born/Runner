@@ -1,7 +1,7 @@
-﻿using Framework;
+﻿using Behaviour;
+using Framework;
 using Framework.Reactive;
 using Shared;
-using Shared.Containers;
 using UniRx;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -22,11 +22,11 @@ namespace Character
             public CharacterStats stats;
             public AssetReference viewReference;
             public Transform spawnPoint;
+            public OrientationAxises orientationAxises;
             public ReactiveCommand<Transform> onCharacterInitialized;
             public ReactiveCommand<Collider> onInterraction;
-            public ReactiveCommand<BehaviourContainer> onBehaviourChanged;
-            public ReactiveCommand<ConditionContainer> onConditionAdded;
             public ReactiveCommand<SwipeDirection> onSwipeDirection;
+            public ReactiveCommand<CharacterBehaviourPm> onBehaviourCreated;
         }
 
         public CharacterRoot(Ctx ctx)
@@ -52,15 +52,11 @@ namespace Character
 
             var ctx = new CharacterPm.Ctx
             {
-                stats = _ctx.stats,
                 characterTransform = _view.transform,
-                rigidbody = _view.rigidbody,
-                animatorView = _view.animatorView,
                 spawnPoint = _ctx.spawnPoint,
+
                 onCharacterInitialized = _onCharacterInitialized,
-                onBehaviourChanged = _ctx.onBehaviourChanged,
-                onConditionAdded = _ctx.onConditionAdded,
-                onSwipeDirection = _ctx.onSwipeDirection
+                onBehaviourCreated = _ctx.onBehaviourCreated
             };
 
             AddUnsafe(new CharacterPm(ctx));

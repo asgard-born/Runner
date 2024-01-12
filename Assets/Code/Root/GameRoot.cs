@@ -1,4 +1,5 @@
 ﻿using System;
+using Behaviour;
 using CameraLogic;
 using Character;
 using Configs;
@@ -6,8 +7,8 @@ using Cysharp.Threading.Tasks;
 using Framework;
 using Framework.Reactive;
 using Interactions;
+using Obstacles;
 using Shared;
-using Shared.Containers;
 using UI.Roots;
 using UniRx;
 using UnityEngine;
@@ -21,23 +22,23 @@ namespace Root
 
         private readonly Ctx _ctx;
 
+        private ReactiveTrigger _onGameRun;
         private ReactiveCommand<SwipeDirection> _onSwipeDirection;
         private ReactiveCommand<Transform> _onCharacterInitialized;
         private ReactiveCommand<Collider> _onInterraction;
-        private ReactiveCommand<GameObject> _onCrashIntoObstacle;
-        private ReactiveCommand<BehaviourContainer> _onBehaviourChanged;
-        private ReactiveCommand<ConditionContainer> _onConditionAdded;
-        private ReactiveTrigger _onGameRun;
+        private ReactiveCommand<Obstacle> _onCrashIntoObstacle;
+        private ReactiveCommand<BehaviourConfigs> _onBehaviourAdded;
+        private ReactiveCommand<CharacterBehaviourPm> _onBehaviourCreated;
 
         public struct Ctx
         {
             public LevelConfigs levelConfigs;
             public PlayersConfigs playersConfigs;
-            public PoolsConfigs poolsConfigs;
             public ResourcesConfigs resourcesConfigs;
             public RectTransform uiRoot;
             public Transform spawnPoint;
             public Camera camera;
+            public OrientationAxises orientationAxises;
         }
 
         public GameRoot(Ctx ctx)
@@ -47,18 +48,18 @@ namespace Root
             InitializeRx();
             InitializeInput(ctx);
             InitializeCharacter();
-            InitializeInteractionHandler();
+            InitializeServices();
         }
 
         private void InitializeRx()
         {
+            _onGameRun = AddUnsafe(new ReactiveTrigger());
             _onSwipeDirection = AddUnsafe(new ReactiveCommand<SwipeDirection>());
             _onCharacterInitialized = AddUnsafe(new ReactiveCommand<Transform>());
-            _onCrashIntoObstacle = AddUnsafe(new ReactiveCommand<GameObject>());
+            _onCrashIntoObstacle = AddUnsafe(new ReactiveCommand<Obstacle>());
             _onInterraction = AddUnsafe(new ReactiveCommand<Collider>());
-            _onBehaviourChanged = AddUnsafe(new ReactiveCommand<BehaviourContainer>());
-            _onConditionAdded = AddUnsafe(new ReactiveCommand<ConditionContainer>());
-            _onGameRun = AddUnsafe(new ReactiveTrigger());
+            _onBehaviourAdded = AddUnsafe(new ReactiveCommand<BehaviourConfigs>());
+            _onBehaviourCreated = AddUnsafe(new ReactiveCommand<CharacterBehaviourPm>());
 
             AddUnsafe(_onCharacterInitialized.Subscribe(InitializeCamera));
         }
@@ -84,27 +85,27 @@ namespace Root
                 stats = stats,
                 viewReference = _ctx.resourcesConfigs.characterReference,
                 spawnPoint = _ctx.spawnPoint,
+                orientationAxises = _ctx.orientationAxises,
+
                 onCharacterInitialized = _onCharacterInitialized,
                 onInterraction = _onInterraction,
-                onBehaviourChanged = _onBehaviourChanged,
-                onConditionAdded = _onConditionAdded,
+                onBehaviourCreated = _onBehaviourCreated,
                 onSwipeDirection = _onSwipeDirection
             };
 
             AddUnsafe(new CharacterRoot(characterCtx));
         }
 
-        private void InitializeInteractionHandler()
+        private void InitializeServices()
         {
-            var characterCtx = new InteractionHandlerRoot.Ctx
+            var characterCtx = new InteractionReporterService.Ctx
             {
                 onInterraction = _onInterraction,
-                onBehaviourChanged = _onBehaviourChanged,
-                onConditionAdded = _onConditionAdded,
+                onBehaviourAdded = _onBehaviourAdded,
                 onCrashIntoObstacle = _onCrashIntoObstacle
             };
 
-            AddUnsafe(new InteractionHandlerRoot(characterCtx));
+            AddUnsafe(new InteractionReporterService(characterCtx));
         }
 
         private async void RunGameAsync()

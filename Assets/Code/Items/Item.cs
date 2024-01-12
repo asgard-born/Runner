@@ -1,15 +1,14 @@
-﻿using ObjectsPool;
-using Shared.Containers;
+﻿using System.Collections.Generic;
+using Shared;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Items
 {
-    public class Item : PoolObject
+    public class Item : SerializedMonoBehaviour
     {
-        [SerializeField] protected EffectContainer[] _effects;
-        [SerializeField] protected float _timeSec;
+        [SerializeField] private List<BehaviourInfo> _behaviours;
 
-        public EffectContainer[] effects => _effects;
-        public float timeSec => _timeSec;
+        public List<BehaviourInfo> behaviours => _behaviours;
     }
 }
