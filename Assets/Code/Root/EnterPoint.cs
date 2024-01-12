@@ -6,9 +6,10 @@ namespace Root
 {
     public class EnterPoint : MonoBehaviour
     {
-        [Space, Header("Configs")] [SerializeField] private LevelConfigs _levelConfigs;
-        [SerializeField] private PlayersConfigs _playersConfigs;
+        [Header("Configs")] [SerializeField] private PlayersConfigs _playersConfigs;
+        [SerializeField] private LevelConfigs _levelConfigs;
         [SerializeField] private ResourcesConfigs _resourcesConfigs;
+        [SerializeField] private CameraConfigs _cameraConfigs;
         [Space, Header("UI")] [SerializeField] private RectTransform _uiRoot;
         [SerializeField] private OrientationAxises _orientationAxises;
         [SerializeField] private Transform _spawnPoint;
@@ -20,9 +21,10 @@ namespace Root
         {
             var rootCtx = new GameRoot.Ctx
             {
-                levelConfigs = _levelConfigs,
                 playersConfigs = _playersConfigs,
+                levelConfigs = _levelConfigs,
                 resourcesConfigs = _resourcesConfigs,
+                cameraConfigs = _cameraConfigs,
                 uiRoot = _uiRoot,
                 orientationAxises = _orientationAxises,
                 spawnPoint = _spawnPoint,

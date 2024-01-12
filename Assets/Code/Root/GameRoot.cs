@@ -32,9 +32,10 @@ namespace Root
 
         public struct Ctx
         {
-            public LevelConfigs levelConfigs;
             public PlayersConfigs playersConfigs;
+            public LevelConfigs levelConfigs;
             public ResourcesConfigs resourcesConfigs;
+            public CameraConfigs cameraConfigs;
             public RectTransform uiRoot;
             public Transform spawnPoint;
             public Camera camera;
@@ -121,9 +122,9 @@ namespace Root
             {
                 characterTransform = characterTransform,
                 cameraTransform = _ctx.camera.transform,
-                cameraSmooth = _ctx.playersConfigs.cameraSmooth,
-                positionOffset = _ctx.levelConfigs.cameraPositionOffset,
-                rotationOffset = _ctx.levelConfigs.cameraRotationOffset
+                cameraSmooth = _ctx.cameraConfigs.smooth,
+                positionOffset = _ctx.cameraConfigs.positionOffset,
+                rotationOffset = _ctx.cameraConfigs.rotationOffset
             };
 
             AddUnsafe(new CameraPm(ctx));
