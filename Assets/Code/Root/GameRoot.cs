@@ -91,7 +91,10 @@ namespace Root
         {
             var characterCtx = new InteractionHandlerRoot.Ctx
             {
-                onInterraction = _onInterraction
+                onInterraction = _onInterraction,
+                onBehaviourChanged = _onBehaviourChanged,
+                onConditionAdded = _onConditionAdded,
+                onCrashIntoObstacle = _onCrashIntoObstacle
             };
 
             AddUnsafe(new InteractionHandlerRoot(characterCtx));

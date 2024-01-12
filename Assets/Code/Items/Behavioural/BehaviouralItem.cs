@@ -11,7 +11,7 @@ namespace Items.Behavioural
 
         public BehaviourContainer behaviourContainer => _behaviourContainer;
 
-        private void OnValidate()
+        private void Start()
         {
             Assert.IsTrue(_behaviourContainer.type.IsSubclassOf(typeof(CharacterBehaviour)), $"The behaviour must be inherited from {nameof(CharacterBehaviour)}");
         }

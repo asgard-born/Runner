@@ -1,4 +1,5 @@
 ﻿using Framework;
+using Shared;
 using UniRx;
 using UnityEngine;
 
@@ -9,6 +10,9 @@ namespace Interactions
         public struct Ctx
         {
             public ReactiveCommand<Collider> onInterraction;
+            public ReactiveCommand<BehaviourContainer> onBehaviourChanged;
+            public ReactiveCommand<ConditionContainer> onConditionAdded;
+            public ReactiveCommand<GameObject> onCrashIntoObstacle;
         }
 
         public InteractionHandlerRoot(Ctx ctx)

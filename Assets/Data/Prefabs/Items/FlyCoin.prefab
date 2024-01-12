@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1695149266354087611}
   - component: {fileID: 7034090950668143965}
   - component: {fileID: 3780070680476746506}
-  - component: {fileID: 7273621751348420661}
+  - component: {fileID: 6114771875753264582}
   m_Layer: 6
   m_Name: FlyCoin
   m_TagString: Untagged
@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -584.91, y: 1.56, z: -2.45}
-  m_LocalScale: {x: 1, y: 1, z: 0.2}
+  m_LocalScale: {x: 1, y: 1, z: 0.20000002}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -48,8 +48,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df4aadbb18d34b90a751d614de2e023a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _behaviourType:
-    _behaviourName: 10
+  _effects: []
+  _timeSec: 0
 --- !u!33 &1695149266354087611
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -115,36 +115,21 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &7273621751348420661
-Rigidbody:
+--- !u!114 &6114771875753264582
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6818167270396220995}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba78e5419a784c8b92f65ba9c17e5f96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

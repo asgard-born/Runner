@@ -1,9 +1,10 @@
-﻿using Shared;
+﻿using ObjectsPool;
+using Shared;
 using UnityEngine;
 
 namespace Items
 {
-    public class Item : MonoBehaviour
+    public class Item : PoolObject
     {
         [SerializeField] protected EffectContainer[] _effects;
         [SerializeField] protected float _timeSec;

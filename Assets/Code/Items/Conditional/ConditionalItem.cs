@@ -14,7 +14,7 @@ namespace Items.Conditional
 
         public ConditionContainer conditionContainer => _conditionContainer;
 
-        private void OnValidate()
+        private void Start()
         {
             Assert.IsTrue(_conditionContainer.type.IsSubclassOf(typeof(CharacterCondition)), $"The condition must be inherited from {nameof(CharacterCondition)}");
         }
