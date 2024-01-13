@@ -1,6 +1,7 @@
-﻿using Character;
+﻿using System.Collections.Generic;
 using Framework;
 using Shared;
+using UniRx;
 using UnityEngine;
 
 namespace Behaviour
@@ -25,7 +26,8 @@ namespace Behaviour
             public Rigidbody rigidbody;
             public Transform characterTransform;
             public CharacterState state;
-            public RoadPart roadPart;
+            public LinkedList<Roadline> roadlines;
+            public ReactiveCommand<SwipeDirection> onSwipeDirection;
         }
 
         public CharacterBehaviourPm(Ctx ctx)

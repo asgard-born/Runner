@@ -1,10 +1,12 @@
-﻿namespace Shared
+﻿using System.Collections.Generic;
+
+namespace Shared
 {
     public struct CharacterState
     {
         public float initialSpeed;
         public float speed;
         public float jumpForce;
-        public RoadPart roadPart;
+        public LinkedListNode<Roadline> currentRoadline;
     }
 }

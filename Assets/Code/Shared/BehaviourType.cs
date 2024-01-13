@@ -7,6 +7,6 @@
     {
         None = 0,
         Moving = 10,
-        Velocity = 20,
+        Velocity = 20
     }
 }

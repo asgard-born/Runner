@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Behaviour;
 using CameraLogic;
 using Character;
@@ -27,7 +28,7 @@ namespace Root
         private ReactiveCommand<Transform> _onCharacterInitialized;
         private ReactiveCommand<Collider> _onInterraction;
         private ReactiveCommand<Obstacle> _onCrashIntoObstacle;
-        private ReactiveCommand<BehaviourConfigs> _onBehaviourAdded;
+        private ReactiveCommand<BehaviourInfo> _onBehaviourAdded;
         private ReactiveCommand<CharacterBehaviourPm> _onBehaviourCreated;
 
         public struct Ctx
@@ -37,9 +38,8 @@ namespace Root
             public ResourcesConfigs resourcesConfigs;
             public CameraConfigs cameraConfigs;
             public RectTransform uiRoot;
-            public Transform spawnPoint;
+            public LinkedListNode<Roadline> spawnRoadlineNode;
             public Camera camera;
-            public RoadPart roadPart;
         }
 
         public GameRoot(Ctx ctx)
@@ -59,7 +59,7 @@ namespace Root
             _onCharacterInitialized = AddUnsafe(new ReactiveCommand<Transform>());
             _onCrashIntoObstacle = AddUnsafe(new ReactiveCommand<Obstacle>());
             _onInterraction = AddUnsafe(new ReactiveCommand<Collider>());
-            _onBehaviourAdded = AddUnsafe(new ReactiveCommand<BehaviourConfigs>());
+            _onBehaviourAdded = AddUnsafe(new ReactiveCommand<BehaviourInfo>());
             _onBehaviourCreated = AddUnsafe(new ReactiveCommand<CharacterBehaviourPm>());
 
             AddUnsafe(_onCharacterInitialized.Subscribe(InitializeCamera));
@@ -71,7 +71,7 @@ namespace Root
             {
                 rootTransform = ctx.uiRoot,
                 virtualPadViewReference = ctx.resourcesConfigs.virtualPadReference,
-                onSwipeDirection = _onSwipeDirection,
+                onSwipeDirection = _onSwipeDirection
             };
 
             AddUnsafe(new VirtualPadRoot(virtualPadEntityCtx));
@@ -83,35 +83,36 @@ namespace Root
             {
                 initialSpeed = _ctx.playersConfigs.initialSpeed,
                 speed = _ctx.playersConfigs.initialSpeed,
-                roadPart = _ctx.roadPart,
+                currentRoadline = _ctx.spawnRoadlineNode,
                 jumpForce = _ctx.playersConfigs.jumpForce
             };
 
-            var characterCtx = new CharacterRoot.Ctx
+            var ctx = new CharacterRoot.Ctx
             {
                 state = state,
                 viewReference = _ctx.resourcesConfigs.characterReference,
-                spawnPoint = _ctx.spawnPoint,
+                spawnPoint = state.currentRoadline.Value.transform,
 
                 onCharacterInitialized = _onCharacterInitialized,
                 onInterraction = _onInterraction,
-                onBehaviourCreated = _onBehaviourCreated,
-                onSwipeDirection = _onSwipeDirection
+                onSwipeDirection = _onSwipeDirection,
+                onBehaviourAdded = _onBehaviourAdded,
+                onBehaviourCreated = _onBehaviourCreated
             };
 
-            AddUnsafe(new CharacterRoot(characterCtx));
+            AddUnsafe(new CharacterRoot(ctx));
         }
 
         private void InitializeServices()
         {
-            var characterCtx = new InteractionReporterService.Ctx
+            var characterCtx = new InteractionReporter.Ctx
             {
                 onInterraction = _onInterraction,
                 onBehaviourAdded = _onBehaviourAdded,
                 onCrashIntoObstacle = _onCrashIntoObstacle
             };
 
-            AddUnsafe(new InteractionReporterService(characterCtx));
+            AddUnsafe(new InteractionReporter(characterCtx));
         }
 
         private async void RunGameAsync()

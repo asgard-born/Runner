@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Behaviour;
+using Behaviour.Behaviours;
 using Framework;
 using Shared;
 using UniRx;
@@ -20,7 +21,9 @@ namespace Character
         {
             public Transform characterTransform;
             public Transform spawnPoint;
+            public BehaviourInfo defaultBehaviourInfo;
 
+            public ReactiveCommand<BehaviourInfo> onBehaviourAdded;
             public ReactiveCommand<CharacterBehaviourPm> onBehaviourCreated;
             public ReactiveCommand<Transform> onCharacterInitialized;
         }
@@ -35,10 +38,11 @@ namespace Character
 
         private void InitializeCharacter()
         {
-            _ctx.characterTransform.position = _ctx.spawnPoint.position;
-            _ctx.characterTransform.rotation = _ctx.spawnPoint.rotation;
+            _ctx.characterTransform.position = _ctx.spawnPoint.transform.position;
+            _ctx.characterTransform.rotation = _ctx.spawnPoint.transform.rotation;
 
             _ctx.onCharacterInitialized?.Execute(_ctx.characterTransform);
+            _ctx.onBehaviourAdded?.Execute(_ctx.defaultBehaviourInfo);
         }
 
         private void OnBehaviourCreated(CharacterBehaviourPm behaviour)

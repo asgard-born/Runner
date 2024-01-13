@@ -9,6 +9,6 @@
         Run = 10,
         Fly = 20,
         Slow = 30,
-        Fast = 40,
+        Fast = 40
     }
 }

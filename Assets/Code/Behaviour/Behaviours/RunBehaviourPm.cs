@@ -7,12 +7,13 @@ namespace Behaviour.Behaviours
     public class RunBehaviourPm : CharacterBehaviourPm
     {
         private Sequence _sideMovingSequence;
-        
+
         private static readonly int _idle = Animator.StringToHash("Idle");
         private static readonly int _running = Animator.StringToHash("Running");
         private static readonly int _jumping = Animator.StringToHash("Jumping");
         private static readonly int _falling = Animator.StringToHash("Falling");
         private static readonly int _damage = Animator.StringToHash("Damage");
+        private float _sideMoveDurationSec = .5f;
 
         public RunBehaviourPm(Ctx ctx) : base(ctx)
         {
@@ -45,10 +46,9 @@ namespace Behaviour.Behaviours
             switch (swipeDirection)
             {
                 case SwipeDirection.Left:
-                    
-                    break;
-
                 case SwipeDirection.Right:
+                    SideMove(swipeDirection);
+
                     break;
 
                 case SwipeDirection.Up:
@@ -61,12 +61,32 @@ namespace Behaviour.Behaviours
             }
         }
 
-        private void MovingLeftProcess()
+        private void SideMove(SwipeDirection swipeDirection)
         {
+            var transform = _ctx.characterTransform;
+            Vector3 roadPosition;
+
+            if (!CanMoveToDirection(swipeDirection)) return;
+
             // _sideMovingSequence = DOTween
-            //     .Sequence(_ctx.rigidbody.DOMove(_ctx.rigidbody.position));
+            //     .Sequence(_ctx.characterTransform.DOMoveX( roadPosition.x, _sideMoveDurationSec));
+        }
 
+        private bool CanMoveToDirection(SwipeDirection swipeDirection)
+        {
+            var currentLine = _ctx.state.currentRoadline;
 
+            if (swipeDirection == SwipeDirection.Left && currentLine.Previous != null)
+            {
+                return true;
+            }
+
+            if (swipeDirection == SwipeDirection.Right && currentLine.Next != null)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private void TryJump(float jumpForce)
@@ -132,7 +152,6 @@ namespace Behaviour.Behaviours
         {
             if (IsGrounded())
             {
-                
             }
             else
             {

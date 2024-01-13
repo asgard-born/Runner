@@ -1,4 +1,5 @@
 ﻿using Behaviour;
+using Cysharp.Threading.Tasks;
 using Framework;
 using Framework.Reactive;
 using Shared;
@@ -26,10 +27,12 @@ namespace Character
             public CharacterState state;
             public AssetReference viewReference;
             public Transform spawnPoint;
+            public BehaviourInfo defaultBehaviourInfo;
             
             public ReactiveCommand<Transform> onCharacterInitialized;
             public ReactiveCommand<Collider> onInterraction;
             public ReactiveCommand<SwipeDirection> onSwipeDirection;
+            public ReactiveCommand<BehaviourInfo> onBehaviourAdded;
             public ReactiveCommand<CharacterBehaviourPm> onBehaviourCreated;
         }
 
@@ -38,10 +41,17 @@ namespace Character
             _ctx = ctx;
             _onCharacterInitialized = ctx.onCharacterInitialized;
 
-            InitializeCharacterAsync();
+            InitializeAsync();
         }
 
-        private async void InitializeCharacterAsync()
+        private async void InitializeAsync()
+        {
+            await InitializeCharacterAsync();
+            InitializeBehaviourFactory();
+        }
+       
+
+        private async UniTask InitializeCharacterAsync()
         {
             var prefab = await LoadAndTrackPrefab<CharacterView>(_ctx.viewReference);
 
@@ -59,11 +69,29 @@ namespace Character
                 characterTransform = _view.transform,
                 spawnPoint = _ctx.spawnPoint,
 
-                onCharacterInitialized = _onCharacterInitialized,
-                onBehaviourCreated = _ctx.onBehaviourCreated
+                onBehaviourAdded = _ctx.onBehaviourAdded,
+                onBehaviourCreated = _ctx.onBehaviourCreated,
+                onCharacterInitialized = _onCharacterInitialized
             };
 
             AddUnsafe(new CharacterPm(ctx));
+        }
+        
+        private void InitializeBehaviourFactory()
+        {
+            var behaviourFactoryCtx = new BehaviourFactory.Ctx
+            {
+                state = _ctx.state,
+                animator = _view.animator,
+                rigidbody = _view.rigidbody,
+                characterTransform = _view.transform,
+                
+                onSwipeDirection = _ctx.onSwipeDirection,
+                onBehaviourAdded = _ctx.onBehaviourAdded,
+                onBehaviourCreated = _ctx.onBehaviourCreated
+            };
+            
+            AddUnsafe(new BehaviourFactory(behaviourFactoryCtx));
         }
     }
 }
