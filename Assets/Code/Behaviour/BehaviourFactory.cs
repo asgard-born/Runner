@@ -1,5 +1,4 @@
 ﻿using Behaviour.Behaviours;
-using Character;
 using Framework;
 using Shared;
 using UniRx;
@@ -7,7 +6,7 @@ using UnityEngine;
 
 namespace Behaviour
 {
-    public class BehaviourFactoryPm : BaseDisposable
+    public class BehaviourFactory : BaseDisposable
     {
         private readonly Ctx _ctx;
 
@@ -15,17 +14,17 @@ namespace Behaviour
 
         public struct Ctx
         {
-            public Animator animatorView;
-            public Rigidbody rigidbody;
             public CharacterState state;
+            public Animator animator;
+            public Rigidbody rigidbody;
             public Transform characterTransform;
-            public RoadPart roadPart;
 
             public ReactiveCommand<BehaviourInfo> onBehaviourAdded;
             public ReactiveCommand<CharacterBehaviourPm> onBehaviourCreated;
+            public ReactiveCommand<SwipeDirection> onSwipeDirection;
         }
 
-        public BehaviourFactoryPm(Ctx ctx)
+        public BehaviourFactory(Ctx ctx)
         {
             _ctx = ctx;
 
@@ -40,10 +39,11 @@ namespace Behaviour
             {
                 durationSec = behaviourInfo.durationSec,
                 effects = behaviourInfo.configs.effects,
-                animator = _ctx.animatorView,
+                animator = _ctx.animator,
                 rigidbody = _ctx.rigidbody,
                 characterTransform = _ctx.characterTransform,
                 state = _ctx.state,
+                onSwipeDirection = _ctx.onSwipeDirection
             };
 
             switch (behaviourInfo.configs.name)
@@ -51,6 +51,21 @@ namespace Behaviour
                 default:
                 case BehaviourName.Run:
                     behaviour = new RunBehaviourPm(_behaviourCtx);
+
+                    break;
+
+                case BehaviourName.Fly:
+                    behaviour = new FlyBehaviourPm(_behaviourCtx);
+
+                    break;
+
+                case BehaviourName.Slow:
+                    behaviour = new SlowBehaviourPm(_behaviourCtx);
+
+                    break;
+
+                case BehaviourName.Fast:
+                    behaviour = new FastBehaviourPm(_behaviourCtx);
 
                     break;
             }

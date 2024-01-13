@@ -32,7 +32,7 @@ namespace Framework.Addressables
                 try
                 {
                     var handle = UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<T>(reference);
-                    T asset = await handle.Task;
+                    T asset = await handle.ToUniTask();
 
                     if (handle.OperationException != null)
                     {
