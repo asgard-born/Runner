@@ -27,14 +27,21 @@ namespace Character
             public ReactiveTrigger<BehaviourType, CharacterBehaviourPm> onNewBehaviourProduced;
             public ReactiveCommand<BehaviourType> onBehaviourAdded;
             public ReactiveCommand<Transform> onCharacterInitialized;
+            public ReactiveCommand<BehaviourType> onBehaviourFinished;
         }
 
         public CharacterPm(Ctx ctx)
         {
             _ctx = ctx;
 
-            AddUnsafe(ctx.onNewBehaviourProduced.Subscribe(OnNewBehaviourProduced));
+            InitializeRx();
             InitializeCharacter();
+        }
+
+        private void InitializeRx()
+        {
+            AddUnsafe(_ctx.onNewBehaviourProduced.Subscribe(OnNewBehaviourProduced));
+            AddUnsafe(_ctx.onBehaviourFinished.Subscribe(OnBehaviourFinished));
         }
 
         private void InitializeCharacter()
@@ -57,8 +64,20 @@ namespace Character
             {
                 _behaviours.Add(type, newBehaviour);
             }
-            
+
             _ctx.onBehaviourAdded?.Execute(type);
+        }
+
+        private void OnBehaviourFinished(BehaviourType type)
+        {
+            if (_behaviours.TryGetValue(type, out var finishedBehaviour))
+            {
+                finishedBehaviour.Dispose();
+            }
+            else
+            {
+                Debug.LogError("The behaviour must be in dictionary");
+            }
         }
     }
 }

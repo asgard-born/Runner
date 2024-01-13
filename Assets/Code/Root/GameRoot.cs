@@ -29,7 +29,6 @@ namespace Root
         private ReactiveCommand<Collider> _onInterraction;
         private ReactiveCommand<Obstacle> _onInteractedWithObstacle;
         private ReactiveCommand<BehaviourInfo> _onBehaviourTaken;
-        private ReactiveTrigger<BehaviourType, CharacterBehaviourPm> _onNewBehaviourProduced;
 
         public struct Ctx
         {
@@ -61,7 +60,6 @@ namespace Root
             _onInteractedWithObstacle = AddUnsafe(new ReactiveCommand<Obstacle>());
             _onInterraction = AddUnsafe(new ReactiveCommand<Collider>());
             _onBehaviourTaken = AddUnsafe(new ReactiveCommand<BehaviourInfo>());
-            _onNewBehaviourProduced = AddUnsafe(new ReactiveTrigger<BehaviourType, CharacterBehaviourPm>());
 
             AddUnsafe(_onCharacterInitialized.Subscribe(InitializeCamera));
         }
@@ -92,7 +90,6 @@ namespace Root
                 onInterraction = _onInterraction,
                 onSwipeDirection = _onSwipeDirection,
                 onBehaviourTaken = _onBehaviourTaken,
-                onNewBehaviourProduced = _onNewBehaviourProduced
             };
 
             AddUnsafe(new CharacterRoot(ctx));

@@ -24,7 +24,7 @@ namespace CameraLogic
         {
             _ctx = ctx;
             
-            Observable.EveryLateUpdate().Subscribe(Follow);
+            AddUnsafe(Observable.EveryLateUpdate().Subscribe(Follow));
         }
 
         private void Follow(long _)

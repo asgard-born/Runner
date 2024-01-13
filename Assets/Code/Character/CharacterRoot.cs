@@ -13,18 +13,20 @@ using Object = UnityEngine.Object;
 namespace Character
 {
     /// <summary>
-    /// Доменная зона персонажа. Является входной точкой, которая создает Presentation Model и View персонажа,
-    /// а также реализует их слабую связанность посредством реактивных команд.
+    /// Доменная зона персонажа. Является входной точкой, которая создает
+    /// PresentationModel, View и Фабрику поведений персонажа и связывает их посредством реактивных команд
     /// </summary>
     public class CharacterRoot : BaseDisposable
     {
+        private Ctx _ctx;
         private CharacterView _view;
         private CharacterState _state;
 
         private ReactiveTrigger<float> _onSpeedChangedCallback;
-
-        private Ctx _ctx;
-
+        private ReactiveCommand<BehaviourType> _onBehaviourAdded;
+        private ReactiveTrigger<BehaviourType, CharacterBehaviourPm> _onNewBehaviourProduced;
+        private ReactiveCommand<BehaviourType> _onBehaviourFinished;
+        
         public struct Ctx
         {
             public PlayersConfigs playersConfigs;
@@ -37,8 +39,6 @@ namespace Character
             public ReactiveCommand<Collider> onInterraction;
             public ReactiveCommand<SwipeDirection> onSwipeDirection;
             public ReactiveCommand<BehaviourInfo> onBehaviourTaken;
-            public ReactiveTrigger<BehaviourType, CharacterBehaviourPm> onNewBehaviourProduced;
-            public ReactiveCommand<BehaviourType> onBehaviourAdded;
         }
 
         public CharacterRoot(Ctx ctx)
@@ -50,16 +50,23 @@ namespace Character
 
         private async void InitializeAsync()
         {
+            InitializeRx();
             await InitializeCharacterView();
-            InitializeCharacterPm();
             InitializeCharacterState();
             InitializeBehaviourFactory();
+            InitializeCharacterPm();
+        }
+
+        private void InitializeRx()
+        {
+            _onNewBehaviourProduced = AddUnsafe(new ReactiveTrigger<BehaviourType, CharacterBehaviourPm>());
+            _onBehaviourAdded = AddUnsafe(new ReactiveCommand<BehaviourType>());
+            _onBehaviourFinished = AddUnsafe(new ReactiveCommand<BehaviourType>());
         }
 
         private async UniTask InitializeCharacterView()
         {
             var prefab = await LoadAndTrackPrefab<CharacterView>(_ctx.viewReference);
-
             _view = Object.Instantiate(prefab);
 
             var viewCtx = new CharacterView.Ctx
@@ -80,8 +87,9 @@ namespace Character
 
                 onCharacterInitialized = _ctx.onCharacterInitialized,
                 onBehaviourTaken = _ctx.onBehaviourTaken,
-                onNewBehaviourProduced = _ctx.onNewBehaviourProduced,
-                onBehaviourAdded = _ctx.onBehaviourAdded
+                onNewBehaviourProduced = _onNewBehaviourProduced,
+                onBehaviourAdded = _onBehaviourAdded,
+                onBehaviourFinished = _onBehaviourFinished
             };
 
             AddUnsafe(new CharacterPm(ctx));
@@ -109,8 +117,8 @@ namespace Character
 
                 onSwipeDirection = _ctx.onSwipeDirection,
                 onBehaviourTaken = _ctx.onBehaviourTaken,
-                onNewBehaviourProduced = _ctx.onNewBehaviourProduced,
-                onBehaviourAdded = _ctx.onBehaviourAdded
+                onNewBehaviourProduced = _onNewBehaviourProduced,
+                onBehaviourAdded = _onBehaviourAdded
             };
 
             AddUnsafe(new CharacterBehaviourFactoryPm(behaviourFactoryCtx));

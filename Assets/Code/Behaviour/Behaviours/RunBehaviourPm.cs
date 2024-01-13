@@ -44,7 +44,7 @@ namespace Behaviour.Behaviours
             }
         }
 
-        protected override void OnSwipe(SwipeDirection swipeDirection)
+        protected override void OnSwipeDirection(SwipeDirection swipeDirection)
         {
             switch (swipeDirection)
             {
