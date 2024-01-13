@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace CameraLogic
 {
+    /// <summary>
+    /// Управляет логикой работы камеры.
+    /// </summary>
     public class CameraPm : BaseDisposable
     {
         private Ctx _ctx;
@@ -12,7 +15,7 @@ namespace CameraLogic
         {
             public Transform characterTransform;
             public Transform cameraTransform;
-            public float cameraSmooth;
+            public float smoothFactor;
             public Vector3 positionOffset;
             public Vector3 rotationOffset;
         }
@@ -20,6 +23,7 @@ namespace CameraLogic
         public CameraPm(Ctx ctx)
         {
             _ctx = ctx;
+            
             Observable.EveryLateUpdate().Subscribe(Follow);
         }
 
@@ -27,7 +31,7 @@ namespace CameraLogic
         {
             if (_ctx.characterTransform == null) return;
 
-            float smoothSpeed = _ctx.cameraSmooth * Time.deltaTime;
+            float smoothSpeed = _ctx.smoothFactor * Time.deltaTime;
 
             Vector3 desiredPosition = _ctx.characterTransform.position + _ctx.characterTransform.rotation * _ctx.positionOffset;
             Vector3 smoothedPosition = Vector3.Lerp(_ctx.cameraTransform.position, desiredPosition, smoothSpeed);

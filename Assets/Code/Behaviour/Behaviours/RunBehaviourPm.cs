@@ -52,7 +52,7 @@ namespace Behaviour.Behaviours
                     break;
 
                 case SwipeDirection.Up:
-                    TryJump(_ctx.stats.jumpForce);
+                    TryJump(_ctx.state.jumpForce);
 
                     break;
 
@@ -89,7 +89,7 @@ namespace Behaviour.Behaviours
 
         private void OnMove()
         {
-            Run(_ctx.stats.speed);
+            Run(_ctx.state.speed);
         }
 
         private void OnJumping()

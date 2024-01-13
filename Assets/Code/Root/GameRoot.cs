@@ -39,7 +39,7 @@ namespace Root
             public RectTransform uiRoot;
             public Transform spawnPoint;
             public Camera camera;
-            public OrientationAxises orientationAxises;
+            public RoadPart roadPart;
         }
 
         public GameRoot(Ctx ctx)
@@ -79,14 +79,19 @@ namespace Root
 
         private void InitializeCharacter()
         {
-            var stats = new CharacterStats(_ctx.playersConfigs.initialSpeed, _ctx.playersConfigs.jumpForce);
+            var state = new CharacterState
+            {
+                initialSpeed = _ctx.playersConfigs.initialSpeed,
+                speed = _ctx.playersConfigs.initialSpeed,
+                roadPart = _ctx.roadPart,
+                jumpForce = _ctx.playersConfigs.jumpForce
+            };
 
             var characterCtx = new CharacterRoot.Ctx
             {
-                stats = stats,
+                state = state,
                 viewReference = _ctx.resourcesConfigs.characterReference,
                 spawnPoint = _ctx.spawnPoint,
-                orientationAxises = _ctx.orientationAxises,
 
                 onCharacterInitialized = _onCharacterInitialized,
                 onInterraction = _onInterraction,
@@ -122,7 +127,7 @@ namespace Root
             {
                 characterTransform = characterTransform,
                 cameraTransform = _ctx.camera.transform,
-                cameraSmooth = _ctx.cameraConfigs.smooth,
+                smoothFactor = _ctx.cameraConfigs.smoothFactor,
                 positionOffset = _ctx.cameraConfigs.positionOffset,
                 rotationOffset = _ctx.cameraConfigs.rotationOffset
             };

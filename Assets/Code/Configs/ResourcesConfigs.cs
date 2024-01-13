@@ -3,7 +3,10 @@ using UnityEngine.AddressableAssets;
 
 namespace Configs
 {
-    [CreateAssetMenu(menuName = "Configs/ResourcesConfigs", fileName = "ResourcesConfigs")]
+    /// <summary>
+    /// Конфиги для загружаемых ресурсов
+    /// </summary>
+    [CreateAssetMenu(menuName = "Configs/Resources Configs", fileName = "Resources_Configs")]
     public class ResourcesConfigs : ScriptableObject
     {
         public AssetReference characterReference;

@@ -9,6 +9,10 @@ using Object = UnityEngine.Object;
 
 namespace Character
 {
+    /// <summary>
+    /// Доменная зона персонажа. Является входной точкой, которая создает Presentation Model и View персонажа,
+    /// а также реализует их слабую связанность посредством реактивных команд.
+    /// </summary>
     public class CharacterRoot : BaseDisposable
     {
         private ReactiveCommand<Transform> _onCharacterInitialized;
@@ -19,10 +23,10 @@ namespace Character
 
         public struct Ctx
         {
-            public CharacterStats stats;
+            public CharacterState state;
             public AssetReference viewReference;
             public Transform spawnPoint;
-            public OrientationAxises orientationAxises;
+            
             public ReactiveCommand<Transform> onCharacterInitialized;
             public ReactiveCommand<Collider> onInterraction;
             public ReactiveCommand<SwipeDirection> onSwipeDirection;

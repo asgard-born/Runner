@@ -24,8 +24,8 @@ namespace Behaviour
             public Animator animator;
             public Rigidbody rigidbody;
             public Transform characterTransform;
-            public CharacterStats stats;
-            public OrientationAxises orientationAxises;
+            public CharacterState state;
+            public RoadPart roadPart;
         }
 
         public CharacterBehaviourPm(Ctx ctx)

@@ -11,7 +11,7 @@ namespace Root
         [SerializeField] private ResourcesConfigs _resourcesConfigs;
         [SerializeField] private CameraConfigs _cameraConfigs;
         [Space, Header("UI")] [SerializeField] private RectTransform _uiRoot;
-        [SerializeField] private OrientationAxises _orientationAxises;
+        [SerializeField] private RoadPart _roadPart;
         [SerializeField] private Transform _spawnPoint;
         [SerializeField] private Camera _camera;
 
@@ -26,7 +26,7 @@ namespace Root
                 resourcesConfigs = _resourcesConfigs,
                 cameraConfigs = _cameraConfigs,
                 uiRoot = _uiRoot,
-                orientationAxises = _orientationAxises,
+                roadPart = _roadPart,
                 spawnPoint = _spawnPoint,
                 camera = _camera
             };

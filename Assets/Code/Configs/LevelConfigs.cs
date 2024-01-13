@@ -2,9 +2,13 @@
 
 namespace Configs
 {
-    [CreateAssetMenu(menuName = "Configs/LevelConfigs", fileName = "LevelConfigs")]
+    /// <summary>
+    /// Конфиги для установки каждого из уровней
+    /// </summary>
+    [CreateAssetMenu(menuName = "Configs/Level Configs", fileName = "Level_Configs")]
     public class LevelConfigs : ScriptableObject
     {
-        [Space, Header("Start")] public float startDelaySec = 1.2f;
+        [Space, Header("Start")] private float _startDelaySec = 1.2f;
+        public float startDelaySec => _startDelaySec;
     }
 }

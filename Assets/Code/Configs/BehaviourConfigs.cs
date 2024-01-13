@@ -8,15 +8,15 @@ namespace Configs
     /// При создании, мы устанавливаем контракт тип-название
     /// Поведения одних и тех же типов будет взаимоисключаемым
     /// </summary>
-    [CreateAssetMenu(fileName = "Behaviour_Configs", menuName = "Configs/Behaviour Configs")]
+    [CreateAssetMenu(menuName = "Configs/Behaviour Configs", fileName = "Behaviour_Configs")]
     public class BehaviourConfigs : ScriptableObject
     {
         [SerializeField] private BehaviourType _type;
         [SerializeField] private BehaviourName _name;
-        
+
         [SerializeField] private GameObject[] _effects;
         [SerializeField] private float _durationSec;
-        
+
         public BehaviourType type => _type;
         public BehaviourName name => _name;
         public GameObject[] effects => _effects;

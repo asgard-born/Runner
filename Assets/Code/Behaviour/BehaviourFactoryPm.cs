@@ -17,9 +17,9 @@ namespace Behaviour
         {
             public Animator animatorView;
             public Rigidbody rigidbody;
-            public CharacterStats stats;
+            public CharacterState state;
             public Transform characterTransform;
-            public OrientationAxises orientationAxises;
+            public RoadPart roadPart;
 
             public ReactiveCommand<BehaviourInfo> onBehaviourAdded;
             public ReactiveCommand<CharacterBehaviourPm> onBehaviourCreated;
@@ -43,7 +43,7 @@ namespace Behaviour
                 animator = _ctx.animatorView,
                 rigidbody = _ctx.rigidbody,
                 characterTransform = _ctx.characterTransform,
-                stats = _ctx.stats,
+                state = _ctx.state,
             };
 
             switch (behaviourInfo.configs.name)
