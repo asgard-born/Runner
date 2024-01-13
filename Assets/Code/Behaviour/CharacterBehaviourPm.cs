@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Framework;
+﻿using Framework;
 using Shared;
 using UniRx;
 using UnityEngine;
@@ -20,19 +19,29 @@ namespace Behaviour
 
         public struct Ctx
         {
+            public BehaviourType type;
+            public bool isEndless;
             public float durationSec;
             public GameObject[] effects;
             public Animator animator;
             public Rigidbody rigidbody;
             public Transform characterTransform;
             public CharacterState state;
-            public LinkedList<Roadline> roadlines;
             public ReactiveCommand<SwipeDirection> onSwipeDirection;
+            public ReactiveCommand<BehaviourType> onBehaviourAdded;
         }
 
         public CharacterBehaviourPm(Ctx ctx)
         {
             _ctx = ctx;
+            AddUnsafe(_ctx.onBehaviourAdded.Subscribe(OnBehaviourAdded));
+        }
+
+        private void OnBehaviourAdded(BehaviourType type)
+        {
+            if (type != _ctx.type) return;
+            
+            DoBehave();
         }
 
         protected abstract void DoBehave();

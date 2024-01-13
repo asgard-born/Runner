@@ -27,9 +27,9 @@ namespace Root
         private ReactiveCommand<SwipeDirection> _onSwipeDirection;
         private ReactiveCommand<Transform> _onCharacterInitialized;
         private ReactiveCommand<Collider> _onInterraction;
-        private ReactiveCommand<Obstacle> _onCrashIntoObstacle;
-        private ReactiveCommand<BehaviourInfo> _onBehaviourAdded;
-        private ReactiveCommand<CharacterBehaviourPm> _onBehaviourCreated;
+        private ReactiveCommand<Obstacle> _onInteractedWithObstacle;
+        private ReactiveCommand<BehaviourInfo> _onBehaviourTaken;
+        private ReactiveTrigger<BehaviourType, CharacterBehaviourPm> _onNewBehaviourProduced;
 
         public struct Ctx
         {
@@ -38,8 +38,9 @@ namespace Root
             public ResourcesConfigs resourcesConfigs;
             public CameraConfigs cameraConfigs;
             public RectTransform uiRoot;
-            public LinkedListNode<Roadline> spawnRoadlineNode;
+            public List<RoadlinePoint> roadlinePoints;
             public Camera camera;
+            public RoadlinePoint spawnPoint;
         }
 
         public GameRoot(Ctx ctx)
@@ -49,7 +50,7 @@ namespace Root
             InitializeRx();
             InitializeInput(ctx);
             InitializeCharacter();
-            InitializeServices();
+            InitializeInteractionReporter();
         }
 
         private void InitializeRx()
@@ -57,10 +58,10 @@ namespace Root
             _onGameRun = AddUnsafe(new ReactiveTrigger());
             _onSwipeDirection = AddUnsafe(new ReactiveCommand<SwipeDirection>());
             _onCharacterInitialized = AddUnsafe(new ReactiveCommand<Transform>());
-            _onCrashIntoObstacle = AddUnsafe(new ReactiveCommand<Obstacle>());
+            _onInteractedWithObstacle = AddUnsafe(new ReactiveCommand<Obstacle>());
             _onInterraction = AddUnsafe(new ReactiveCommand<Collider>());
-            _onBehaviourAdded = AddUnsafe(new ReactiveCommand<BehaviourInfo>());
-            _onBehaviourCreated = AddUnsafe(new ReactiveCommand<CharacterBehaviourPm>());
+            _onBehaviourTaken = AddUnsafe(new ReactiveCommand<BehaviourInfo>());
+            _onNewBehaviourProduced = AddUnsafe(new ReactiveTrigger<BehaviourType, CharacterBehaviourPm>());
 
             AddUnsafe(_onCharacterInitialized.Subscribe(InitializeCamera));
         }
@@ -79,47 +80,34 @@ namespace Root
 
         private void InitializeCharacter()
         {
-            var state = new CharacterState
-            {
-                initialSpeed = _ctx.playersConfigs.initialSpeed,
-                speed = _ctx.playersConfigs.initialSpeed,
-                currentRoadline = _ctx.spawnRoadlineNode,
-                jumpForce = _ctx.playersConfigs.jumpForce
-            };
-
             var ctx = new CharacterRoot.Ctx
             {
-                state = state,
+                playersConfigs = _ctx.playersConfigs,
                 viewReference = _ctx.resourcesConfigs.characterReference,
-                spawnPoint = state.currentRoadline.Value.transform,
+                initialBehaviourInfo = _ctx.playersConfigs.initialBehaviourInfo,
+                spawnPoint = _ctx.spawnPoint,
+                roadlinePoints = _ctx.roadlinePoints,
 
                 onCharacterInitialized = _onCharacterInitialized,
                 onInterraction = _onInterraction,
                 onSwipeDirection = _onSwipeDirection,
-                onBehaviourAdded = _onBehaviourAdded,
-                onBehaviourCreated = _onBehaviourCreated
+                onBehaviourTaken = _onBehaviourTaken,
+                onNewBehaviourProduced = _onNewBehaviourProduced
             };
 
             AddUnsafe(new CharacterRoot(ctx));
         }
 
-        private void InitializeServices()
+        private void InitializeInteractionReporter()
         {
-            var characterCtx = new InteractionReporter.Ctx
+            var characterCtx = new InteractionReporterPm.Ctx
             {
                 onInterraction = _onInterraction,
-                onBehaviourAdded = _onBehaviourAdded,
-                onCrashIntoObstacle = _onCrashIntoObstacle
+                onBehaviourTaken = _onBehaviourTaken,
+                onInteractedWithObstacle = _onInteractedWithObstacle
             };
 
-            AddUnsafe(new InteractionReporter(characterCtx));
-        }
-
-        private async void RunGameAsync()
-        {
-            await UniTask.Delay(TimeSpan.FromSeconds(_ctx.levelConfigs.startDelaySec));
-
-            _onGameRun?.Notify();
+            AddUnsafe(new InteractionReporterPm(characterCtx));
         }
 
         private void InitializeCamera(Transform characterTransform)
@@ -134,6 +122,13 @@ namespace Root
             };
 
             AddUnsafe(new CameraPm(ctx));
+        }
+
+        private async void RunGameAsync()
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(_ctx.levelConfigs.startDelaySec));
+
+            _onGameRun?.Notify();
         }
     }
 }

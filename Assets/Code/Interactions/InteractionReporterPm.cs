@@ -1,5 +1,4 @@
-﻿using Configs;
-using Framework;
+﻿using Framework;
 using Items;
 using Obstacles;
 using Shared;
@@ -8,22 +7,26 @@ using UnityEngine;
 
 namespace Interactions
 {
-    public class InteractionReporter : BaseDisposable
+    /// <summary>
+    /// Распознает тип объекта взаимодействия и сообщает об этом в событиях
+    /// принимает в себя абстрактное "сырье" в виде коллайдеров
+    /// </summary>
+    public class InteractionReporterPm : BaseDisposable
     {
-        private ReactiveCommand<BehaviourInfo> _onBehaviourAdded;
-        private ReactiveCommand<Obstacle> _onCrashIntoObstacle;
+        private ReactiveCommand<BehaviourInfo> _onBehaviourTaken;
+        private ReactiveCommand<Obstacle> _onInteractedWithObstacle;
 
         public struct Ctx
         {
             public ReactiveCommand<Collider> onInterraction;
-            public ReactiveCommand<BehaviourInfo> onBehaviourAdded;
-            public ReactiveCommand<Obstacle> onCrashIntoObstacle;
+            public ReactiveCommand<BehaviourInfo> onBehaviourTaken;
+            public ReactiveCommand<Obstacle> onInteractedWithObstacle;
         }
 
-        public InteractionReporter(Ctx ctx)
+        public InteractionReporterPm(Ctx ctx)
         {
-            _onBehaviourAdded = ctx.onBehaviourAdded;
-            _onCrashIntoObstacle = ctx.onCrashIntoObstacle;
+            _onBehaviourTaken = ctx.onBehaviourTaken;
+            _onInteractedWithObstacle = ctx.onInteractedWithObstacle;
             
             AddUnsafe(ctx.onInterraction.Subscribe(TryReport));
         }
@@ -43,7 +46,7 @@ namespace Interactions
             {
                 foreach (var behaviourInfo in item.behaviours)
                 {
-                    _onBehaviourAdded?.Execute(behaviourInfo);
+                    _onBehaviourTaken?.Execute(behaviourInfo);
                 }
                 
                 item.gameObject.SetActive(false);
@@ -54,7 +57,7 @@ namespace Interactions
 
             if (obstacle != null)
             {
-                _onCrashIntoObstacle?.Execute(obstacle);
+                _onInteractedWithObstacle?.Execute(obstacle);
             }
         }
     }

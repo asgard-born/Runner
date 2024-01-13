@@ -30,7 +30,10 @@ namespace Behaviour.Behaviours
             switch (_currentAction)
             {
                 case CharacterAction.Jumping:
-                    OnJumping();
+                    if (IsFalling())
+                    {
+                        _currentAction = CharacterAction.Falling;
+                    }
 
                     break;
 
@@ -109,15 +112,12 @@ namespace Behaviour.Behaviours
 
         private void OnMove()
         {
-            Run(_ctx.state.speed);
-        }
+            var speed = _ctx.state.velocity;
 
-        private void OnJumping()
-        {
-            if (IsFalling())
-            {
-                _currentAction = CharacterAction.Falling;
-            }
+            if (speed <= 0) return;
+
+            _ctx.rigidbody.MovePosition(_ctx.characterTransform.position + _ctx.characterTransform.forward * speed * Time.fixedDeltaTime);
+            _ctx.animator.SetBool(_running, true);
         }
 
         private void Stop()
@@ -125,14 +125,6 @@ namespace Behaviour.Behaviours
             _ctx.animator.SetBool(_idle, true);
 
             _ctx.rigidbody.isKinematic = true;
-        }
-
-        private void Run(float speed)
-        {
-            if (speed <= 0) return;
-
-            _ctx.rigidbody.MovePosition(_ctx.characterTransform.position + _ctx.characterTransform.forward * speed * Time.fixedDeltaTime);
-            _ctx.animator.SetBool(_running, true);
         }
 
         private bool IsGrounded()

@@ -13,9 +13,7 @@ namespace Configs
     {
         [SerializeField] private BehaviourType _type;
         [SerializeField] private BehaviourName _name;
-
         [SerializeField] private GameObject[] _effects;
-        [SerializeField] private float _durationSec;
 
         public BehaviourType type => _type;
         public BehaviourName name => _name;

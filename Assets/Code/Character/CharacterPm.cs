@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Behaviour;
-using Behaviour.Behaviours;
 using Framework;
+using Framework.Reactive;
 using Shared;
 using UniRx;
 using UnityEngine;
@@ -20,11 +20,12 @@ namespace Character
         public struct Ctx
         {
             public Transform characterTransform;
-            public Transform spawnPoint;
-            public BehaviourInfo defaultBehaviourInfo;
+            public RoadlinePoint spawnPoint;
+            public BehaviourInfo initialBehaviourInfo;
 
-            public ReactiveCommand<BehaviourInfo> onBehaviourAdded;
-            public ReactiveCommand<CharacterBehaviourPm> onBehaviourCreated;
+            public ReactiveCommand<BehaviourInfo> onBehaviourTaken;
+            public ReactiveTrigger<BehaviourType, CharacterBehaviourPm> onNewBehaviourProduced;
+            public ReactiveCommand<BehaviourType> onBehaviourAdded;
             public ReactiveCommand<Transform> onCharacterInitialized;
         }
 
@@ -32,7 +33,7 @@ namespace Character
         {
             _ctx = ctx;
 
-            AddUnsafe(ctx.onBehaviourCreated.Subscribe(OnBehaviourCreated));
+            AddUnsafe(ctx.onNewBehaviourProduced.Subscribe(OnNewBehaviourProduced));
             InitializeCharacter();
         }
 
@@ -42,12 +43,22 @@ namespace Character
             _ctx.characterTransform.rotation = _ctx.spawnPoint.transform.rotation;
 
             _ctx.onCharacterInitialized?.Execute(_ctx.characterTransform);
-            _ctx.onBehaviourAdded?.Execute(_ctx.defaultBehaviourInfo);
+            _ctx.onBehaviourTaken?.Execute(_ctx.initialBehaviourInfo);
         }
 
-        private void OnBehaviourCreated(CharacterBehaviourPm behaviour)
+        private void OnNewBehaviourProduced(BehaviourType type, CharacterBehaviourPm newBehaviour)
         {
+            if (_behaviours.TryGetValue(type, out var oldBehaviour))
+            {
+                oldBehaviour.Dispose();
+                _behaviours[type] = newBehaviour;
+            }
+            else
+            {
+                _behaviours.Add(type, newBehaviour);
+            }
             
+            _ctx.onBehaviourAdded?.Execute(type);
         }
     }
 }

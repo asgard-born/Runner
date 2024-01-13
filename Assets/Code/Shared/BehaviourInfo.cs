@@ -1,5 +1,6 @@
 ﻿using System;
 using Configs;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Shared
@@ -12,8 +13,10 @@ namespace Shared
     public class BehaviourInfo
     {
         [SerializeField] private BehaviourConfigs _configs;
-        [SerializeField] private float _durationSec;
+        [SerializeField] private bool _isEndless;
+        [SerializeField, HideIf("_isEndless")] private float _durationSec;
         
+        public bool isEndless => _isEndless;
         public float durationSec => _durationSec;
         public BehaviourConfigs configs => _configs;
     }

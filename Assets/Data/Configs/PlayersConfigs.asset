@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 072c7a026fa7429d8dde54c07ebdde37, type: 3}
   m_Name: PlayersConfigs
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 8706411172060818193, guid: 60a70c239708781458c23f25cad654f7, type: 3}
-  cameraSmooth: 2.5
-  initialSpeed: 5
-  jumpForce: 4.5
-  maxJumpingTimes: 2
-  lives: 5
+  _initialBehaviourInfo:
+    _configs: {fileID: 11400000, guid: d5e3070a81de46e439f0eb237103b20c, type: 2}
+    _isEndless: 1
+    _durationSec: 0
+  _initialSpeed: 15
+  _jumpForce: 4

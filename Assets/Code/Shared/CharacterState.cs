@@ -4,9 +4,9 @@ namespace Shared
 {
     public struct CharacterState
     {
-        public float initialSpeed;
-        public float speed;
+        public float initialVelocity;
+        public float velocity;
         public float jumpForce;
-        public LinkedListNode<Roadline> currentRoadline;
+        public LinkedListNode<RoadlinePoint> currentRoadline;
     }
 }

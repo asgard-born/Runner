@@ -1,12 +1,13 @@
 ﻿using Behaviour.Behaviours;
 using Framework;
+using Framework.Reactive;
 using Shared;
 using UniRx;
 using UnityEngine;
 
 namespace Behaviour
 {
-    public class BehaviourFactory : BaseDisposable
+    public class CharacterBehaviourFactoryPm : BaseDisposable
     {
         private readonly Ctx _ctx;
 
@@ -19,16 +20,17 @@ namespace Behaviour
             public Rigidbody rigidbody;
             public Transform characterTransform;
 
-            public ReactiveCommand<BehaviourInfo> onBehaviourAdded;
-            public ReactiveCommand<CharacterBehaviourPm> onBehaviourCreated;
+            public ReactiveCommand<BehaviourInfo> onBehaviourTaken;
             public ReactiveCommand<SwipeDirection> onSwipeDirection;
+            public ReactiveTrigger<BehaviourType, CharacterBehaviourPm> onNewBehaviourProduced;
+            public ReactiveCommand<BehaviourType> onBehaviourAdded;
         }
 
-        public BehaviourFactory(Ctx ctx)
+        public CharacterBehaviourFactoryPm(Ctx ctx)
         {
             _ctx = ctx;
 
-            AddUnsafe(ctx.onBehaviourAdded.Subscribe(Create));
+            AddUnsafe(ctx.onBehaviourTaken.Subscribe(Create));
         }
 
         private void Create(BehaviourInfo behaviourInfo)
@@ -37,13 +39,16 @@ namespace Behaviour
 
             _behaviourCtx = new CharacterBehaviourPm.Ctx
             {
+                type = behaviourInfo.configs.type,
+                isEndless = behaviourInfo.isEndless,
                 durationSec = behaviourInfo.durationSec,
                 effects = behaviourInfo.configs.effects,
                 animator = _ctx.animator,
                 rigidbody = _ctx.rigidbody,
                 characterTransform = _ctx.characterTransform,
                 state = _ctx.state,
-                onSwipeDirection = _ctx.onSwipeDirection
+                onSwipeDirection = _ctx.onSwipeDirection,
+                onBehaviourAdded = _ctx.onBehaviourAdded
             };
 
             switch (behaviourInfo.configs.name)
@@ -70,7 +75,7 @@ namespace Behaviour
                     break;
             }
 
-            _ctx.onBehaviourCreated?.Execute(behaviour);
+            _ctx.onNewBehaviourProduced?.Notify(behaviourInfo.configs.type, behaviour);
         }
     }
 }

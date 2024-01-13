@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Shared
 {
     [Serializable]
-    public class Roadline
+    public class RoadlinePoint
     {
         [SerializeField] private Transform _transform;
         [SerializeField] private RoadlineType _type;

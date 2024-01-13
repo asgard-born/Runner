@@ -1,4 +1,6 @@
-﻿using Behaviour;
+﻿using System.Collections.Generic;
+using Behaviour;
+using Configs;
 using Cysharp.Threading.Tasks;
 using Framework;
 using Framework.Reactive;
@@ -16,42 +18,45 @@ namespace Character
     /// </summary>
     public class CharacterRoot : BaseDisposable
     {
-        private ReactiveCommand<Transform> _onCharacterInitialized;
-        private ReactiveTrigger<float> _onSpeedChangedCallback;
         private CharacterView _view;
+        private CharacterState _state;
+
+        private ReactiveTrigger<float> _onSpeedChangedCallback;
 
         private Ctx _ctx;
 
         public struct Ctx
         {
-            public CharacterState state;
+            public PlayersConfigs playersConfigs;
             public AssetReference viewReference;
-            public Transform spawnPoint;
-            public BehaviourInfo defaultBehaviourInfo;
-            
+            public BehaviourInfo initialBehaviourInfo;
+            public RoadlinePoint spawnPoint;
+            public List<RoadlinePoint> roadlinePoints;
+
             public ReactiveCommand<Transform> onCharacterInitialized;
             public ReactiveCommand<Collider> onInterraction;
             public ReactiveCommand<SwipeDirection> onSwipeDirection;
-            public ReactiveCommand<BehaviourInfo> onBehaviourAdded;
-            public ReactiveCommand<CharacterBehaviourPm> onBehaviourCreated;
+            public ReactiveCommand<BehaviourInfo> onBehaviourTaken;
+            public ReactiveTrigger<BehaviourType, CharacterBehaviourPm> onNewBehaviourProduced;
+            public ReactiveCommand<BehaviourType> onBehaviourAdded;
         }
 
         public CharacterRoot(Ctx ctx)
         {
             _ctx = ctx;
-            _onCharacterInitialized = ctx.onCharacterInitialized;
 
             InitializeAsync();
         }
 
         private async void InitializeAsync()
         {
-            await InitializeCharacterAsync();
+            await InitializeCharacterView();
+            InitializeCharacterPm();
+            InitializeCharacterState();
             InitializeBehaviourFactory();
         }
-       
 
-        private async UniTask InitializeCharacterAsync()
+        private async UniTask InitializeCharacterView()
         {
             var prefab = await LoadAndTrackPrefab<CharacterView>(_ctx.viewReference);
 
@@ -63,35 +68,52 @@ namespace Character
             };
 
             _view.SetCtx(viewCtx);
+        }
 
+        private void InitializeCharacterPm()
+        {
             var ctx = new CharacterPm.Ctx
             {
                 characterTransform = _view.transform,
                 spawnPoint = _ctx.spawnPoint,
+                initialBehaviourInfo = _ctx.initialBehaviourInfo,
 
-                onBehaviourAdded = _ctx.onBehaviourAdded,
-                onBehaviourCreated = _ctx.onBehaviourCreated,
-                onCharacterInitialized = _onCharacterInitialized
+                onCharacterInitialized = _ctx.onCharacterInitialized,
+                onBehaviourTaken = _ctx.onBehaviourTaken,
+                onNewBehaviourProduced = _ctx.onNewBehaviourProduced,
+                onBehaviourAdded = _ctx.onBehaviourAdded
             };
 
             AddUnsafe(new CharacterPm(ctx));
         }
-        
+
+        private void InitializeCharacterState()
+        {
+            _state = new CharacterState
+            {
+                initialVelocity = _ctx.playersConfigs.initialSpeed,
+                velocity = _ctx.playersConfigs.initialSpeed,
+                currentRoadline = new LinkedList<RoadlinePoint>(_ctx.roadlinePoints).Find(_ctx.spawnPoint),
+                jumpForce = _ctx.playersConfigs.jumpForce
+            };
+        }
+
         private void InitializeBehaviourFactory()
         {
-            var behaviourFactoryCtx = new BehaviourFactory.Ctx
+            var behaviourFactoryCtx = new CharacterBehaviourFactoryPm.Ctx
             {
-                state = _ctx.state,
+                state = _state,
                 animator = _view.animator,
                 rigidbody = _view.rigidbody,
                 characterTransform = _view.transform,
-                
+
                 onSwipeDirection = _ctx.onSwipeDirection,
-                onBehaviourAdded = _ctx.onBehaviourAdded,
-                onBehaviourCreated = _ctx.onBehaviourCreated
+                onBehaviourTaken = _ctx.onBehaviourTaken,
+                onNewBehaviourProduced = _ctx.onNewBehaviourProduced,
+                onBehaviourAdded = _ctx.onBehaviourAdded
             };
-            
-            AddUnsafe(new BehaviourFactory(behaviourFactoryCtx));
+
+            AddUnsafe(new CharacterBehaviourFactoryPm(behaviourFactoryCtx));
         }
     }
 }
