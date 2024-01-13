@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8956366455977934706}
-  - component: {fileID: 451318773317564984}
+  - component: {fileID: 112187876957941299}
   - component: {fileID: 1695149266354087611}
   - component: {fileID: 7034090950668143965}
   - component: {fileID: 3780070680476746506}
@@ -35,7 +35,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!114 &451318773317564984
+--- !u!114 &112187876957941299
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,11 +44,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 6818167270396220995}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df4aadbb18d34b90a751d614de2e023a, type: 3}
+  m_Script: {fileID: 11500000, guid: 250f6fd1845c4031b8116ce1c80cd99a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _effects: []
-  _timeSec: 0
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  _behaviours:
+  - _configs: {fileID: 11400000, guid: 58245e65188ea1c41b7db277a08b2116, type: 2}
+    _isEndless: 0
+    _durationSec: 10
 --- !u!33 &1695149266354087611
 MeshFilter:
   m_ObjectHideFlags: 0
