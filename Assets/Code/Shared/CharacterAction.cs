@@ -5,7 +5,8 @@
     /// </summary>
     public enum CharacterAction : byte
     {
-        None = 10,
+        None = 0,
+        Running = 10,
         Jumping = 20,
         Falling = 30
     }

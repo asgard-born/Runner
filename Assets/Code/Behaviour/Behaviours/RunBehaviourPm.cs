@@ -17,9 +17,10 @@ namespace Behaviour.Behaviours
 
         public RunBehaviourPm(Ctx ctx) : base(ctx)
         {
-            _isMoving = true;
-
             InitializeState();
+
+            _isMoving = true;
+            _currentAction = CharacterAction.Running;
         }
 
         private void InitializeState()
@@ -39,6 +40,10 @@ namespace Behaviour.Behaviours
 
             switch (_currentAction)
             {
+                case CharacterAction.Running:
+                    _ctx.animator.SetTrigger(_running);
+                    break;
+
                 case CharacterAction.Jumping:
                     if (!IsGrounded())
                     {
@@ -96,9 +101,8 @@ namespace Behaviour.Behaviours
             nextPosition = (nextPosition - transform.position) / Time.fixedDeltaTime;
             nextPosition = new Vector3(nextPosition.x, _ctx.rigidbody.velocity.y, nextPosition.z);
             _ctx.state.nextPosition = nextPosition;
-            
+
             _ctx.rigidbody.velocity = _ctx.state.nextPosition;
-            _ctx.animator.SetBool(_running, true);
         }
 
         private void OnChangeSide(SwipeDirection swipeDirection)
@@ -128,13 +132,10 @@ namespace Behaviour.Behaviours
 
         private void TryJump(float jumpForce)
         {
-            if (!IsGrounded())
-            {
-                return;
-            }
+            if (_currentAction != CharacterAction.Running) return;
 
             _ctx.rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            // _ctx.animator.SetTrigger(_jumping);
+            _ctx.animator.SetTrigger(_jumping);
 
             _currentAction = CharacterAction.Jumping;
         }
@@ -161,7 +162,14 @@ namespace Behaviour.Behaviours
 
         private void OnFalling()
         {
-            _ctx.animator.SetBool(_falling, !IsGrounded());
+            var isGrounded = IsGrounded();
+            
+            _ctx.animator.SetBool(_falling, !isGrounded);
+
+            if (isGrounded)
+            {
+                _currentAction = CharacterAction.Running;
+            }
         }
     }
 }
