@@ -10,7 +10,7 @@ namespace Behaviour.Behaviours
     {
         private static readonly int _idle = Animator.StringToHash("Idle");
         private static readonly int _running = Animator.StringToHash("Running");
-        private static readonly int _jumping = Animator.StringToHash("Jumping");
+        private static readonly int _jumping = Animator.StringToHash("Jump");
         private static readonly int _falling = Animator.StringToHash("Falling");
         private static readonly int _damage = Animator.StringToHash("Damage");
 
@@ -39,7 +39,7 @@ namespace Behaviour.Behaviours
             switch (_currentAction)
             {
                 case CharacterAction.Jumping:
-                    if (IsFalling())
+                    if (!IsGrounded())
                     {
                         _currentAction = CharacterAction.Falling;
                     }
@@ -130,20 +130,15 @@ namespace Behaviour.Behaviours
                 return;
             }
 
-            _ctx.rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            _ctx.rigidbody.AddTorque(Vector3.up * jumpForce, ForceMode.Impulse);
             _ctx.animator.SetTrigger(_jumping);
 
             _currentAction = CharacterAction.Jumping;
         }
 
-        private bool IsFalling()
-        {
-            return _ctx.rigidbody.velocity.y < 0;
-        }
-
         private void Stop()
         {
-            _ctx.animator.SetBool(_idle, true);
+            _ctx.animator.SetTrigger(_idle);
 
             _ctx.rigidbody.isKinematic = true;
         }
@@ -163,13 +158,7 @@ namespace Behaviour.Behaviours
 
         private void OnFalling()
         {
-            if (IsGrounded())
-            {
-            }
-            else
-            {
-                //OnFalling --> View (Rx)
-            }
+            _ctx.animator.SetBool(_falling, !IsGrounded());
         }
     }
 }

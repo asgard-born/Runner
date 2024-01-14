@@ -17,4 +17,4 @@ MonoBehaviour:
   _effects: []
   _speed: 5
   _sideSpeed: 7.5
-  _jumpForce: 5
+  _jumpForce: 50
