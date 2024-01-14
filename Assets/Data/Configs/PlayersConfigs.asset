@@ -16,4 +16,7 @@ MonoBehaviour:
     _configs: {fileID: 11400000, guid: d5e3070a81de46e439f0eb237103b20c, type: 2}
     _isEndless: 1
     _durationSec: 0
-  _toleranceDistance: {x: 0.2, y: 0.08}
+  _toleranceDistance: {x: 0.2, y: 0.6}
+  _landingMask:
+    serializedVersion: 2
+    m_Bits: 512

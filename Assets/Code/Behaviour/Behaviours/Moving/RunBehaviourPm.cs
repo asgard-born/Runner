@@ -89,6 +89,8 @@ namespace Behaviour.Behaviours.Moving
         {
             if (_currentAction != CharacterAction.Moving) return;
 
+            _ctx.rigidbody.useGravity = true;
+            _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
             _ctx.rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             _ctx.animator.SetTrigger(_jumping);
 
@@ -104,15 +106,11 @@ namespace Behaviour.Behaviours.Moving
 
         private bool IsGrounded()
         {
-            if (Physics.Raycast(_ctx.characterTransform.position + new Vector3(0, 0.2f, 0), Vector3.down, .2f))
-            {
-                if (_ctx.rigidbody.velocity.y <= 0)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return Physics.Raycast(
+                _ctx.transform.position + Vector3.up * _ctx.toleranceDistance.y,
+                Vector3.down,
+                _ctx.toleranceDistance.y,
+                _ctx.landingMask);
         }
 
         private void OnFalling()
@@ -123,8 +121,18 @@ namespace Behaviour.Behaviours.Moving
 
             if (isGrounded)
             {
-                _currentAction = CharacterAction.Moving;
+                OnGrounded();
             }
+        }
+
+        private void OnGrounded()
+        {
+            var characterPosition = _ctx.transform.position;
+            _ctx.rigidbody.position = new Vector3(characterPosition.x, _ctx.state.currentRoadline.Value.transform.position.y, characterPosition.z);
+            _ctx.rigidbody.useGravity = false;
+            _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
+
+            _currentAction = CharacterAction.Moving;
         }
     }
 }

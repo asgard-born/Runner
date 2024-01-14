@@ -111,6 +111,8 @@ namespace Character
                 state = _state,
                 animator = _view.animator,
                 rigidbody = _view.rigidbody,
+                collider = _view.collider,
+                landingMask = _ctx.playersConfigs.landingMask,
                 characterTransform = _view.transform,
                 toleranceDistance = _ctx.playersConfigs.toleranceDistance,
 

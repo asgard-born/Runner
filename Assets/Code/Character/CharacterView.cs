@@ -9,6 +9,7 @@ namespace Character
     public class CharacterView : MonoBehaviour
     {
         [SerializeField] private Rigidbody _rigidbody;
+        [SerializeField] private Collider _collider;
         [SerializeField] private Animator _animator;
         [SerializeField] private LayerMask _mask;
         [SerializeField, Range(.25f, .5f)] private float _overlapRadius = .3f;
@@ -16,6 +17,7 @@ namespace Character
         [SerializeField] private Transform _interractingPointFirst;
         [SerializeField] private Transform _interractingPointSecond;
 
+        public Collider collider => _collider;
         public Rigidbody rigidbody => _rigidbody;
         public Animator animator => _animator;
 

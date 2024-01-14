@@ -62,13 +62,12 @@ namespace Behaviour.Behaviours.Moving
 
         private void Lifting()
         {
-            var transform = _ctx.characterTransform;
             var roalinePosition = _ctx.state.currentRoadline.Value.transform.position;
-            var localDistance = (roalinePosition.y + _ctx.configs.height) - transform.position.y;
+            var localDistance = (roalinePosition.y + _ctx.configs.height) - _ctx.transform.position.y;
 
             if (Mathf.Abs(localDistance) > _ctx.toleranceDistance.y)
             {
-                MovingVertical(transform.up);
+                MovingVertical(_ctx.transform.up);
             }
             else
             {
@@ -78,13 +77,12 @@ namespace Behaviour.Behaviours.Moving
 
         private void Landing()
         {
-            var transform = _ctx.characterTransform;
             var roalinePosition = _ctx.state.currentRoadline.Value.transform.position;
-            var localDistance = _ctx.characterTransform.InverseTransformPoint(roalinePosition);
+            var localDistance = _ctx.transform.InverseTransformPoint(roalinePosition);
 
             if (Mathf.Abs(localDistance.y) > _ctx.toleranceDistance.y)
             {
-                MovingVertical(-transform.up);
+                MovingVertical(-_ctx.transform.up);
             }
             else
             {

@@ -20,6 +20,8 @@ namespace Behaviour
             public CharacterState state;
             public Animator animator;
             public Rigidbody rigidbody;
+            public Collider collider;
+            public LayerMask landingMask;
             public Transform characterTransform;
             public Vector2 toleranceDistance;
 
@@ -48,7 +50,9 @@ namespace Behaviour
                 durationSec = behaviourInfo.durationSec,
                 animator = _ctx.animator,
                 rigidbody = _ctx.rigidbody,
-                characterTransform = _ctx.characterTransform,
+                collider = _ctx.collider,
+                landingMask =_ctx.landingMask, 
+                transform = _ctx.characterTransform,
                 toleranceDistance = _ctx.toleranceDistance,
                 state = _ctx.state,
                 

@@ -30,21 +30,20 @@ namespace Behaviour.Behaviours.Abstract
             var speed = _ctx.state.speed.z;
 
             if (speed <= 0) return;
-
-            var transform = _ctx.characterTransform;
+            
             var roalinePosition = _ctx.state.currentRoadline.Value.transform.position;
 
-            var newVelocity = transform.position + transform.forward * speed * Time.fixedDeltaTime;
-            var localDistance = _ctx.characterTransform.InverseTransformPoint(roalinePosition);
+            var newVelocity = _ctx.transform.position + _ctx.transform.forward * speed * Time.fixedDeltaTime;
+            var localDistance = _ctx.transform.InverseTransformPoint(roalinePosition);
 
-            var direction = localDistance.x > 0 ? transform.right : -transform.right;
+            var direction = localDistance.x > 0 ? _ctx.transform.right : -_ctx.transform.right;
 
             if (Mathf.Abs(localDistance.x) > _ctx.toleranceDistance.x)
             {
                 newVelocity += direction * _ctx.state.speed.x * Time.fixedDeltaTime;
             }
 
-            newVelocity = (newVelocity - transform.position) / Time.fixedDeltaTime;
+            newVelocity = (newVelocity - _ctx.transform.position) / Time.fixedDeltaTime;
             newVelocity = new Vector3(newVelocity.x, _ctx.rigidbody.velocity.y, newVelocity.z);
 
             _ctx.rigidbody.velocity = newVelocity;

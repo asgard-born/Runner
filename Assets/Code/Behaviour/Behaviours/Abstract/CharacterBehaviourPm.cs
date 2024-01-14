@@ -26,7 +26,9 @@ namespace Behaviour.Behaviours.Abstract
             public float durationSec;
             public Animator animator;
             public Rigidbody rigidbody;
-            public Transform characterTransform;
+            public Collider collider;
+            public LayerMask landingMask;
+            public Transform transform;
             public Vector2 toleranceDistance;
             public CharacterState state;
 
@@ -56,8 +58,8 @@ namespace Behaviour.Behaviours.Abstract
 
                 for (var i = 0; i < effects.Length; i++)
                 {
-                    _spawnedEffects[i] = Object.Instantiate(effects[i], _ctx.characterTransform);
-                    _spawnedEffects[i].transform.rotation = _ctx.characterTransform.rotation;
+                    _spawnedEffects[i] = Object.Instantiate(effects[i], _ctx.transform);
+                    _spawnedEffects[i].transform.rotation = _ctx.transform.rotation;
                 }
             }
 

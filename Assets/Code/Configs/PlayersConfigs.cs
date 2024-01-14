@@ -12,9 +12,11 @@ namespace Configs
     {
         [SerializeField] private BehaviourInfo _initialBehaviourInfo;
         [SerializeField] private Vector2 _toleranceDistance;
+        [SerializeField] private LayerMask _landingMask;
 
         public BehaviourInfo initialBehaviourInfo => _initialBehaviourInfo;
         public Vector2 toleranceDistance => _toleranceDistance;
+        public LayerMask landingMask => _landingMask;
 
         private void OnValidate()
         {
