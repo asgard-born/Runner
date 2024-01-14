@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Shared
 {
-    public struct CharacterState
+    public class CharacterState
     {
         public Vector3 speed;
         public float jumpForce;

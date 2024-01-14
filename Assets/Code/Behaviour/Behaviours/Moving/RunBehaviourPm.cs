@@ -12,20 +12,15 @@ namespace Behaviour.Behaviours.Moving
     {
         public RunBehaviourPm(Ctx ctx) : base(ctx)
         {
-            InitializeState();
-            StartMoving();
         }
 
-        private void StartMoving()
-        {
-            _currentAction = CharacterAction.Moving;
-            _ctx.animator.SetTrigger(_running);
-        }
-
-        protected override void InitializeState()
+        protected override void Initialize()
         {
             _ctx.state.speed = _ctx.configs.speed;
             _ctx.state.jumpForce = _ctx.configs.jumpForce;
+
+            SetDefaultCondition();
+            _ctx.animator.SetTrigger(_running);
         }
 
         protected override void Behave()
@@ -121,11 +116,11 @@ namespace Behaviour.Behaviours.Moving
 
             if (isGrounded)
             {
-                OnGrounded();
+                SetDefaultCondition();
             }
         }
 
-        private void OnGrounded()
+        private void SetDefaultCondition()
         {
             var characterPosition = _ctx.transform.position;
             _ctx.rigidbody.position = new Vector3(characterPosition.x, _ctx.state.currentRoadline.Value.transform.position.y, characterPosition.z);

@@ -10,14 +10,13 @@ namespace Behaviour.Behaviours.Moving
         {
         }
 
-        protected override void InitializeState()
+        protected override void Initialize()
         {
             _ctx.state.speed = _ctx.configs.speed;
-        }
 
-        protected override void OnTimesOver()
-        {
-            _currentAction = CharacterAction.Landing;
+            _ctx.rigidbody.useGravity = false;
+            _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+            _currentAction = CharacterAction.Lifting;
         }
 
         protected override void Behave()
@@ -60,6 +59,11 @@ namespace Behaviour.Behaviours.Moving
             }
         }
 
+        protected override void OnTimesOver()
+        {
+            _currentAction = CharacterAction.Landing;
+        }
+
         private void Lifting()
         {
             var roalinePosition = _ctx.state.currentRoadline.Value.transform.position;
@@ -97,8 +101,12 @@ namespace Behaviour.Behaviours.Moving
 
         private void MovingVertical(Vector3 direction)
         {
-            var newVelocity = direction * _ctx.configs.speed.y * Time.fixedDeltaTime;
-            newVelocity = new Vector3(_ctx.rigidbody.velocity.x, newVelocity.y, _ctx.rigidbody.velocity.z);
+            var speed = _ctx.state.speed.y;
+
+            var newVelocity = _ctx.transform.position + direction * speed * Time.fixedDeltaTime;
+
+            var currentVelocity = _ctx.rigidbody.velocity;
+            newVelocity = new Vector3(currentVelocity.x, newVelocity.y, currentVelocity.z);
             _ctx.rigidbody.velocity = newVelocity;
         }
     }

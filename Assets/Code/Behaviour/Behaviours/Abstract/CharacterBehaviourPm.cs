@@ -40,7 +40,8 @@ namespace Behaviour.Behaviours.Abstract
         protected CharacterBehaviourPm(Ctx ctx)
         {
             _ctx = ctx;
-
+            Initialize();
+            
             AddUnsafe(_ctx.onSwipeDirection.Subscribe(OnSwipeDirection));
             AddUnsafe(_ctx.onBehaviourAdded.Subscribe(OnBehaviourAdded));
         }
@@ -96,7 +97,7 @@ namespace Behaviour.Behaviours.Abstract
         }
         
         protected abstract void OnTimesOver();
-        protected abstract void InitializeState();
+        protected abstract void Initialize();
         protected abstract void Behave();
         protected abstract void OnSwipeDirection(Direction direction);
     }

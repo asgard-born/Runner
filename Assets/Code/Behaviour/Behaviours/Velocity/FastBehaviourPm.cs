@@ -13,7 +13,7 @@ namespace Behaviour.Behaviours.Velocity
         {
         }
 
-        protected override void InitializeState()
+        protected override void Initialize()
         {
         }
 
