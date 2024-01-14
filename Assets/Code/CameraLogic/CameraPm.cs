@@ -17,14 +17,13 @@ namespace CameraLogic
             public Transform cameraTransform;
             public float speed;
             public Vector3 positionOffset;
-            public Vector3 rotationOffset;
         }
 
         public CameraPm(Ctx ctx)
         {
             _ctx = ctx;
             
-            AddUnsafe(Observable.EveryLateUpdate().Subscribe(Follow));
+            AddUnsafe(Observable.EveryFixedUpdate().Subscribe(Follow));
         }
 
         private void Follow(long _)
@@ -37,11 +36,6 @@ namespace CameraLogic
             Vector3 smoothedPosition = Vector3.Lerp(_ctx.cameraTransform.position, desiredPosition, smoothSpeed);
             
             _ctx.cameraTransform.position = smoothedPosition;
-
-            Quaternion desiredrotation = _ctx.characterTransform.rotation * Quaternion.Euler(_ctx.rotationOffset);
-            Quaternion smoothedrotation = Quaternion.Lerp(_ctx.cameraTransform.rotation, desiredrotation, smoothSpeed);
-            
-            _ctx.cameraTransform.rotation = smoothedrotation;
         }
     }
 }

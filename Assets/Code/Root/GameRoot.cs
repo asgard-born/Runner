@@ -113,8 +113,7 @@ namespace Root
                 characterTransform = characterTransform,
                 cameraTransform = _ctx.camera.transform,
                 speed = _ctx.cameraConfigs.speed,
-                positionOffset = _ctx.cameraConfigs.positionOffset,
-                rotationOffset = _ctx.cameraConfigs.rotationOffset
+                positionOffset = _ctx.cameraConfigs.positionOffset
             };
 
             AddUnsafe(new CameraPm(ctx));
