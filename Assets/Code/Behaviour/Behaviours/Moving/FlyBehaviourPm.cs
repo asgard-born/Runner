@@ -30,11 +30,6 @@ namespace Behaviour.Behaviours.Moving
 
             switch (_currentAction)
             {
-                case CharacterAction.Running:
-                    _ctx.animator.SetTrigger(_running);
-
-                    break;
-
                 case CharacterAction.Landing:
                     _ctx.animator.SetTrigger(_landing);
 

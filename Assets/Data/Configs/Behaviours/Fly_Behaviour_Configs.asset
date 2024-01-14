@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _type: 10
   _name: 20
-  _effects: []
+  _effects:
+  - {fileID: 1311965450642704, guid: 8237f7b8f33ea8a4c84650594a690807, type: 3}
   _speed: 5
   _sideSpeed: 7.5
   _jumpForce: 0
