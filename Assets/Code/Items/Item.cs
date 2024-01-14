@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using Shared;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Items
 {
-    public class Item : SerializedMonoBehaviour
+    public class Item : MonoBehaviour
     {
         [SerializeField] private List<BehaviourInfo> _behaviours;
 
