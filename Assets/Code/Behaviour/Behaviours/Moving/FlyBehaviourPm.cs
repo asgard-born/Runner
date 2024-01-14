@@ -1,12 +1,12 @@
-﻿using Shared;
+﻿using Behaviour.Behaviours.Abstract;
+using Shared;
 
-namespace Behaviour.Behaviours
+namespace Behaviour.Behaviours.Moving
 {
-    public class FlyBehaviourPm : CharacterBehaviourPm
+    public class FlyBehaviourPm : MovingBehaviourPm
     {
         public FlyBehaviourPm(Ctx ctx) : base(ctx)
         {
-            
         }
 
         protected override void Behave()
@@ -18,9 +18,9 @@ namespace Behaviour.Behaviours
             switch (swipeDirection)
             {
                 case SwipeDirection.Left:
-                    break;
-
                 case SwipeDirection.Right:
+                    OnChangeSide(swipeDirection);
+
                     break;
             }
         }

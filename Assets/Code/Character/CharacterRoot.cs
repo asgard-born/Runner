@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Behaviour;
+using Behaviour.Behaviours.Abstract;
 using Configs;
 using Cysharp.Threading.Tasks;
 using Framework;

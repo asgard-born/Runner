@@ -1,6 +1,7 @@
-﻿using Shared;
+﻿using Behaviour.Behaviours.Abstract;
+using Shared;
 
-namespace Behaviour.Behaviours
+namespace Behaviour.Behaviours.Velocity
 {
     public class SlowBehaviourPm : CharacterBehaviourPm
     {

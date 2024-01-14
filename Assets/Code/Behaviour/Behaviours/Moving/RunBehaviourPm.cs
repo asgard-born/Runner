@@ -1,20 +1,15 @@
-﻿using Shared;
+﻿using Behaviour.Behaviours.Abstract;
+using Shared;
 using UnityEngine;
 
-namespace Behaviour.Behaviours
+namespace Behaviour.Behaviours.Moving
 {
     /// <summary>
     /// Поведение игрока типа Бег. Поведению делегируется работа с компонентами представления
     /// и обработка пользовательского свайпа в разные стороны
     /// </summary>
-    public class RunBehaviourPm : CharacterBehaviourPm
+    public class RunBehaviourPm : MovingBehaviourPm
     {
-        private static readonly int _idle = Animator.StringToHash("Idle");
-        private static readonly int _running = Animator.StringToHash("Running");
-        private static readonly int _jumping = Animator.StringToHash("Jump");
-        private static readonly int _falling = Animator.StringToHash("Falling");
-        private static readonly int _damage = Animator.StringToHash("Damage");
-
         public RunBehaviourPm(Ctx ctx) : base(ctx)
         {
             InitializeState();
@@ -77,57 +72,6 @@ namespace Behaviour.Behaviours
                 case SwipeDirection.Down:
                     break;
             }
-        }
-
-        private void Move()
-        {
-            var speed = _ctx.state.speed;
-
-            if (speed <= 0) return;
-
-            var transform = _ctx.characterTransform;
-            var roalinePosition = _ctx.state.currentRoadline.Value.transform.position;
-
-            var newVelocity = transform.position + transform.forward * speed * Time.fixedDeltaTime;
-            var localDistance = _ctx.characterTransform.InverseTransformPoint(roalinePosition);
-
-            var direction = localDistance.x > 0 ? transform.right : -transform.right;
-
-            if (Mathf.Abs(localDistance.x) > _ctx.toleranceSideDistance)
-            {
-                newVelocity += direction * _ctx.state.sideSpeed * Time.fixedDeltaTime;
-            }
-
-            newVelocity = (newVelocity - transform.position) / Time.fixedDeltaTime;
-            newVelocity = new Vector3(newVelocity.x, _ctx.rigidbody.velocity.y, newVelocity.z);
-            _ctx.state.velocity = newVelocity;
-
-            _ctx.rigidbody.velocity = _ctx.state.velocity;
-        }
-
-        private void OnChangeSide(SwipeDirection swipeDirection)
-        {
-            if (!CanMoveToDirection(swipeDirection)) return;
-
-            var currentLine = _ctx.state.currentRoadline;
-            var nextRoadline = swipeDirection == SwipeDirection.Left ? currentLine.Previous : currentLine.Next;
-
-            _ctx.state.currentRoadline = nextRoadline;
-        }
-
-        private bool CanMoveToDirection(SwipeDirection swipeDirection)
-        {
-            if (swipeDirection == SwipeDirection.Left && _ctx.state.currentRoadline.Previous != null)
-            {
-                return true;
-            }
-
-            if (swipeDirection == SwipeDirection.Right && _ctx.state.currentRoadline.Next != null)
-            {
-                return true;
-            }
-
-            return false;
         }
 
         private void TryJump(float jumpForce)

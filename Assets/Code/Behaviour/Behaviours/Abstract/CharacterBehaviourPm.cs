@@ -5,17 +5,15 @@ using UniRx;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Behaviour
+namespace Behaviour.Behaviours.Abstract
 {
     /// <summary>
     /// Базовый класс для реализации различных видов поведения персонажа
     /// Реализует собой паттерн 'Стратегия': мы делегируем поведению управление персонажем
-    /// Для сохранения слабой связанности сюда не передается view напрямую
+    /// Для сохранения слабой связанности в контекст класса не передается view напрямую
     /// </summary>
     public abstract class CharacterBehaviourPm : BaseDisposable
     {
-        protected bool _isMoving;
-        protected CharacterAction _currentAction;
         protected float _secondsLeft;
         protected GameObject[] _spawnedEffects;
 

@@ -1,4 +1,7 @@
 ﻿using Behaviour.Behaviours;
+using Behaviour.Behaviours.Abstract;
+using Behaviour.Behaviours.Moving;
+using Behaviour.Behaviours.Velocity;
 using Framework;
 using Framework.Reactive;
 using Shared;
