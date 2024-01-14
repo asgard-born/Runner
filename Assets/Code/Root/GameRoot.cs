@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Behaviour;
 using CameraLogic;
 using Character;
 using Configs;
@@ -113,7 +112,7 @@ namespace Root
             {
                 characterTransform = characterTransform,
                 cameraTransform = _ctx.camera.transform,
-                smoothFactor = _ctx.cameraConfigs.smoothFactor,
+                speed = _ctx.cameraConfigs.speed,
                 positionOffset = _ctx.cameraConfigs.positionOffset,
                 rotationOffset = _ctx.cameraConfigs.rotationOffset
             };

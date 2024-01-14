@@ -16,5 +16,4 @@ MonoBehaviour:
     _configs: {fileID: 11400000, guid: d5e3070a81de46e439f0eb237103b20c, type: 2}
     _isEndless: 1
     _durationSec: 0
-  _initialSpeed: 5
-  _jumpForce: 4
+  _toleranceSideDistance: 0.2

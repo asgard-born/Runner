@@ -19,11 +19,13 @@ namespace Behaviour
             public Animator animator;
             public Rigidbody rigidbody;
             public Transform characterTransform;
+            public float toleranceSideDistance;
 
             public ReactiveCommand<BehaviourInfo> onBehaviourTaken;
             public ReactiveCommand<SwipeDirection> onSwipeDirection;
             public ReactiveTrigger<BehaviourType, CharacterBehaviourPm> onNewBehaviourProduced;
             public ReactiveCommand<BehaviourType> onBehaviourAdded;
+            public ReactiveCommand<BehaviourType> onBehaviourFinished;
         }
 
         public CharacterBehaviourFactoryPm(Ctx ctx)
@@ -39,16 +41,18 @@ namespace Behaviour
 
             _behaviourCtx = new CharacterBehaviourPm.Ctx
             {
-                type = behaviourInfo.configs.type,
+                configs = behaviourInfo.configs,
                 isEndless = behaviourInfo.isEndless,
                 durationSec = behaviourInfo.durationSec,
-                effects = behaviourInfo.configs.effects,
                 animator = _ctx.animator,
                 rigidbody = _ctx.rigidbody,
                 characterTransform = _ctx.characterTransform,
+                toleranceSideDistance = _ctx.toleranceSideDistance,
                 state = _ctx.state,
+                
                 onSwipeDirection = _ctx.onSwipeDirection,
-                onBehaviourAdded = _ctx.onBehaviourAdded
+                onBehaviourAdded = _ctx.onBehaviourAdded,
+                onBehaviourFinished = _ctx.onBehaviourFinished
             };
 
             switch (behaviourInfo.configs.name)

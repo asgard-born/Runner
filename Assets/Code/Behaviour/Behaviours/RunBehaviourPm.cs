@@ -1,30 +1,39 @@
-﻿using DG.Tweening;
-using Shared;
+﻿using Shared;
 using UnityEngine;
 
 namespace Behaviour.Behaviours
 {
+    /// <summary>
+    /// Поведение игрока типа Бег. Поведению делегируется работа с вью и обработка пользовательского свайпа в разные стороны 
+    /// </summary>
     public class RunBehaviourPm : CharacterBehaviourPm
     {
-        private Sequence _sideMovingSequence;
-
         private static readonly int _idle = Animator.StringToHash("Idle");
         private static readonly int _running = Animator.StringToHash("Running");
         private static readonly int _jumping = Animator.StringToHash("Jumping");
         private static readonly int _falling = Animator.StringToHash("Falling");
         private static readonly int _damage = Animator.StringToHash("Damage");
-        private float _sideMoveDurationSec = .5f;
 
         public RunBehaviourPm(Ctx ctx) : base(ctx)
         {
             _isMoving = true;
+
+            InitializeState();
         }
 
-        protected override void DoBehave()
+        private void InitializeState()
+        {
+            _ctx.state.nextPosition = _ctx.characterTransform.position;
+            _ctx.state.velocity = _ctx.configs.speed;
+            _ctx.state.jumpForce = _ctx.configs.jumpForce;
+            _ctx.state.sideSpeed = _ctx.configs.sideSpeed;
+        }
+
+        protected override void Behave()
         {
             if (_isMoving)
             {
-                OnMove();
+                Move();
             }
 
             switch (_currentAction)
@@ -50,7 +59,7 @@ namespace Behaviour.Behaviours
             {
                 case SwipeDirection.Left:
                 case SwipeDirection.Right:
-                    SideMove(swipeDirection);
+                    OnChangeSide(swipeDirection);
 
                     break;
 
@@ -64,27 +73,49 @@ namespace Behaviour.Behaviours
             }
         }
 
-        private void SideMove(SwipeDirection swipeDirection)
+        private void Move()
         {
-            var transform = _ctx.characterTransform;
-            Vector3 roadPosition;
+            var speed = _ctx.state.velocity;
 
+            if (speed <= 0) return;
+
+            var transform = _ctx.characterTransform;
+            var roalinePosition = _ctx.state.currentRoadline.Value.transform.position;
+
+            var nextPosition = transform.forward * speed * Time.fixedDeltaTime;
+            var localDistance = _ctx.characterTransform.InverseTransformPoint(roalinePosition);
+
+            var direction = localDistance.x > 0 ? transform.right : -transform.right;
+
+            if (Mathf.Abs(localDistance.x) > _ctx.toleranceSideDistance)
+            {
+                nextPosition += direction * _ctx.state.sideSpeed * Time.fixedDeltaTime;
+            }
+
+            _ctx.state.nextPosition += nextPosition;
+
+            _ctx.rigidbody.MovePosition(_ctx.state.nextPosition);
+            _ctx.animator.SetBool(_running, true);
+        }
+
+        private void OnChangeSide(SwipeDirection swipeDirection)
+        {
             if (!CanMoveToDirection(swipeDirection)) return;
 
-            // _sideMovingSequence = DOTween
-            //     .Sequence(_ctx.characterTransform.DOMoveX( roadPosition.x, _sideMoveDurationSec));
+            var currentLine = _ctx.state.currentRoadline;
+            var nextRoadline = swipeDirection == SwipeDirection.Left ? currentLine.Previous : currentLine.Next;
+
+            _ctx.state.currentRoadline = nextRoadline;
         }
 
         private bool CanMoveToDirection(SwipeDirection swipeDirection)
         {
-            var currentLine = _ctx.state.currentRoadline;
-
-            if (swipeDirection == SwipeDirection.Left && currentLine.Previous != null)
+            if (swipeDirection == SwipeDirection.Left && _ctx.state.currentRoadline.Previous != null)
             {
                 return true;
             }
 
-            if (swipeDirection == SwipeDirection.Right && currentLine.Next != null)
+            if (swipeDirection == SwipeDirection.Right && _ctx.state.currentRoadline.Next != null)
             {
                 return true;
             }
@@ -99,7 +130,7 @@ namespace Behaviour.Behaviours
                 return;
             }
 
-            _ctx.rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
+            _ctx.rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             _ctx.animator.SetTrigger(_jumping);
 
             _currentAction = CharacterAction.Jumping;
@@ -108,16 +139,6 @@ namespace Behaviour.Behaviours
         private bool IsFalling()
         {
             return _ctx.rigidbody.velocity.y < 0;
-        }
-
-        private void OnMove()
-        {
-            var speed = _ctx.state.velocity;
-
-            if (speed <= 0) return;
-
-            _ctx.rigidbody.MovePosition(_ctx.characterTransform.position + _ctx.characterTransform.forward * speed * Time.fixedDeltaTime);
-            _ctx.animator.SetBool(_running, true);
         }
 
         private void Stop()

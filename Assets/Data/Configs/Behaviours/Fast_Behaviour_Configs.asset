@@ -15,4 +15,6 @@ MonoBehaviour:
   _type: 20
   _name: 40
   _effects: []
-  _durationSec: 10
+  _speed: 15
+  _sideSpeed: 22
+  _jumpForce: 0

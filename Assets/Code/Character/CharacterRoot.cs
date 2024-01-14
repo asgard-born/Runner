@@ -99,10 +99,7 @@ namespace Character
         {
             _state = new CharacterState
             {
-                initialVelocity = _ctx.playersConfigs.initialSpeed,
-                velocity = _ctx.playersConfigs.initialSpeed,
-                currentRoadline = new LinkedList<RoadlinePoint>(_ctx.roadlinePoints).Find(_ctx.spawnPoint),
-                jumpForce = _ctx.playersConfigs.jumpForce
+                currentRoadline = new LinkedList<RoadlinePoint>(_ctx.roadlinePoints).Find(_ctx.spawnPoint)
             };
         }
 
@@ -114,11 +111,13 @@ namespace Character
                 animator = _view.animator,
                 rigidbody = _view.rigidbody,
                 characterTransform = _view.transform,
+                toleranceSideDistance = _ctx.playersConfigs.toleranceSideDistance,
 
                 onSwipeDirection = _ctx.onSwipeDirection,
                 onBehaviourTaken = _ctx.onBehaviourTaken,
                 onNewBehaviourProduced = _onNewBehaviourProduced,
-                onBehaviourAdded = _onBehaviourAdded
+                onBehaviourAdded = _onBehaviourAdded,
+                onBehaviourFinished = _onBehaviourFinished
             };
 
             AddUnsafe(new CharacterBehaviourFactoryPm(behaviourFactoryCtx));

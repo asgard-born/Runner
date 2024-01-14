@@ -11,12 +11,10 @@ namespace Configs
     public class PlayersConfigs : ScriptableObject
     {
         [SerializeField] private BehaviourInfo _initialBehaviourInfo;
-        [SerializeField] private float _initialSpeed = 15f;
-        [SerializeField] private float _jumpForce = 4f;
+        [SerializeField] private float _toleranceSideDistance = .05f;
 
         public BehaviourInfo initialBehaviourInfo => _initialBehaviourInfo;
-        public float initialSpeed => _initialSpeed;
-        public float jumpForce => _jumpForce;
+        public float toleranceSideDistance => _toleranceSideDistance;
 
         private void OnValidate()
         {

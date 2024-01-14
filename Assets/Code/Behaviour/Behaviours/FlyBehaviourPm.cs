@@ -9,7 +9,7 @@ namespace Behaviour.Behaviours
             
         }
 
-        protected override void DoBehave()
+        protected override void Behave()
         {
         }
 
