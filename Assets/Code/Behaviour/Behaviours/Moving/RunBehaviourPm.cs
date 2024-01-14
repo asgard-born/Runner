@@ -10,6 +10,10 @@ namespace Behaviour.Behaviours.Moving
     /// </summary>
     public class RunBehaviourPm : MovingBehaviourPm
     {
+        protected static readonly int _runningHash = Animator.StringToHash("Running");
+        protected static readonly int _jumpingHash = Animator.StringToHash("Jump");
+        protected static readonly int _fallingHash = Animator.StringToHash("Falling");
+
         public RunBehaviourPm(Ctx ctx) : base(ctx)
         {
         }
@@ -20,7 +24,7 @@ namespace Behaviour.Behaviours.Moving
             _ctx.state.jumpForce = _ctx.configs.jumpForce;
 
             SetDefaultCondition();
-            _ctx.animator.SetTrigger(_running);
+            _ctx.animator.SetTrigger(_runningHash);
         }
 
         protected override void Behave()
@@ -28,7 +32,7 @@ namespace Behaviour.Behaviours.Moving
             switch (_currentAction)
             {
                 case CharacterAction.Idle:
-                    _ctx.animator.SetBool(_idle, true);
+                    _ctx.animator.SetBool(_idleHash, true);
 
                     break;
 
@@ -87,14 +91,14 @@ namespace Behaviour.Behaviours.Moving
             _ctx.rigidbody.useGravity = true;
             _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
             _ctx.rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            _ctx.animator.SetTrigger(_jumping);
+            _ctx.animator.SetTrigger(_jumpingHash);
 
             _currentAction = CharacterAction.Jumping;
         }
 
         private void Stop()
         {
-            _ctx.animator.SetTrigger(_idle);
+            _ctx.animator.SetTrigger(_idleHash);
 
             _ctx.rigidbody.isKinematic = true;
         }
@@ -112,7 +116,7 @@ namespace Behaviour.Behaviours.Moving
         {
             var isGrounded = IsGrounded();
 
-            _ctx.animator.SetBool(_falling, !isGrounded);
+            _ctx.animator.SetBool(_fallingHash, !isGrounded);
 
             if (isGrounded)
             {

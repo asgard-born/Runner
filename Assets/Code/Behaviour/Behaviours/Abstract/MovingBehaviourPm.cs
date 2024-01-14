@@ -12,11 +12,8 @@ namespace Behaviour.Behaviours.Abstract
     {
         protected CharacterAction _currentAction;
 
-        protected static readonly int _idle = Animator.StringToHash("Idle");
-        protected static readonly int _running = Animator.StringToHash("Running");
-        protected static readonly int _jumping = Animator.StringToHash("Jump");
-        protected static readonly int _falling = Animator.StringToHash("Falling");
-        protected static readonly int _damage = Animator.StringToHash("Damage");
+        protected static readonly int _idleHash = Animator.StringToHash("Idle");
+        protected static readonly int _damageHash = Animator.StringToHash("Damage");
 
         protected MovingBehaviourPm(Ctx ctx) : base(ctx)
         {

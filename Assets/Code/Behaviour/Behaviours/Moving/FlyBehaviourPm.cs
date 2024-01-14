@@ -1,4 +1,5 @@
 ﻿using Behaviour.Behaviours.Abstract;
+using DG.Tweening;
 using Shared;
 using UnityEngine;
 
@@ -6,6 +7,8 @@ namespace Behaviour.Behaviours.Moving
 {
     public class FlyBehaviourPm : MovingBehaviourPm
     {
+        protected static readonly int _flyingHash = Animator.StringToHash("Flying");
+
         public FlyBehaviourPm(Ctx ctx) : base(ctx)
         {
         }
@@ -17,6 +20,8 @@ namespace Behaviour.Behaviours.Moving
             _ctx.rigidbody.useGravity = false;
             _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
             _currentAction = CharacterAction.Lifting;
+
+            _ctx.animator.SetTrigger(_flyingHash);
         }
 
         protected override void Behave()
@@ -24,7 +29,7 @@ namespace Behaviour.Behaviours.Moving
             switch (_currentAction)
             {
                 case CharacterAction.Idle:
-                    _ctx.animator.SetBool(_idle, true);
+                    _ctx.animator.SetBool(_idleHash, true);
 
                     break;
 
@@ -34,14 +39,12 @@ namespace Behaviour.Behaviours.Moving
                     break;
 
                 case CharacterAction.Lifting:
-                    Move();
-                    Lifting();
+                    Lift();
 
                     break;
 
                 case CharacterAction.Landing:
-                    Move();
-                    Landing();
+                    Land();
 
                     break;
             }
@@ -64,50 +67,28 @@ namespace Behaviour.Behaviours.Moving
             _currentAction = CharacterAction.Landing;
         }
 
-        private void Lifting()
+        private void Lift()
         {
-            var roalinePosition = _ctx.state.currentRoadline.Value.transform.position;
-            var localDistance = (roalinePosition.y + _ctx.configs.height) - _ctx.transform.position.y;
+            var roadlinePosition = _ctx.state.currentRoadline.Value.transform.position;
+            var newPointY = roadlinePosition.y + _ctx.configs.height;
+            var newPos = new Vector3(_ctx.transform.position.x, newPointY, _ctx.transform.position.z);
 
-            if (Mathf.Abs(localDistance) > _ctx.toleranceDistance.y)
-            {
-                MovingVertical(_ctx.transform.up);
-            }
-            else
-            {
-                _currentAction = CharacterAction.Moving;
-            }
+            _ctx.transform.DOMove(newPos, _ctx.configs.speed.y).OnComplete(() => _currentAction = CharacterAction.Moving);
         }
 
-        private void Landing()
+        private void Land()
         {
-            var roalinePosition = _ctx.state.currentRoadline.Value.transform.position;
-            var localDistance = _ctx.transform.InverseTransformPoint(roalinePosition);
+            var roadlinePosition = _ctx.state.currentRoadline.Value.transform.position;
+            var newPointY = roadlinePosition.y;
+            var newPos = new Vector3(_ctx.transform.position.x, newPointY, _ctx.transform.position.z);
 
-            if (Mathf.Abs(localDistance.y) > _ctx.toleranceDistance.y)
-            {
-                MovingVertical(-_ctx.transform.up);
-            }
-            else
-            {
-                Finish();
-            }
+            _ctx.transform.DOMove(newPos, _ctx.configs.speed.y).OnComplete(Finish);
         }
 
         private void Finish()
         {
+            _currentAction = CharacterAction.None;
             _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
-        }
-
-        private void MovingVertical(Vector3 direction)
-        {
-            var speed = _ctx.state.speed.y;
-
-            var newVelocity = _ctx.transform.position + direction * speed * Time.fixedDeltaTime;
-
-            var currentVelocity = _ctx.rigidbody.velocity;
-            newVelocity = new Vector3(currentVelocity.x, newVelocity.y, currentVelocity.z);
-            _ctx.rigidbody.velocity = newVelocity;
         }
     }
 }
