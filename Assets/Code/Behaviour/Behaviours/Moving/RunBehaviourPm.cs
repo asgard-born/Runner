@@ -18,7 +18,7 @@ namespace Behaviour.Behaviours.Moving
             _currentAction = CharacterAction.Running;
         }
 
-        private void InitializeState()
+        protected override void InitializeState()
         {
             _ctx.state.speed = _ctx.configs.speed;
             _ctx.state.jumpForce = _ctx.configs.jumpForce;
@@ -72,6 +72,11 @@ namespace Behaviour.Behaviours.Moving
                 case SwipeDirection.Down:
                     break;
             }
+        }
+        
+        protected override void OnTimesOver()
+        {
+            _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
         }
 
         private void TryJump(float jumpForce)

@@ -13,14 +13,21 @@ namespace Behaviour.Behaviours.Velocity
         {
         }
 
+        protected override void InitializeState()
+        {
+        }
+
         protected override void Behave()
         {
-            
+        }
+
+        protected override void OnTimesOver()
+        {
+            _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
         }
 
         protected override void OnSwipeDirection(SwipeDirection swipeDirection)
         {
-            
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Configs;
+﻿using System;
+using Configs;
 using Framework;
 using Shared;
 using UniRx;
@@ -67,16 +68,18 @@ namespace Behaviour.Behaviours.Abstract
         {
             Behave();
 
+            // Учитываем, что любое потенциальное поведение может выть временным или даваться на постоянной основе
             if (!_ctx.isEndless)
             {
                 _secondsLeft -= Time.fixedDeltaTime;
 
                 if (_secondsLeft <= 0)
                 {
-                    _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
+                    OnTimesOver();
                 }
             }
         }
+
 
         protected override void OnDispose()
         {
@@ -89,7 +92,9 @@ namespace Behaviour.Behaviours.Abstract
 
             _spawnedEffects = null;
         }
-
+        
+        protected abstract void OnTimesOver();
+        protected abstract void InitializeState();
         protected abstract void Behave();
         protected abstract void OnSwipeDirection(SwipeDirection swipeDirection);
     }
