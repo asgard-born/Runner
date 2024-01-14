@@ -1,6 +1,6 @@
 ﻿namespace Shared
 {
-    public enum SwipeDirection : byte
+    public enum Direction : byte
     {
         None,
         Left,

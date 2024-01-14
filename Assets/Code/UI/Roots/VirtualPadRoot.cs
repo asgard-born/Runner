@@ -17,7 +17,7 @@ namespace UI.Roots
         {
             public RectTransform rootTransform;
             public AssetReference virtualPadViewReference;
-            public ReactiveCommand<SwipeDirection> onSwipeDirection;
+            public ReactiveCommand<Direction> onSwipeDirection;
         }
 
         public VirtualPadRoot(Ctx ctx)

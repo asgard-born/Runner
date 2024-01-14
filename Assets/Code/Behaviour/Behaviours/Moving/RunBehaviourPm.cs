@@ -13,33 +13,38 @@ namespace Behaviour.Behaviours.Moving
         public RunBehaviourPm(Ctx ctx) : base(ctx)
         {
             InitializeState();
+            StartMoving();
+        }
 
-            _isMoving = true;
-            _currentAction = CharacterAction.Running;
+        private void StartMoving()
+        {
+            _currentAction = CharacterAction.Moving;
+            _ctx.animator.SetTrigger(_running);
         }
 
         protected override void InitializeState()
         {
             _ctx.state.speed = _ctx.configs.speed;
             _ctx.state.jumpForce = _ctx.configs.jumpForce;
-            _ctx.state.sideSpeed = _ctx.configs.sideSpeed;
         }
 
         protected override void Behave()
         {
-            if (_isMoving)
-            {
-                Move();
-            }
-
             switch (_currentAction)
             {
-                case CharacterAction.Running:
-                    _ctx.animator.SetTrigger(_running);
+                case CharacterAction.Idle:
+                    _ctx.animator.SetBool(_idle, true);
+
+                    break;
+
+                case CharacterAction.Moving:
+                    Move();
 
                     break;
 
                 case CharacterAction.Jumping:
+                    Move();
+
                     if (!IsGrounded())
                     {
                         _currentAction = CharacterAction.Falling;
@@ -48,32 +53,33 @@ namespace Behaviour.Behaviours.Moving
                     break;
 
                 case CharacterAction.Falling:
+                    Move();
                     OnFalling();
 
                     break;
             }
         }
 
-        protected override void OnSwipeDirection(SwipeDirection swipeDirection)
+        protected override void OnSwipeDirection(Direction direction)
         {
-            switch (swipeDirection)
+            switch (direction)
             {
-                case SwipeDirection.Left:
-                case SwipeDirection.Right:
-                    OnChangeSide(swipeDirection);
+                case Direction.Left:
+                case Direction.Right:
+                    OnChangeSide(direction);
 
                     break;
 
-                case SwipeDirection.Up:
+                case Direction.Up:
                     TryJump(_ctx.state.jumpForce);
 
                     break;
 
-                case SwipeDirection.Down:
+                case Direction.Down:
                     break;
             }
         }
-        
+
         protected override void OnTimesOver()
         {
             _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
@@ -81,7 +87,7 @@ namespace Behaviour.Behaviours.Moving
 
         private void TryJump(float jumpForce)
         {
-            if (_currentAction != CharacterAction.Running) return;
+            if (_currentAction != CharacterAction.Moving) return;
 
             _ctx.rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             _ctx.animator.SetTrigger(_jumping);
@@ -117,7 +123,7 @@ namespace Behaviour.Behaviours.Moving
 
             if (isGrounded)
             {
-                _currentAction = CharacterAction.Running;
+                _currentAction = CharacterAction.Moving;
             }
         }
     }

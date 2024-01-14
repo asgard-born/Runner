@@ -23,7 +23,7 @@ namespace Root
         private readonly Ctx _ctx;
 
         private ReactiveTrigger _onGameRun;
-        private ReactiveCommand<SwipeDirection> _onSwipeDirection;
+        private ReactiveCommand<Direction> _onSwipeDirection;
         private ReactiveCommand<Transform> _onCharacterInitialized;
         private ReactiveCommand<Collider> _onInterraction;
         private ReactiveCommand<Obstacle> _onInteractedWithObstacle;
@@ -54,7 +54,7 @@ namespace Root
         private void InitializeRx()
         {
             _onGameRun = AddUnsafe(new ReactiveTrigger());
-            _onSwipeDirection = AddUnsafe(new ReactiveCommand<SwipeDirection>());
+            _onSwipeDirection = AddUnsafe(new ReactiveCommand<Direction>());
             _onCharacterInitialized = AddUnsafe(new ReactiveCommand<Transform>());
             _onInteractedWithObstacle = AddUnsafe(new ReactiveCommand<Obstacle>());
             _onInterraction = AddUnsafe(new ReactiveCommand<Collider>());

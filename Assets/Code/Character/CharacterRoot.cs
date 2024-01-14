@@ -38,7 +38,7 @@ namespace Character
 
             public ReactiveCommand<Transform> onCharacterInitialized;
             public ReactiveCommand<Collider> onInterraction;
-            public ReactiveCommand<SwipeDirection> onSwipeDirection;
+            public ReactiveCommand<Direction> onSwipeDirection;
             public ReactiveCommand<BehaviourInfo> onBehaviourTaken;
         }
 
@@ -112,7 +112,7 @@ namespace Character
                 animator = _view.animator,
                 rigidbody = _view.rigidbody,
                 characterTransform = _view.transform,
-                toleranceSideDistance = _ctx.playersConfigs.toleranceSideDistance,
+                toleranceDistance = _ctx.playersConfigs.toleranceDistance,
 
                 onSwipeDirection = _ctx.onSwipeDirection,
                 onBehaviourTaken = _ctx.onBehaviourTaken,

@@ -1,5 +1,4 @@
-﻿using System;
-using Configs;
+﻿using Configs;
 using Framework;
 using Shared;
 using UniRx;
@@ -28,10 +27,10 @@ namespace Behaviour.Behaviours.Abstract
             public Animator animator;
             public Rigidbody rigidbody;
             public Transform characterTransform;
-            public float toleranceSideDistance;
+            public Vector2 toleranceDistance;
             public CharacterState state;
 
-            public ReactiveCommand<SwipeDirection> onSwipeDirection;
+            public ReactiveCommand<Direction> onSwipeDirection;
             public ReactiveCommand<BehaviourType> onBehaviourAdded;
             public ReactiveCommand<BehaviourType> onBehaviourFinished;
         }
@@ -57,7 +56,8 @@ namespace Behaviour.Behaviours.Abstract
 
                 for (var i = 0; i < effects.Length; i++)
                 {
-                    _spawnedEffects[i] = Object.Instantiate(effects[i], _ctx.characterTransform.position, _ctx.characterTransform.rotation, _ctx.characterTransform);
+                    _spawnedEffects[i] = Object.Instantiate(effects[i], _ctx.characterTransform);
+                    _spawnedEffects[i].transform.rotation = _ctx.characterTransform.rotation;
                 }
             }
 
@@ -96,6 +96,6 @@ namespace Behaviour.Behaviours.Abstract
         protected abstract void OnTimesOver();
         protected abstract void InitializeState();
         protected abstract void Behave();
-        protected abstract void OnSwipeDirection(SwipeDirection swipeDirection);
+        protected abstract void OnSwipeDirection(Direction direction);
     }
 }

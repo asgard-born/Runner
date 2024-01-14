@@ -14,15 +14,16 @@ namespace Configs
         [SerializeField] private BehaviourType _type;
         [SerializeField] private BehaviourName _name;
         [SerializeField] private GameObject[] _effects;
-        [SerializeField] private float _speed;
-        [SerializeField, Range(0, 30)] private float _sideSpeed;
+        // для разных поведений нужна разная скорость, лаконично будет скомпоновать в Vector3
+        [SerializeField] private Vector3 _speed;
         [SerializeField] private float _jumpForce;
+        [SerializeField] private float _height;
 
         public BehaviourType type => _type;
         public BehaviourName name => _name;
         public GameObject[] effects => _effects;
-        public float speed => _speed;
-        public float sideSpeed => _sideSpeed;
+        public Vector3 speed => _speed;
         public float jumpForce => _jumpForce;
+        public float height => _height;
     }
 }

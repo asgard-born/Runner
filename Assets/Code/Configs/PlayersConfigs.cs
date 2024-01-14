@@ -11,10 +11,10 @@ namespace Configs
     public class PlayersConfigs : ScriptableObject
     {
         [SerializeField] private BehaviourInfo _initialBehaviourInfo;
-        [SerializeField] private float _toleranceSideDistance = .05f;
+        [SerializeField] private Vector2 _toleranceDistance;
 
         public BehaviourInfo initialBehaviourInfo => _initialBehaviourInfo;
-        public float toleranceSideDistance => _toleranceSideDistance;
+        public Vector2 toleranceDistance => _toleranceDistance;
 
         private void OnValidate()
         {

@@ -10,7 +10,6 @@ namespace Behaviour.Behaviours.Abstract
     /// </summary>
     public abstract class MovingBehaviourPm : CharacterBehaviourPm
     {
-        protected bool _isMoving;
         protected CharacterAction _currentAction;
 
         protected static readonly int _idle = Animator.StringToHash("Idle");
@@ -28,7 +27,7 @@ namespace Behaviour.Behaviours.Abstract
         /// </summary>
         protected virtual void Move()
         {
-            var speed = _ctx.state.speed;
+            var speed = _ctx.state.speed.z;
 
             if (speed <= 0) return;
 
@@ -40,36 +39,35 @@ namespace Behaviour.Behaviours.Abstract
 
             var direction = localDistance.x > 0 ? transform.right : -transform.right;
 
-            if (Mathf.Abs(localDistance.x) > _ctx.toleranceSideDistance)
+            if (Mathf.Abs(localDistance.x) > _ctx.toleranceDistance.x)
             {
-                newVelocity += direction * _ctx.state.sideSpeed * Time.fixedDeltaTime;
+                newVelocity += direction * _ctx.state.speed.x * Time.fixedDeltaTime;
             }
 
             newVelocity = (newVelocity - transform.position) / Time.fixedDeltaTime;
             newVelocity = new Vector3(newVelocity.x, _ctx.rigidbody.velocity.y, newVelocity.z);
-            _ctx.state.velocity = newVelocity;
 
-            _ctx.rigidbody.velocity = _ctx.state.velocity;
+            _ctx.rigidbody.velocity = newVelocity;
         }
 
-        protected virtual void OnChangeSide(SwipeDirection swipeDirection)
+        protected virtual void OnChangeSide(Direction direction)
         {
-            if (!CanMoveToDirection(swipeDirection)) return;
+            if (!CanMoveToDirection(direction)) return;
 
             var currentLine = _ctx.state.currentRoadline;
-            var nextRoadline = swipeDirection == SwipeDirection.Left ? currentLine.Previous : currentLine.Next;
+            var nextRoadline = direction == Direction.Left ? currentLine.Previous : currentLine.Next;
 
             _ctx.state.currentRoadline = nextRoadline;
         }
 
-        protected virtual bool CanMoveToDirection(SwipeDirection swipeDirection)
+        protected virtual bool CanMoveToDirection(Direction direction)
         {
-            if (swipeDirection == SwipeDirection.Left && _ctx.state.currentRoadline.Previous != null)
+            if (direction == Direction.Left && _ctx.state.currentRoadline.Previous != null)
             {
                 return true;
             }
 
-            if (swipeDirection == SwipeDirection.Right && _ctx.state.currentRoadline.Next != null)
+            if (direction == Direction.Right && _ctx.state.currentRoadline.Next != null)
             {
                 return true;
             }

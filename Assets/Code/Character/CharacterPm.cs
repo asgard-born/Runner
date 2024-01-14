@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Behaviour;
 using Behaviour.Behaviours.Abstract;
 using Framework;
 using Framework.Reactive;
@@ -78,6 +77,12 @@ namespace Character
             else
             {
                 Debug.LogError("The behaviour must be in dictionary");
+            }
+
+            // Если завершился жизненный цикл поведения, подменяющего наше дефолтное, мы возвращаем его обратно
+            if (type == _ctx.initialBehaviourInfo.configs.type)
+            {
+                _ctx.onBehaviourTaken?.Execute(_ctx.initialBehaviourInfo);
             }
         }
     }

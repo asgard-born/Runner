@@ -1,5 +1,4 @@
-﻿using Behaviour.Behaviours;
-using Behaviour.Behaviours.Abstract;
+﻿using Behaviour.Behaviours.Abstract;
 using Behaviour.Behaviours.Moving;
 using Behaviour.Behaviours.Velocity;
 using Framework;
@@ -22,10 +21,10 @@ namespace Behaviour
             public Animator animator;
             public Rigidbody rigidbody;
             public Transform characterTransform;
-            public float toleranceSideDistance;
+            public Vector2 toleranceDistance;
 
             public ReactiveCommand<BehaviourInfo> onBehaviourTaken;
-            public ReactiveCommand<SwipeDirection> onSwipeDirection;
+            public ReactiveCommand<Direction> onSwipeDirection;
             public ReactiveTrigger<BehaviourType, CharacterBehaviourPm> onNewBehaviourProduced;
             public ReactiveCommand<BehaviourType> onBehaviourAdded;
             public ReactiveCommand<BehaviourType> onBehaviourFinished;
@@ -50,7 +49,7 @@ namespace Behaviour
                 animator = _ctx.animator,
                 rigidbody = _ctx.rigidbody,
                 characterTransform = _ctx.characterTransform,
-                toleranceSideDistance = _ctx.toleranceSideDistance,
+                toleranceDistance = _ctx.toleranceDistance,
                 state = _ctx.state,
                 
                 onSwipeDirection = _ctx.onSwipeDirection,

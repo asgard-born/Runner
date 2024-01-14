@@ -6,9 +6,11 @@
     public enum CharacterAction : byte
     {
         None = 0,
-        Running = 10,
-        Jumping = 20,
-        Falling = 30,
-        Landing = 40,
+        Idle = 10,
+        Moving = 20,
+        Jumping = 30,
+        Falling = 40,
+        Lifting = 50,
+        Landing = 60,
     }
 }

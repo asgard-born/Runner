@@ -26,7 +26,7 @@ namespace Behaviour.Behaviours.Velocity
             _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
         }
 
-        protected override void OnSwipeDirection(SwipeDirection swipeDirection)
+        protected override void OnSwipeDirection(Direction direction)
         {
         }
     }
