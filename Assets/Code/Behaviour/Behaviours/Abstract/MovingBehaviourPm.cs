@@ -11,6 +11,7 @@ namespace Behaviour.Behaviours.Abstract
     public abstract class MovingBehaviourPm : CharacterBehaviourPm
     {
         protected CharacterAction _currentAction;
+        private const int SPEED_MULTIPLIER = 100;
 
         protected static readonly int _idleHash = Animator.StringToHash("Idle");
         protected static readonly int _damageHash = Animator.StringToHash("Damage");
@@ -24,26 +25,25 @@ namespace Behaviour.Behaviours.Abstract
         /// </summary>
         protected virtual void Move()
         {
-            var speed = _ctx.state.speed.z;
+            var speedZ = _ctx.state.speed.z * SPEED_MULTIPLIER * Time.fixedDeltaTime;
+            var speedX = _ctx.state.speed.x * SPEED_MULTIPLIER * Time.fixedDeltaTime;
 
-            if (speed <= 0) return;
+            var roadlinePosition = _ctx.state.currentRoadline.Value.transform.position;
+
+            var forwardVelocity = _ctx.transform.forward * speedZ;
             
-            var roalinePosition = _ctx.state.currentRoadline.Value.transform.position;
-
-            var newVelocity = _ctx.transform.position + _ctx.transform.forward * speed * Time.fixedDeltaTime;
-            var localDistance = _ctx.transform.InverseTransformPoint(roalinePosition);
-
+            var sideVelocity = Vector3.zero;
+            var localDistance = _ctx.transform.InverseTransformPoint(roadlinePosition);
             var direction = localDistance.x > 0 ? _ctx.transform.right : -_ctx.transform.right;
 
             if (Mathf.Abs(localDistance.x) > _ctx.toleranceDistance.x)
             {
-                newVelocity += direction * _ctx.state.speed.x * Time.fixedDeltaTime;
+                sideVelocity = direction * speedX;
             }
 
-            newVelocity = (newVelocity - _ctx.transform.position) / Time.fixedDeltaTime;
-            newVelocity = new Vector3(newVelocity.x, _ctx.rigidbody.velocity.y, newVelocity.z);
+            var verticalVelocity = Vector3.up * _ctx.rigidbody.velocity.y;
 
-            _ctx.rigidbody.velocity = newVelocity;
+            _ctx.rigidbody.velocity = forwardVelocity + sideVelocity + verticalVelocity;
         }
 
         protected virtual void OnChangeSide(Direction direction)
