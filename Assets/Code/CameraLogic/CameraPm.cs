@@ -15,7 +15,7 @@ namespace CameraLogic
         {
             public Transform characterTransform;
             public Transform cameraTransform;
-            public float smoothFactor;
+            public float speed;
             public Vector3 positionOffset;
             public Vector3 rotationOffset;
         }
@@ -31,7 +31,7 @@ namespace CameraLogic
         {
             if (_ctx.characterTransform == null) return;
 
-            float smoothSpeed = _ctx.smoothFactor * Time.deltaTime;
+            float smoothSpeed = _ctx.speed * Time.deltaTime;
 
             Vector3 desiredPosition = _ctx.characterTransform.position + _ctx.characterTransform.rotation * _ctx.positionOffset;
             Vector3 smoothedPosition = Vector3.Lerp(_ctx.cameraTransform.position, desiredPosition, smoothSpeed);
