@@ -4,7 +4,8 @@ using UnityEngine;
 namespace Behaviour.Behaviours
 {
     /// <summary>
-    /// Поведение игрока типа Бег. Поведению делегируется работа с вью и обработка пользовательского свайпа в разные стороны 
+    /// Поведение игрока типа Бег. Поведению делегируется работа с компонентами представления
+    /// и обработка пользовательского свайпа в разные стороны
     /// </summary>
     public class RunBehaviourPm : CharacterBehaviourPm
     {
@@ -82,7 +83,7 @@ namespace Behaviour.Behaviours
             var transform = _ctx.characterTransform;
             var roalinePosition = _ctx.state.currentRoadline.Value.transform.position;
 
-            var nextPosition = transform.forward * speed * Time.fixedDeltaTime;
+            var nextPosition = transform.position + transform.forward * speed * Time.fixedDeltaTime;
             var localDistance = _ctx.characterTransform.InverseTransformPoint(roalinePosition);
 
             var direction = localDistance.x > 0 ? transform.right : -transform.right;
@@ -92,9 +93,11 @@ namespace Behaviour.Behaviours
                 nextPosition += direction * _ctx.state.sideSpeed * Time.fixedDeltaTime;
             }
 
-            _ctx.state.nextPosition += nextPosition;
-
-            _ctx.rigidbody.MovePosition(_ctx.state.nextPosition);
+            nextPosition = (nextPosition - transform.position) / Time.fixedDeltaTime;
+            nextPosition = new Vector3(nextPosition.x, _ctx.rigidbody.velocity.y, nextPosition.z);
+            _ctx.state.nextPosition = nextPosition;
+            
+            _ctx.rigidbody.velocity = _ctx.state.nextPosition;
             _ctx.animator.SetBool(_running, true);
         }
 
@@ -130,8 +133,8 @@ namespace Behaviour.Behaviours
                 return;
             }
 
-            _ctx.rigidbody.AddTorque(Vector3.up * jumpForce, ForceMode.Impulse);
-            _ctx.animator.SetTrigger(_jumping);
+            _ctx.rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            // _ctx.animator.SetTrigger(_jumping);
 
             _currentAction = CharacterAction.Jumping;
         }

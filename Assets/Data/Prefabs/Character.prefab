@@ -1029,6 +1029,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 4278587929373083817}
+  _animator: {fileID: -147495752933334567}
   _mask:
     serializedVersion: 2
     m_Bits: 192
@@ -1036,7 +1037,6 @@ MonoBehaviour:
   _updateFrequencyMillisec: 50
   _interractingPointFirst: {fileID: 3146263363203936661}
   _interractingPointSecond: {fileID: 3306762774082564640}
-  _animator: {fileID: -147495752933334567}
 --- !u!54 &4278587929373083817
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1045,7 +1045,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1782702501690864755}
   serializedVersion: 4
-  m_Mass: 10
+  m_Mass: 5
   m_Drag: 0.5
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
