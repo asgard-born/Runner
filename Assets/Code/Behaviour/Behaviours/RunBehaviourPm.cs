@@ -25,8 +25,7 @@ namespace Behaviour.Behaviours
 
         private void InitializeState()
         {
-            _ctx.state.nextPosition = _ctx.characterTransform.position;
-            _ctx.state.velocity = _ctx.configs.speed;
+            _ctx.state.speed = _ctx.configs.speed;
             _ctx.state.jumpForce = _ctx.configs.jumpForce;
             _ctx.state.sideSpeed = _ctx.configs.sideSpeed;
         }
@@ -42,6 +41,7 @@ namespace Behaviour.Behaviours
             {
                 case CharacterAction.Running:
                     _ctx.animator.SetTrigger(_running);
+
                     break;
 
                 case CharacterAction.Jumping:
@@ -81,28 +81,28 @@ namespace Behaviour.Behaviours
 
         private void Move()
         {
-            var speed = _ctx.state.velocity;
+            var speed = _ctx.state.speed;
 
             if (speed <= 0) return;
 
             var transform = _ctx.characterTransform;
             var roalinePosition = _ctx.state.currentRoadline.Value.transform.position;
 
-            var nextPosition = transform.position + transform.forward * speed * Time.fixedDeltaTime;
+            var newVelocity = transform.position + transform.forward * speed * Time.fixedDeltaTime;
             var localDistance = _ctx.characterTransform.InverseTransformPoint(roalinePosition);
 
             var direction = localDistance.x > 0 ? transform.right : -transform.right;
 
             if (Mathf.Abs(localDistance.x) > _ctx.toleranceSideDistance)
             {
-                nextPosition += direction * _ctx.state.sideSpeed * Time.fixedDeltaTime;
+                newVelocity += direction * _ctx.state.sideSpeed * Time.fixedDeltaTime;
             }
 
-            nextPosition = (nextPosition - transform.position) / Time.fixedDeltaTime;
-            nextPosition = new Vector3(nextPosition.x, _ctx.rigidbody.velocity.y, nextPosition.z);
-            _ctx.state.nextPosition = nextPosition;
+            newVelocity = (newVelocity - transform.position) / Time.fixedDeltaTime;
+            newVelocity = new Vector3(newVelocity.x, _ctx.rigidbody.velocity.y, newVelocity.z);
+            _ctx.state.velocity = newVelocity;
 
-            _ctx.rigidbody.velocity = _ctx.state.nextPosition;
+            _ctx.rigidbody.velocity = _ctx.state.velocity;
         }
 
         private void OnChangeSide(SwipeDirection swipeDirection)
@@ -163,7 +163,7 @@ namespace Behaviour.Behaviours
         private void OnFalling()
         {
             var isGrounded = IsGrounded();
-            
+
             _ctx.animator.SetBool(_falling, !isGrounded);
 
             if (isGrounded)

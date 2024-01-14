@@ -5,10 +5,10 @@ namespace Shared
 {
     public struct CharacterState
     {
-        public float velocity;
+        public float speed;
         public float jumpForce;
         public float sideSpeed;
-        public Vector3 nextPosition;
+        public Vector3 velocity;
         public LinkedListNode<RoadlinePoint> currentRoadline;
     }
 }
