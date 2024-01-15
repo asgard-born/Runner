@@ -763,7 +763,6 @@ GameObject:
   - component: {fileID: 497832}
   - component: {fileID: 3387084}
   - component: {fileID: 2317488}
-  - component: {fileID: 64403533157552192}
   - component: {fileID: -2032348526711186592}
   m_Layer: 7
   m_Name: SM_Veh_Car_Sedan_01
@@ -845,28 +844,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &64403533157552192
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 198730}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 2dfd189627cfe43479265db2e35e552c, type: 3}
 --- !u!65 &-2032348526711186592
 BoxCollider:
   m_ObjectHideFlags: 0
