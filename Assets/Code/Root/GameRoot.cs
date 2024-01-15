@@ -89,6 +89,7 @@ namespace Root
                 onInterraction = _onInterraction,
                 onSwipeDirection = _onSwipeDirection,
                 onBehaviourTaken = _onBehaviourTaken,
+                onInteractedWithObstacle = _onInteractedWithObstacle
             };
 
             AddUnsafe(new CharacterRoot(ctx));

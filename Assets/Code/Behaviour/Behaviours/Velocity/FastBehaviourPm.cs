@@ -1,4 +1,5 @@
 ﻿using Behaviour.Behaviours.Abstract;
+using Obstacles;
 using Shared;
 
 namespace Behaviour.Behaviours.Velocity
@@ -11,6 +12,11 @@ namespace Behaviour.Behaviours.Velocity
     {
         public FastBehaviourPm(Ctx ctx) : base(ctx)
         {
+        }
+
+        protected override void OnCrash(Obstacle obstacle)
+        {
+            
         }
 
         protected override void Initialize()

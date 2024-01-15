@@ -3,6 +3,7 @@ using Behaviour.Behaviours.Moving;
 using Behaviour.Behaviours.Velocity;
 using Framework;
 using Framework.Reactive;
+using Obstacles;
 using Shared;
 using UniRx;
 using UnityEngine;
@@ -30,6 +31,7 @@ namespace Behaviour
             public ReactiveTrigger<BehaviourType, CharacterBehaviourPm> onNewBehaviourProduced;
             public ReactiveCommand<BehaviourType> onBehaviourAdded;
             public ReactiveCommand<BehaviourType> onBehaviourFinished;
+            public ReactiveCommand<Obstacle> onInteractedWithObstacle;
         }
 
         public CharacterBehaviourFactoryPm(Ctx ctx)
@@ -58,7 +60,8 @@ namespace Behaviour
                 
                 onSwipeDirection = _ctx.onSwipeDirection,
                 onBehaviourAdded = _ctx.onBehaviourAdded,
-                onBehaviourFinished = _ctx.onBehaviourFinished
+                onBehaviourFinished = _ctx.onBehaviourFinished,
+                onCrash = _ctx.onInteractedWithObstacle
             };
 
             switch (behaviourInfo.configs.name)

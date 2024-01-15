@@ -14,7 +14,7 @@ namespace Interactions
     public class InteractionReporterPm : BaseDisposable
     {
         private ReactiveCommand<BehaviourInfo> _onBehaviourTaken;
-        private ReactiveCommand<Obstacle> _onInteractedWithObstacle;
+        private readonly Ctx _ctx;
 
         public struct Ctx
         {
@@ -25,8 +25,8 @@ namespace Interactions
 
         public InteractionReporterPm(Ctx ctx)
         {
+            _ctx = ctx;
             _onBehaviourTaken = ctx.onBehaviourTaken;
-            _onInteractedWithObstacle = ctx.onInteractedWithObstacle;
             
             AddUnsafe(ctx.onInterraction.Subscribe(TryReport));
         }
@@ -57,7 +57,7 @@ namespace Interactions
 
             if (obstacle != null)
             {
-                _onInteractedWithObstacle?.Execute(obstacle);
+                _ctx.onInteractedWithObstacle?.Execute(obstacle);
             }
         }
     }

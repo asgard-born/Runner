@@ -1,4 +1,5 @@
 ﻿using Behaviour.Behaviours.Abstract;
+using Obstacles;
 using Shared;
 using UnityEngine;
 
@@ -57,6 +58,11 @@ namespace Behaviour.Behaviours.Moving
 
                     break;
             }
+        }
+
+        protected override void OnCrash(Obstacle obstacle)
+        {
+            _currentAction = CharacterAction.Idle;
         }
 
         protected override void OnSwipeDirection(Direction direction)

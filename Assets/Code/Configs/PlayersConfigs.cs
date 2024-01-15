@@ -5,7 +5,7 @@ using UnityEngine.Assertions;
 namespace Configs
 {
     /// <summary>
-    /// Начальные установки игрока, включая его начальное поведение
+    /// Начальные установки игрока, включая его стартовое поведение
     /// </summary>
     [CreateAssetMenu(menuName = "Configs/Players Configs", fileName = "Players_Configs")]
     public class PlayersConfigs : ScriptableObject
@@ -13,9 +13,11 @@ namespace Configs
         [SerializeField] private BehaviourInfo _initialBehaviourInfo;
         [SerializeField] private Vector2 _toleranceDistance;
         [SerializeField] private LayerMask _landingMask;
+        [SerializeField] private float _crashDelay;
 
         public BehaviourInfo initialBehaviourInfo => _initialBehaviourInfo;
         public Vector2 toleranceDistance => _toleranceDistance;
+        public float crashDelay => _crashDelay;
         public LayerMask landingMask => _landingMask;
 
         private void OnValidate()
