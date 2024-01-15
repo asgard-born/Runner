@@ -25,7 +25,7 @@ namespace Behaviour.Behaviours.Abstract
         {
             public BehaviourConfigs configs;
             public bool isEndless;
-            public float durationSec;
+            public float behaviourDurationSec;
             public Animator animator;
             public Rigidbody rigidbody;
             public Collider collider;
@@ -33,13 +33,13 @@ namespace Behaviour.Behaviours.Abstract
             public Transform transform;
             public Vector2 toleranceDistance;
             public CharacterState state;
-            public float _crash;
+            public float crashDelay;
 
             public ReactiveCommand<Direction> onSwipeDirection;
             public ReactiveCommand<BehaviourType> onBehaviourAdded;
             public ReactiveCommand<BehaviourType> onBehaviourFinished;
             public ReactiveCommand<GameObject> onCrash;
-            public ReactiveTrigger onFinish;
+            public ReactiveTrigger onFinishReached;
         }
 
         protected CharacterBehaviourPm(Ctx ctx)
@@ -55,7 +55,7 @@ namespace Behaviour.Behaviours.Abstract
         {
             if (type != _ctx.configs.type) return;
 
-            _secondsLeft = _ctx.durationSec;
+            _secondsLeft = _ctx.behaviourDurationSec;
             var effects = _ctx.configs.effects;
 
             if (effects != null)

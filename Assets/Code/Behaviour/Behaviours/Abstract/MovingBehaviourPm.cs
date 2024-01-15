@@ -1,5 +1,6 @@
 ﻿using Shared;
 using UnityEngine;
+using UniRx;
 
 namespace Behaviour.Behaviours.Abstract
 {
@@ -18,7 +19,8 @@ namespace Behaviour.Behaviours.Abstract
 
         protected MovingBehaviourPm(Ctx ctx) : base(ctx)
         {
-            AddUnsafe(_ctx.onFinish.Subscribe(OnFinish));
+            AddUnsafe(_ctx.onFinishReached.Subscribe(OnFinish));
+            AddUnsafe(_ctx.onCrash.Subscribe(OnCrash));
         }
 
         /// <summary>
@@ -34,6 +36,18 @@ namespace Behaviour.Behaviours.Abstract
             var verticalVelocity = Vector3.up * _ctx.rigidbody.velocity.y;
 
             _ctx.rigidbody.velocity = forwardVelocity + sideVelocity + verticalVelocity;
+        }
+        
+        protected virtual void OnCrash(GameObject obstacle)
+        {
+            _ctx.rigidbody.velocity = Vector3.zero;
+            _currentAction = CharacterAction.Idle;
+            _ctx.state.lives.Value -= 1;
+            
+            if (_ctx.state.lives.Value > 0)
+            {
+                Respawn();
+            }
         }
 
         protected Vector3 CalculateSideVelocity()
@@ -81,6 +95,9 @@ namespace Behaviour.Behaviours.Abstract
         protected virtual void OnFinish()
         {
             _currentAction = CharacterAction.Idle;
+            _ctx.onFinishReached?.Notify();
         }
+
+        protected abstract void Respawn();
     }
 }

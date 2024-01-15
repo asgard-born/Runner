@@ -9,8 +9,8 @@ using UnityEngine;
 namespace Interactions
 {
     /// <summary>
-    /// Распознает тип объекта взаимодействия и сообщает об этом в событиях
-    /// принимает в себя абстрактное "сырье" в виде коллайдеров
+    /// Принимает в себя 'сырые' данные в виде коллайдеров
+    /// Распознает объект взаимодействия и сообщает об этом в событиях
     /// </summary>
     public class InteractionReporterPm : BaseDisposable
     {
@@ -23,9 +23,9 @@ namespace Interactions
 
             public ReactiveCommand<Collider> onInterraction;
             public ReactiveCommand<BehaviourInfo> onBehaviourTaken;
-            public ReactiveCommand<GameObject> onInteractedWithObstacle;
-            public ReactiveCommand<Transform> onInteractedWithSaveZone;
-            public ReactiveTrigger onFinish;
+            public ReactiveCommand<GameObject> onInteractWithObstacle;
+            public ReactiveCommand<Transform> onInteractWithSaveZone;
+            public ReactiveTrigger onFinishReached;
         }
 
         public InteractionReporterPm(Ctx ctx)
@@ -45,20 +45,6 @@ namespace Interactions
                 return;
             }
 
-            var item = collider.GetComponent<Item>();
-
-            if (item != null)
-            {
-                foreach (var behaviourInfo in item.behaviours)
-                {
-                    _onBehaviourTaken?.Execute(behaviourInfo);
-                }
-
-                item.gameObject.SetActive(false);
-
-                return;
-            }
-
             var gameObject = collider.gameObject;
             var layer = gameObject.layer;
 
@@ -69,24 +55,36 @@ namespace Interactions
                     switch (layerMaskPair.Value)
                     {
                         case LayerName.Obstacle:
-                            _ctx.onInteractedWithObstacle?.Execute(gameObject);
+                            _ctx.onInteractWithObstacle?.Execute(gameObject);
 
                             break;
 
                         case LayerName.SaveZone:
 
-                            _ctx.onInteractedWithSaveZone?.Execute(gameObject.transform);
+                            _ctx.onInteractWithSaveZone?.Execute(gameObject.transform);
 
                             break;
 
                         case LayerName.Finish:
-                            _ctx.onFinish?.Notify();
+                            _ctx.onFinishReached?.Notify();
 
                             break;
                     }
-                    
+
                     return;
                 }
+            }
+
+            var item = collider.GetComponent<Item>();
+
+            if (item != null)
+            {
+                foreach (var behaviourInfo in item.behaviours)
+                {
+                    _onBehaviourTaken?.Execute(behaviourInfo);
+                }
+
+                item.gameObject.SetActive(false);
             }
         }
     }

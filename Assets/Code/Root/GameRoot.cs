@@ -22,11 +22,12 @@ namespace Root
         private ReactiveCommand<Direction> _onSwipeDirection;
         private ReactiveCommand<Transform> _onCharacterInitialized;
         private ReactiveCommand<Collider> _onInterraction;
-        private ReactiveCommand<GameObject> _onInteractedWithObstacle;
+        private ReactiveCommand<GameObject> _onInteractWithObstacle;
         private ReactiveCommand<BehaviourInfo> _onBehaviourTaken;
-        private ReactiveCommand<Transform> _onInteractedWithSaveZone;
-        private ReactiveTrigger _onFinish;
+        private ReactiveCommand<Transform> _onInteractWithSaveZone;
+        private ReactiveTrigger _onFinishReached;
         private ReactiveTrigger _onGameLoose;
+        private ReactiveProperty<int> _lives;
 
         public struct Ctx
         {
@@ -45,34 +46,36 @@ namespace Root
             _ctx = ctx;
 
             InitializeRx();
-            InitializeInput(ctx);
+            InitializeUI(ctx);
             InitializeCharacter();
             InitializeInteractionReporter();
         }
 
         private void InitializeRx()
         {
+            _lives = AddUnsafe(new ReactiveProperty<int>(_ctx.playersConfigs.initialLives));
+
             _onSwipeDirection = AddUnsafe(new ReactiveCommand<Direction>());
             _onCharacterInitialized = AddUnsafe(new ReactiveCommand<Transform>());
             _onBehaviourTaken = AddUnsafe(new ReactiveCommand<BehaviourInfo>());
             _onInterraction = AddUnsafe(new ReactiveCommand<Collider>());
-            _onInteractedWithObstacle = AddUnsafe(new ReactiveCommand<GameObject>());
-            _onInteractedWithSaveZone = AddUnsafe(new ReactiveCommand<Transform>());
-            _onFinish = AddUnsafe(new ReactiveTrigger());
+            _onInteractWithObstacle = AddUnsafe(new ReactiveCommand<GameObject>());
+            _onInteractWithSaveZone = AddUnsafe(new ReactiveCommand<Transform>());
+            _onFinishReached = AddUnsafe(new ReactiveTrigger());
 
             AddUnsafe(_onCharacterInitialized.Subscribe(InitializeCamera));
         }
 
-        private void InitializeInput(Ctx ctx)
+        private void InitializeUI(Ctx ctx)
         {
-            var virtualPadEntityCtx = new VirtualPadRoot.Ctx
+            var uiRootCtx = new UIRoot.Ctx
             {
                 uiTransform = ctx.uiTransform,
-                virtualPadViewReference = ctx.resourcesConfigs.virtualPadReference,
+                resourcesConfigs = ctx.resourcesConfigs,
                 onSwipeDirection = _onSwipeDirection
             };
 
-            AddUnsafe(new VirtualPadRoot(virtualPadEntityCtx));
+            AddUnsafe(new UIRoot(uiRootCtx));
         }
 
         private void InitializeCharacter()
@@ -89,8 +92,8 @@ namespace Root
                 onInterraction = _onInterraction,
                 onSwipeDirection = _onSwipeDirection,
                 onBehaviourTaken = _onBehaviourTaken,
-                onInteractedWithObstacle = _onInteractedWithObstacle,
-                onFinish = _onFinish
+                onInteractWithObstacle = _onInteractWithObstacle,
+                onFinishReached = _onFinishReached
             };
 
             AddUnsafe(new CharacterRoot(ctx));
@@ -101,12 +104,12 @@ namespace Root
             var characterCtx = new InteractionReporterPm.Ctx
             {
                 layersDictionary = _ctx.globalConfigs.layersDictionary,
-                
+
                 onInterraction = _onInterraction,
                 onBehaviourTaken = _onBehaviourTaken,
-                onInteractedWithObstacle = _onInteractedWithObstacle,
-                onInteractedWithSaveZone = _onInteractedWithSaveZone,
-                onFinish = _onFinish
+                onInteractWithObstacle = _onInteractWithObstacle,
+                onInteractWithSaveZone = _onInteractWithSaveZone,
+                onFinishReached = _onFinishReached
             };
 
             AddUnsafe(new InteractionReporterPm(characterCtx));

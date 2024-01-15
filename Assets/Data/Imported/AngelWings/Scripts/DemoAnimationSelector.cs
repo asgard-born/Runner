@@ -1,15 +1,18 @@
 ﻿using UnityEngine;
 
-public class DemoAnimationSelector : MonoBehaviour
+namespace Data.Imported.AngelWings.Scripts
 {
-    private Animator m_Animator = null;
-
-    public void SwitchAnimation(int index)
+    public class DemoAnimationSelector : MonoBehaviour
     {
-        if (!m_Animator)
-            m_Animator = GetComponentInChildren<Animator>();
+        private Animator m_Animator = null;
 
-        if (m_Animator)
-            m_Animator.SetInteger("Mode", index);
+        public void SwitchAnimation(int index)
+        {
+            if (!m_Animator)
+                m_Animator = GetComponentInChildren<Animator>();
+
+            if (m_Animator)
+                m_Animator.SetInteger("Mode", index);
+        }
     }
 }

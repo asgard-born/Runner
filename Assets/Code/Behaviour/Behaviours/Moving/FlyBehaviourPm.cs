@@ -1,4 +1,5 @@
 ﻿using Behaviour.Behaviours.Abstract;
+using DG.Tweening;
 using Shared;
 using UnityEngine;
 using UniRx;
@@ -12,7 +13,6 @@ namespace Behaviour.Behaviours.Moving
         public FlyBehaviourPm(Ctx ctx) : base(ctx)
         {
             AddUnsafe(_ctx.onSwipeDirection.Subscribe(OnSwipeDirection));
-            AddUnsafe(_ctx.onCrash.Subscribe(OnCrash));
         }
 
         protected override void Initialize()
@@ -69,10 +69,21 @@ namespace Behaviour.Behaviours.Moving
             _currentAction = CharacterAction.Landing;
         }
 
-        private void OnCrash(GameObject obstacle)
+        
+
+        protected override void Respawn()
         {
-            _ctx.rigidbody.velocity = Vector3.zero;
-            _currentAction = CharacterAction.Idle;
+            var currentZonePos = _ctx.state.currentSaveZone.position;
+            var newPosition = new Vector3(currentZonePos.x, _ctx.transform.position.y, currentZonePos.z);
+
+            var roadline = _ctx.state.currentRoadline;
+
+            while (roadline.Previous != null)
+            {
+                roadline = roadline.Previous;
+            }
+
+            _ctx.rigidbody.DOMove(newPosition, _ctx.crashDelay);
         }
 
         private void Lifting()

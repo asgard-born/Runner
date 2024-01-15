@@ -50,7 +50,7 @@ namespace UI.Roots
             var prefab = await LoadAndTrackPrefab<VirtualPadView>(_ctx.virtualPadViewReference);
 
             VirtualPadView virtualPadView = Object.Instantiate(prefab, _ctx.uiTransform);
-            virtualPadView.SetCtx(ctx);
+            virtualPadView.SetContext(ctx);
         }
     }
 }

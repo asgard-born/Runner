@@ -18,7 +18,7 @@ namespace UI.Views
             public ReactiveCommand<(Vector2, Vector2)> onSwipeRaw;
         }
 
-        public void SetCtx(Ctx ctx)
+        public void SetContext(Ctx ctx)
         {
             _onSwipeRaw = ctx.onSwipeRaw;
         }

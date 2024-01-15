@@ -23,11 +23,13 @@ namespace Character
         private CharacterView _view;
         private CharacterState _state;
 
+        private ReactiveProperty<int> _lives;
+
         private ReactiveTrigger<float> _onSpeedChangedCallback;
         private ReactiveCommand<BehaviourType> _onBehaviourAdded;
         private ReactiveTrigger<BehaviourType, CharacterBehaviourPm> _onNewBehaviourProduced;
         private ReactiveCommand<BehaviourType> _onBehaviourFinished;
-        private ReactiveCommand<Transform> _onInteractedWithSaveZone;
+        private ReactiveCommand<Transform> _onInteractWithSaveZone;
 
         public struct Ctx
         {
@@ -41,8 +43,8 @@ namespace Character
             public ReactiveCommand<Collider> onInterraction;
             public ReactiveCommand<Direction> onSwipeDirection;
             public ReactiveCommand<BehaviourInfo> onBehaviourTaken;
-            public ReactiveCommand<GameObject> onInteractedWithObstacle;
-            public ReactiveTrigger onFinish;
+            public ReactiveCommand<GameObject> onInteractWithObstacle;
+            public ReactiveTrigger onFinishReached;
         }
 
         public CharacterRoot(Ctx ctx)
@@ -63,10 +65,11 @@ namespace Character
 
         private void InitializeRx()
         {
+            
             _onNewBehaviourProduced = AddUnsafe(new ReactiveTrigger<BehaviourType, CharacterBehaviourPm>());
             _onBehaviourAdded = AddUnsafe(new ReactiveCommand<BehaviourType>());
             _onBehaviourFinished = AddUnsafe(new ReactiveCommand<BehaviourType>());
-            _onInteractedWithSaveZone = AddUnsafe(new ReactiveCommand<Transform>());
+            _onInteractWithSaveZone = AddUnsafe(new ReactiveCommand<Transform>());
         }
 
         private async UniTask InitializeCharacterView()
@@ -79,7 +82,7 @@ namespace Character
                 onInterraction = _ctx.onInterraction
             };
 
-            _view.SetCtx(viewCtx);
+            _view.SetContext(viewCtx);
         }
 
         private void InitializeCharacterPm()
@@ -94,7 +97,7 @@ namespace Character
                 onBehaviourTaken = _ctx.onBehaviourTaken,
                 onNewBehaviourProduced = _onNewBehaviourProduced,
                 onBehaviourAdded = _onBehaviourAdded,
-                onInteractedWithSaveZone = _onInteractedWithSaveZone,
+                onInteractWithSaveZone = _onInteractWithSaveZone,
                 onBehaviourFinished = _onBehaviourFinished
             };
 
@@ -105,6 +108,7 @@ namespace Character
         {
             _state = new CharacterState
             {
+                lives = _lives,
                 currentRoadline = new LinkedList<RoadlinePoint>(_ctx.roadlinePoints).Find(_ctx.spawnPoint)
             };
         }
@@ -120,14 +124,15 @@ namespace Character
                 landingMask = _ctx.playersConfigs.landingMask,
                 characterTransform = _view.transform,
                 toleranceDistance = _ctx.playersConfigs.toleranceDistance,
+                crashDelay = _ctx.playersConfigs.crashDelay,
 
                 onSwipeDirection = _ctx.onSwipeDirection,
                 onBehaviourTaken = _ctx.onBehaviourTaken,
                 onNewBehaviourProduced = _onNewBehaviourProduced,
                 onBehaviourAdded = _onBehaviourAdded,
                 onBehaviourFinished = _onBehaviourFinished,
-                onInteractedWithObstacle = _ctx.onInteractedWithObstacle,
-                onFinish = _ctx.onFinish
+                onInteractWithObstacle = _ctx.onInteractWithObstacle,
+                onFinishReached = _ctx.onFinishReached
             };
 
             AddUnsafe(new CharacterBehaviourFactoryPm(behaviourFactoryCtx));

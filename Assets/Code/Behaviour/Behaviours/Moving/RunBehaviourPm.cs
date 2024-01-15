@@ -1,4 +1,5 @@
 ﻿using Behaviour.Behaviours.Abstract;
+using DG.Tweening;
 using Shared;
 using UnityEngine;
 using UniRx;
@@ -17,8 +18,7 @@ namespace Behaviour.Behaviours.Moving
 
         public RunBehaviourPm(Ctx ctx) : base(ctx)
         {
-            AddUnsafe(_ctx.onSwipeDirection.Subscribe(OnSwipeDirection));
-            AddUnsafe(_ctx.onCrash.Subscribe(OnCrash));
+            AddUnsafe(_ctx.onSwipeDirection.Subscribe(OnSwipeDirection)); ;
         }
 
         protected override void Initialize()
@@ -63,10 +63,21 @@ namespace Behaviour.Behaviours.Moving
             }
         }
 
-        protected void OnCrash(GameObject obstacle)
+        protected override void Respawn()
         {
-            _ctx.rigidbody.velocity = Vector3.zero;
-            _currentAction = CharacterAction.Idle;
+            _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+            var currentZonePos = _ctx.state.currentSaveZone.position;
+            var roadline = _ctx.state.currentRoadline;
+
+            _ctx.rigidbody.useGravity = false;
+            _ctx.collider.enabled = false;
+
+            while (roadline.Previous != null)
+            {
+                roadline = roadline.Previous;
+            }
+
+            _ctx.rigidbody.DOMove(currentZonePos, _ctx.crashDelay).OnComplete(SetDefaultCondition);
         }
 
         protected override void OnTimesOver()
@@ -130,6 +141,7 @@ namespace Behaviour.Behaviours.Moving
         private void SetDefaultCondition()
         {
             var characterPosition = _ctx.transform.position;
+            
             _ctx.rigidbody.position = new Vector3(characterPosition.x, _ctx.state.currentRoadline.Value.transform.position.y, characterPosition.z);
             _ctx.rigidbody.useGravity = false;
             _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;

@@ -33,7 +33,7 @@ namespace Character
             CheckForInteractionProcessAsync();
         }
 
-        public void SetCtx(Ctx ctx)
+        public void SetContext(Ctx ctx)
         {
             _onInterraction = ctx.onInterraction;
         }

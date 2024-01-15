@@ -24,14 +24,15 @@ namespace Behaviour
             public LayerMask landingMask;
             public Transform characterTransform;
             public Vector2 toleranceDistance;
+            public float crashDelay;
 
             public ReactiveCommand<BehaviourInfo> onBehaviourTaken;
             public ReactiveCommand<Direction> onSwipeDirection;
             public ReactiveTrigger<BehaviourType, CharacterBehaviourPm> onNewBehaviourProduced;
             public ReactiveCommand<BehaviourType> onBehaviourAdded;
             public ReactiveCommand<BehaviourType> onBehaviourFinished;
-            public ReactiveCommand<GameObject> onInteractedWithObstacle;
-            public ReactiveTrigger onFinish;
+            public ReactiveCommand<GameObject> onInteractWithObstacle;
+            public ReactiveTrigger onFinishReached;
         }
 
         public CharacterBehaviourFactoryPm(Ctx ctx)
@@ -49,7 +50,7 @@ namespace Behaviour
             {
                 configs = behaviourInfo.configs,
                 isEndless = behaviourInfo.isEndless,
-                durationSec = behaviourInfo.durationSec,
+                behaviourDurationSec = behaviourInfo.durationSec,
                 animator = _ctx.animator,
                 rigidbody = _ctx.rigidbody,
                 collider = _ctx.collider,
@@ -57,12 +58,13 @@ namespace Behaviour
                 transform = _ctx.characterTransform,
                 toleranceDistance = _ctx.toleranceDistance,
                 state = _ctx.state,
+                crashDelay = _ctx.crashDelay, 
                 
                 onSwipeDirection = _ctx.onSwipeDirection,
                 onBehaviourAdded = _ctx.onBehaviourAdded,
                 onBehaviourFinished = _ctx.onBehaviourFinished,
-                onCrash = _ctx.onInteractedWithObstacle,
-                onFinish = _ctx.onFinish
+                onCrash = _ctx.onInteractWithObstacle,
+                onFinishReached = _ctx.onFinishReached
             };
 
             switch (behaviourInfo.configs.name)

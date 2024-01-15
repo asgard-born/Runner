@@ -28,7 +28,7 @@ namespace Character
             public ReactiveTrigger<BehaviourType, CharacterBehaviourPm> onNewBehaviourProduced;
             public ReactiveCommand<BehaviourType> onBehaviourAdded;
             public ReactiveCommand<Transform> onCharacterInitialized;
-            public ReactiveCommand<Transform> onInteractedWithSaveZone;
+            public ReactiveCommand<Transform> onInteractWithSaveZone;
             public ReactiveCommand<BehaviourType> onBehaviourFinished;
         }
 
@@ -44,7 +44,7 @@ namespace Character
         {
             AddUnsafe(_ctx.onNewBehaviourProduced.Subscribe(OnNewBehaviourProduced));
             AddUnsafe(_ctx.onBehaviourFinished.Subscribe(OnBehaviourFinished));
-            AddUnsafe(_ctx.onInteractedWithSaveZone.Subscribe(OnInteractedWithSaveZone));
+            AddUnsafe(_ctx.onInteractWithSaveZone.Subscribe(OnInteractedWithSaveZone));
         }
 
         private void OnInteractedWithSaveZone(Transform saveZone)
