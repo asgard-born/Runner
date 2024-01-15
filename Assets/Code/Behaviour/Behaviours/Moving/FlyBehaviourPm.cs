@@ -1,5 +1,4 @@
 ﻿using Behaviour.Behaviours.Abstract;
-using DG.Tweening;
 using Shared;
 using UnityEngine;
 
@@ -39,12 +38,12 @@ namespace Behaviour.Behaviours.Moving
                     break;
 
                 case CharacterAction.Lifting:
-                    Lift();
+                    Lifting();
 
                     break;
 
                 case CharacterAction.Landing:
-                    Land();
+                    Landing();
 
                     break;
             }
@@ -67,22 +66,59 @@ namespace Behaviour.Behaviours.Moving
             _currentAction = CharacterAction.Landing;
         }
 
-        private void Lift()
+        private void Lifting()
         {
             var roadlinePosition = _ctx.state.currentRoadline.Value.transform.position;
-            var newPointY = roadlinePosition.y + _ctx.configs.height;
-            var newPos = new Vector3(_ctx.transform.position.x, newPointY, _ctx.transform.position.z);
+            var localDistance = (roadlinePosition.y + _ctx.configs.height) - _ctx.transform.position.y;
 
-            _ctx.transform.DOMove(newPos, _ctx.configs.speed.y).OnComplete(() => _currentAction = CharacterAction.Moving);
+            if (Mathf.Abs(localDistance) > _ctx.toleranceDistance.y)
+            {
+                MoveVertical(_ctx.transform.up);
+            }
+            else
+            {
+                OnLifted();
+            }
         }
 
-        private void Land()
+        private void OnLifted()
+        {
+            _hasStarted = true;
+            _currentAction = CharacterAction.Moving;
+        }
+
+        private void Landing()
         {
             var roadlinePosition = _ctx.state.currentRoadline.Value.transform.position;
-            var newPointY = roadlinePosition.y;
-            var newPos = new Vector3(_ctx.transform.position.x, newPointY, _ctx.transform.position.z);
+            var localDistance = _ctx.transform.InverseTransformPoint(roadlinePosition);
 
-            _ctx.transform.DOMove(newPos, _ctx.configs.speed.y).OnComplete(Finish);
+            if (Mathf.Abs(localDistance.y) > _ctx.toleranceDistance.y)
+            {
+                MoveVertical(-_ctx.transform.up);
+            }
+            else
+            {
+                OnLanded();
+            }
+        }
+
+        private void OnLanded()
+        {
+            var characterPosition = _ctx.transform.position;
+            _ctx.transform.position = new Vector3(characterPosition.x, _ctx.state.currentRoadline.Value.transform.position.y, characterPosition.z);
+            
+            Finish();
+        }
+
+        private void MoveVertical(Vector3 direction)
+        {
+            var speedY = _ctx.state.speed.y;
+            var verticalVelocity = Vector3.up + direction * speedY * SPEED_MULTIPLIER * Time.fixedDeltaTime;
+            
+            var sideVelocity = CalculateSideVelocity();
+
+            var newVelocity = verticalVelocity + sideVelocity;
+            _ctx.rigidbody.velocity = newVelocity;
         }
 
         private void Finish()

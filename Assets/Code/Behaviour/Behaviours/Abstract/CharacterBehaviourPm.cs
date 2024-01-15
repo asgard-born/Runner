@@ -18,6 +18,7 @@ namespace Behaviour.Behaviours.Abstract
         protected GameObject[] _spawnedEffects;
 
         protected Ctx _ctx;
+        protected bool _hasStarted;
 
         public struct Ctx
         {
@@ -72,7 +73,7 @@ namespace Behaviour.Behaviours.Abstract
             Behave();
 
             // Учитываем, что любое потенциальное поведение может выть временным или даваться на постоянной основе
-            if (!_ctx.isEndless)
+            if (!_ctx.isEndless && _hasStarted)
             {
                 _secondsLeft -= Time.fixedDeltaTime;
 

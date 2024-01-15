@@ -11,7 +11,7 @@ namespace Behaviour.Behaviours.Abstract
     public abstract class MovingBehaviourPm : CharacterBehaviourPm
     {
         protected CharacterAction _currentAction;
-        private const int SPEED_MULTIPLIER = 100;
+        protected const int SPEED_MULTIPLIER = 100;
 
         protected static readonly int _idleHash = Animator.StringToHash("Idle");
         protected static readonly int _damageHash = Animator.StringToHash("Damage");
@@ -26,12 +26,20 @@ namespace Behaviour.Behaviours.Abstract
         protected virtual void Move()
         {
             var speedZ = _ctx.state.speed.z * SPEED_MULTIPLIER * Time.fixedDeltaTime;
+            var forwardVelocity = _ctx.transform.forward * speedZ;
+            
+            var sideVelocity = CalculateSideVelocity();
+
+            var verticalVelocity = Vector3.up * _ctx.rigidbody.velocity.y;
+
+            _ctx.rigidbody.velocity = forwardVelocity + sideVelocity + verticalVelocity;
+        }
+
+        protected Vector3 CalculateSideVelocity()
+        {
             var speedX = _ctx.state.speed.x * SPEED_MULTIPLIER * Time.fixedDeltaTime;
 
             var roadlinePosition = _ctx.state.currentRoadline.Value.transform.position;
-
-            var forwardVelocity = _ctx.transform.forward * speedZ;
-            
             var sideVelocity = Vector3.zero;
             var localDistance = _ctx.transform.InverseTransformPoint(roadlinePosition);
             var direction = localDistance.x > 0 ? _ctx.transform.right : -_ctx.transform.right;
@@ -41,9 +49,7 @@ namespace Behaviour.Behaviours.Abstract
                 sideVelocity = direction * speedX;
             }
 
-            var verticalVelocity = Vector3.up * _ctx.rigidbody.velocity.y;
-
-            _ctx.rigidbody.velocity = forwardVelocity + sideVelocity + verticalVelocity;
+            return sideVelocity;
         }
 
         protected virtual void OnChangeSide(Direction direction)
