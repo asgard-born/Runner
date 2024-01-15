@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1041664364054954240}
   - component: {fileID: 1041664364054954246}
   m_Layer: 5
-  m_Name: VirtualPadView
+  m_Name: Virtual_Pad_View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

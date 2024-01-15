@@ -6,9 +6,6 @@ namespace UI.Views
 {
     public class HUDView : MonoBehaviour
     {
-        [SerializeField] private GameObject _lifePrefabView;
-        [SerializeField] private Transform _livesContainer;
-
         private List<GameObject> _spawnedLives = new();
 
         public struct Ctx
