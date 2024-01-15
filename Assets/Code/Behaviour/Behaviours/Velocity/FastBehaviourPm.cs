@@ -1,6 +1,4 @@
 ﻿using Behaviour.Behaviours.Abstract;
-using Obstacles;
-using Shared;
 
 namespace Behaviour.Behaviours.Velocity
 {
@@ -14,13 +12,10 @@ namespace Behaviour.Behaviours.Velocity
         {
         }
 
-        protected override void OnCrash(Obstacle obstacle)
-        {
-            
-        }
-
         protected override void Initialize()
         {
+            _hasStarted = true;
+            _ctx.state.speed = _ctx.configs.speed;
         }
 
         protected override void Behave()
@@ -30,10 +25,6 @@ namespace Behaviour.Behaviours.Velocity
         protected override void OnTimesOver()
         {
             _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
-        }
-
-        protected override void OnSwipeDirection(Direction direction)
-        {
         }
     }
 }

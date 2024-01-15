@@ -2,6 +2,7 @@
 using Obstacles;
 using Shared;
 using UnityEngine;
+using UniRx;
 
 namespace Behaviour.Behaviours.Moving
 {
@@ -17,6 +18,8 @@ namespace Behaviour.Behaviours.Moving
 
         public RunBehaviourPm(Ctx ctx) : base(ctx)
         {
+            AddUnsafe(_ctx.onSwipeDirection.Subscribe(OnSwipeDirection));
+            AddUnsafe(_ctx.onCrash.Subscribe(OnCrash));
         }
 
         protected override void Initialize()
@@ -26,6 +29,7 @@ namespace Behaviour.Behaviours.Moving
 
             SetDefaultCondition();
             _ctx.animator.SetTrigger(_runningHash);
+            _hasStarted = true;
         }
 
         protected override void Behave()
@@ -60,29 +64,9 @@ namespace Behaviour.Behaviours.Moving
             }
         }
 
-        protected override void OnCrash(Obstacle obstacle)
+        protected void OnCrash(Obstacle obstacle)
         {
             _currentAction = CharacterAction.Idle;
-        }
-
-        protected override void OnSwipeDirection(Direction direction)
-        {
-            switch (direction)
-            {
-                case Direction.Left:
-                case Direction.Right:
-                    OnChangeSide(direction);
-
-                    break;
-
-                case Direction.Up:
-                    TryJump(_ctx.state.jumpForce);
-
-                    break;
-
-                case Direction.Down:
-                    break;
-            }
         }
 
         protected override void OnTimesOver()
@@ -102,11 +86,24 @@ namespace Behaviour.Behaviours.Moving
             _currentAction = CharacterAction.Jumping;
         }
 
-        private void Stop()
+        private void OnSwipeDirection(Direction direction)
         {
-            _ctx.animator.SetTrigger(_idleHash);
+            switch (direction)
+            {
+                case Direction.Left:
+                case Direction.Right:
+                    OnChangeSide(direction);
 
-            _ctx.rigidbody.isKinematic = true;
+                    break;
+
+                case Direction.Up:
+                    TryJump(_ctx.state.jumpForce);
+
+                    break;
+
+                case Direction.Down:
+                    break;
+            }
         }
 
         private bool IsGrounded()

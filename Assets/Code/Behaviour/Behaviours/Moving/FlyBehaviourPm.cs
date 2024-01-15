@@ -1,6 +1,8 @@
 ﻿using Behaviour.Behaviours.Abstract;
+using Obstacles;
 using Shared;
 using UnityEngine;
+using UniRx;
 
 namespace Behaviour.Behaviours.Moving
 {
@@ -10,6 +12,8 @@ namespace Behaviour.Behaviours.Moving
 
         public FlyBehaviourPm(Ctx ctx) : base(ctx)
         {
+            AddUnsafe(_ctx.onSwipeDirection.Subscribe(OnSwipeDirection));
+            AddUnsafe(_ctx.onCrash.Subscribe(OnCrash));
         }
 
         protected override void Initialize()
@@ -49,7 +53,7 @@ namespace Behaviour.Behaviours.Moving
             }
         }
 
-        protected override void OnSwipeDirection(Direction direction)
+        private void OnSwipeDirection(Direction direction)
         {
             switch (direction)
             {
@@ -64,6 +68,11 @@ namespace Behaviour.Behaviours.Moving
         protected override void OnTimesOver()
         {
             _currentAction = CharacterAction.Landing;
+        }
+
+        private void OnCrash(Obstacle obstacle)
+        {
+            _currentAction = CharacterAction.Idle;
         }
 
         private void Lifting()
@@ -106,7 +115,7 @@ namespace Behaviour.Behaviours.Moving
         {
             var characterPosition = _ctx.transform.position;
             _ctx.transform.position = new Vector3(characterPosition.x, _ctx.state.currentRoadline.Value.transform.position.y, characterPosition.z);
-            
+
             Finish();
         }
 
@@ -114,7 +123,7 @@ namespace Behaviour.Behaviours.Moving
         {
             var speedY = _ctx.state.speed.y;
             var verticalVelocity = Vector3.up + direction * speedY * SPEED_MULTIPLIER * Time.fixedDeltaTime;
-            
+
             var sideVelocity = CalculateSideVelocity();
 
             var newVelocity = verticalVelocity + sideVelocity;

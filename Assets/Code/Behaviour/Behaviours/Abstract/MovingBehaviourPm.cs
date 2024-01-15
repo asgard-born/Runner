@@ -52,7 +52,7 @@ namespace Behaviour.Behaviours.Abstract
             return sideVelocity;
         }
 
-        protected virtual void OnChangeSide(Direction direction)
+        protected void OnChangeSide(Direction direction)
         {
             if (!CanMoveToDirection(direction)) return;
 
@@ -62,7 +62,7 @@ namespace Behaviour.Behaviours.Abstract
             _ctx.state.currentRoadline = nextRoadline;
         }
 
-        protected virtual bool CanMoveToDirection(Direction direction)
+        protected bool CanMoveToDirection(Direction direction)
         {
             if (direction == Direction.Left && _ctx.state.currentRoadline.Previous != null)
             {

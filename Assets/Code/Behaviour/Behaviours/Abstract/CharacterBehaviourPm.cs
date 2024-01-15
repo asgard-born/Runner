@@ -33,6 +33,7 @@ namespace Behaviour.Behaviours.Abstract
             public Transform transform;
             public Vector2 toleranceDistance;
             public CharacterState state;
+            public float _crash;
 
             public ReactiveCommand<Obstacle> onCrash;
             public ReactiveCommand<Direction> onSwipeDirection;
@@ -43,11 +44,10 @@ namespace Behaviour.Behaviours.Abstract
         protected CharacterBehaviourPm(Ctx ctx)
         {
             _ctx = ctx;
+            
             Initialize();
-
-            AddUnsafe(_ctx.onSwipeDirection.Subscribe(OnSwipeDirection));
+            
             AddUnsafe(_ctx.onBehaviourAdded.Subscribe(OnBehaviourAdded));
-            AddUnsafe(_ctx.onCrash.Subscribe(OnCrash));
         }
 
         private void OnBehaviourAdded(BehaviourType type)
@@ -100,9 +100,7 @@ namespace Behaviour.Behaviours.Abstract
         }
 
         protected abstract void OnTimesOver();
-        protected abstract void OnCrash(Obstacle obstacle);
         protected abstract void Initialize();
         protected abstract void Behave();
-        protected abstract void OnSwipeDirection(Direction direction);
     }
 }
