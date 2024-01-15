@@ -48,6 +48,7 @@ namespace UI.Roots
 
             var hudViewPrefab = await LoadAndTrackPrefab<HUDView>(_ctx.resourcesConfigs.hudViewReference);
             var hudView = Object.Instantiate(hudViewPrefab, _ctx.uiTransform);
+            
             hudView.SetContext(ctx);
         }
 

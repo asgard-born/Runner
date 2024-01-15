@@ -361,8 +361,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a82bfa1f21274c3d85bff54011359054, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lives: {fileID: 0}
-  _coins: {fileID: 0}
+  _lives: {fileID: 6396165448537168742}
+  _coins: {fileID: 1127163810119024293}
 --- !u!114 &3979800176248117659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -667,7 +667,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 5
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: acedd5d5d89b7fc4d957e03d0b4069b6, type: 2}
   m_sharedMaterial: {fileID: 931405589824567059, guid: acedd5d5d89b7fc4d957e03d0b4069b6, type: 2}
