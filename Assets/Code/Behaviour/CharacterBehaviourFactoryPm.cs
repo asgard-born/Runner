@@ -31,6 +31,7 @@ namespace Behaviour
             public ReactiveCommand<BehaviourType> onBehaviourAdded;
             public ReactiveCommand<BehaviourType> onBehaviourFinished;
             public ReactiveCommand<GameObject> onInteractedWithObstacle;
+            public ReactiveTrigger onFinish;
         }
 
         public CharacterBehaviourFactoryPm(Ctx ctx)
@@ -60,7 +61,8 @@ namespace Behaviour
                 onSwipeDirection = _ctx.onSwipeDirection,
                 onBehaviourAdded = _ctx.onBehaviourAdded,
                 onBehaviourFinished = _ctx.onBehaviourFinished,
-                onCrash = _ctx.onInteractedWithObstacle
+                onCrash = _ctx.onInteractedWithObstacle,
+                onFinish = _ctx.onFinish
             };
 
             switch (behaviourInfo.configs.name)

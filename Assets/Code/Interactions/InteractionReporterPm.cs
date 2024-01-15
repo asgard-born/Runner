@@ -62,25 +62,30 @@ namespace Interactions
             var gameObject = collider.gameObject;
             var layer = gameObject.layer;
 
-            if (_ctx.layersDictionary.TryGetValue(layer, out var name))
+            foreach (var layerMaskPair in _ctx.layersDictionary)
             {
-                switch (name)
+                if ((layerMaskPair.Key.value & (1 << layer)) != 0)
                 {
-                    case LayerName.Obstacle:
-                        _ctx.onInteractedWithObstacle?.Execute(gameObject);
+                    switch (layerMaskPair.Value)
+                    {
+                        case LayerName.Obstacle:
+                            _ctx.onInteractedWithObstacle?.Execute(gameObject);
 
-                        break;
+                            break;
 
-                    case LayerName.SaveZone:
+                        case LayerName.SaveZone:
 
-                        _ctx.onInteractedWithSaveZone?.Execute(gameObject.transform);
+                            _ctx.onInteractedWithSaveZone?.Execute(gameObject.transform);
 
-                        break;
+                            break;
 
-                    case LayerName.Finish:
-                        _ctx.onFinish?.Notify();
+                        case LayerName.Finish:
+                            _ctx.onFinish?.Notify();
 
-                        break;
+                            break;
+                    }
+                    
+                    return;
                 }
             }
         }

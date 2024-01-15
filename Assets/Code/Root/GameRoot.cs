@@ -25,7 +25,7 @@ namespace Root
         private ReactiveCommand<GameObject> _onInteractedWithObstacle;
         private ReactiveCommand<BehaviourInfo> _onBehaviourTaken;
         private ReactiveCommand<Transform> _onInteractedWithSaveZone;
-        private ReactiveTrigger _onGameWin;
+        private ReactiveTrigger _onFinish;
         private ReactiveTrigger _onGameLoose;
 
         public struct Ctx
@@ -58,7 +58,7 @@ namespace Root
             _onInterraction = AddUnsafe(new ReactiveCommand<Collider>());
             _onInteractedWithObstacle = AddUnsafe(new ReactiveCommand<GameObject>());
             _onInteractedWithSaveZone = AddUnsafe(new ReactiveCommand<Transform>());
-            _onGameWin = AddUnsafe(new ReactiveTrigger());
+            _onFinish = AddUnsafe(new ReactiveTrigger());
 
             AddUnsafe(_onCharacterInitialized.Subscribe(InitializeCamera));
         }
@@ -89,7 +89,8 @@ namespace Root
                 onInterraction = _onInterraction,
                 onSwipeDirection = _onSwipeDirection,
                 onBehaviourTaken = _onBehaviourTaken,
-                onInteractedWithObstacle = _onInteractedWithObstacle
+                onInteractedWithObstacle = _onInteractedWithObstacle,
+                onFinish = _onFinish
             };
 
             AddUnsafe(new CharacterRoot(ctx));
@@ -105,7 +106,7 @@ namespace Root
                 onBehaviourTaken = _onBehaviourTaken,
                 onInteractedWithObstacle = _onInteractedWithObstacle,
                 onInteractedWithSaveZone = _onInteractedWithSaveZone,
-                onFinish = _onGameWin
+                onFinish = _onFinish
             };
 
             AddUnsafe(new InteractionReporterPm(characterCtx));

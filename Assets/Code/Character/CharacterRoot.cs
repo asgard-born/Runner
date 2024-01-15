@@ -27,7 +27,8 @@ namespace Character
         private ReactiveCommand<BehaviourType> _onBehaviourAdded;
         private ReactiveTrigger<BehaviourType, CharacterBehaviourPm> _onNewBehaviourProduced;
         private ReactiveCommand<BehaviourType> _onBehaviourFinished;
-        
+        private ReactiveCommand<Transform> _onInteractedWithSaveZone;
+
         public struct Ctx
         {
             public PlayersConfigs playersConfigs;
@@ -41,6 +42,7 @@ namespace Character
             public ReactiveCommand<Direction> onSwipeDirection;
             public ReactiveCommand<BehaviourInfo> onBehaviourTaken;
             public ReactiveCommand<GameObject> onInteractedWithObstacle;
+            public ReactiveTrigger onFinish;
         }
 
         public CharacterRoot(Ctx ctx)
@@ -64,6 +66,7 @@ namespace Character
             _onNewBehaviourProduced = AddUnsafe(new ReactiveTrigger<BehaviourType, CharacterBehaviourPm>());
             _onBehaviourAdded = AddUnsafe(new ReactiveCommand<BehaviourType>());
             _onBehaviourFinished = AddUnsafe(new ReactiveCommand<BehaviourType>());
+            _onInteractedWithSaveZone = AddUnsafe(new ReactiveCommand<Transform>());
         }
 
         private async UniTask InitializeCharacterView()
@@ -91,6 +94,7 @@ namespace Character
                 onBehaviourTaken = _ctx.onBehaviourTaken,
                 onNewBehaviourProduced = _onNewBehaviourProduced,
                 onBehaviourAdded = _onBehaviourAdded,
+                onInteractedWithSaveZone = _onInteractedWithSaveZone,
                 onBehaviourFinished = _onBehaviourFinished
             };
 
@@ -122,7 +126,8 @@ namespace Character
                 onNewBehaviourProduced = _onNewBehaviourProduced,
                 onBehaviourAdded = _onBehaviourAdded,
                 onBehaviourFinished = _onBehaviourFinished,
-                onInteractedWithObstacle = _ctx.onInteractedWithObstacle
+                onInteractedWithObstacle = _ctx.onInteractedWithObstacle,
+                onFinish = _ctx.onFinish
             };
 
             AddUnsafe(new CharacterBehaviourFactoryPm(behaviourFactoryCtx));
