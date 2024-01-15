@@ -11,6 +11,5 @@ namespace Shared
         public Transform currentSaveZone;
         public LinkedListNode<RoadlinePoint> currentRoadline;
         public ReactiveProperty<int> lives;
-        public ReactiveProperty<int> coins;
     }
 }

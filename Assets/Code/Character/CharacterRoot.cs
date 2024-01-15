@@ -23,11 +23,10 @@ namespace Character
         private CharacterView _view;
         private CharacterState _state;
 
-        private ReactiveTrigger<float> _onSpeedChangedCallback;
         private ReactiveCommand<BehaviourType> _onBehaviourAdded;
         private ReactiveTrigger<BehaviourType, CharacterBehaviourPm> _onNewBehaviourProduced;
         private ReactiveCommand<BehaviourType> _onBehaviourFinished;
-        private ReactiveCommand<Transform> _onInteractWithSaveZone;
+        private ReactiveTrigger _onRespawned;
 
         public struct Ctx
         {
@@ -45,7 +44,9 @@ namespace Character
             public ReactiveCommand<Direction> onSwipeDirection;
             public ReactiveCommand<BehaviourInfo> onBehaviourTaken;
             public ReactiveCommand<GameObject> onInteractWithObstacle;
+            public ReactiveCommand<Transform> onInteractWithSaveZone;
             public ReactiveTrigger onFinishReached;
+            public ReactiveTrigger onCoinTaken;
         }
 
         public CharacterRoot(Ctx ctx)
@@ -62,6 +63,18 @@ namespace Character
             InitializeCharacterState();
             InitializeBehaviourFactory();
             InitializeCharacterPm();
+            InitializeCharacterInventory();
+        }
+
+        private void InitializeCharacterInventory()
+        {
+            var ctx = new CharacterInventoryPm.Ctx
+            {
+                coins = _ctx.coins,
+                onCoinTaken = _ctx.onCoinTaken
+            };
+
+            AddUnsafe(new CharacterInventoryPm(ctx));
         }
 
         private void InitializeRx()
@@ -69,7 +82,7 @@ namespace Character
             _onNewBehaviourProduced = AddUnsafe(new ReactiveTrigger<BehaviourType, CharacterBehaviourPm>());
             _onBehaviourAdded = AddUnsafe(new ReactiveCommand<BehaviourType>());
             _onBehaviourFinished = AddUnsafe(new ReactiveCommand<BehaviourType>());
-            _onInteractWithSaveZone = AddUnsafe(new ReactiveCommand<Transform>());
+            _onRespawned = AddUnsafe(new ReactiveTrigger());
         }
 
         private async UniTask InitializeCharacterView()
@@ -79,7 +92,9 @@ namespace Character
 
             var viewCtx = new CharacterView.Ctx
             {
-                onInterraction = _ctx.onInterraction
+                onInterraction = _ctx.onInterraction,
+                onCrash = _ctx.onInteractWithObstacle,
+                onRespawned = _onRespawned
             };
 
             _view.SetContext(viewCtx);
@@ -109,7 +124,6 @@ namespace Character
             {
                 currentRoadline = new LinkedList<RoadlinePoint>(_ctx.roadlinePoints).Find(_ctx.spawnPoint),
                 lives = _ctx.lives,
-                coins = _ctx.coins,
             };
         }
 
@@ -132,8 +146,9 @@ namespace Character
                 onBehaviourAdded = _onBehaviourAdded,
                 onBehaviourFinished = _onBehaviourFinished,
                 onInteractWithObstacle = _ctx.onInteractWithObstacle,
-                onInteractWithSaveZone = _onInteractWithSaveZone,
+                onInteractWithSaveZone = _ctx.onInteractWithSaveZone,
                 onFinishReached = _ctx.onFinishReached,
+                onRespawned = _onRespawned
             };
 
             AddUnsafe(new CharacterBehaviourFactoryPm(behaviourFactoryCtx));

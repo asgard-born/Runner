@@ -20,5 +20,5 @@ MonoBehaviour:
   _landingMask:
     serializedVersion: 2
     m_Bits: 512
-  _crashDelay: 3
+  _crashDelay: 2
   _initialLives: 5

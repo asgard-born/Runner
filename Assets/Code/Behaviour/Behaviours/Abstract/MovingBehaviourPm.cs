@@ -1,4 +1,6 @@
-﻿using Shared;
+﻿using System;
+using Cysharp.Threading.Tasks;
+using Shared;
 using UnityEngine;
 using UniRx;
 
@@ -38,13 +40,22 @@ namespace Behaviour.Behaviours.Abstract
 
             _ctx.rigidbody.velocity = forwardVelocity + sideVelocity + verticalVelocity;
         }
-        
-        protected virtual void OnCrash(GameObject obstacle)
+
+        protected async virtual void OnCrash(GameObject obstacle)
         {
+            if (_currentAction == CharacterAction.Damage) return;
+            
+            _currentAction = CharacterAction.Damage;
+            
             _ctx.rigidbody.velocity = Vector3.zero;
-            _currentAction = CharacterAction.Idle;
+            _ctx.rigidbody.useGravity = false;
+            _ctx.collider.enabled = false;
             _ctx.state.lives.Value -= 1;
             
+            _ctx.animator.SetTrigger(_damageHash);
+
+            await UniTask.Delay(TimeSpan.FromSeconds(_ctx.crashDelay));
+
             if (_ctx.state.lives.Value > 0)
             {
                 Respawn();
@@ -98,7 +109,7 @@ namespace Behaviour.Behaviours.Abstract
             _currentAction = CharacterAction.Idle;
             _ctx.onFinishReached?.Notify();
         }
-        
+
         private void OnInteractedWithSaveZone(Transform saveZone)
         {
             _ctx.state.currentSaveZone = saveZone;

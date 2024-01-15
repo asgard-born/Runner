@@ -34,6 +34,7 @@ namespace Behaviour
             public ReactiveCommand<GameObject> onInteractWithObstacle;
             public ReactiveTrigger onFinishReached;
             public ReactiveCommand<Transform> onInteractWithSaveZone;
+            public ReactiveTrigger onRespawned;
         }
 
         public CharacterBehaviourFactoryPm(Ctx ctx)
@@ -55,12 +56,13 @@ namespace Behaviour
                 animator = _ctx.animator,
                 rigidbody = _ctx.rigidbody,
                 collider = _ctx.collider,
-                landingMask =_ctx.landingMask, 
+                landingMask = _ctx.landingMask,
                 transform = _ctx.characterTransform,
                 toleranceDistance = _ctx.toleranceDistance,
                 state = _ctx.state,
-                crashDelay = _ctx.crashDelay, 
-                
+                crashDelay = _ctx.crashDelay,
+                onRespawned = _ctx.onRespawned,
+
                 onSwipeDirection = _ctx.onSwipeDirection,
                 onBehaviourAdded = _ctx.onBehaviourAdded,
                 onBehaviourFinished = _ctx.onBehaviourFinished,

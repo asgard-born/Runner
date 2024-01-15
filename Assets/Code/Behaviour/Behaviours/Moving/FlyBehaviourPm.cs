@@ -30,11 +30,6 @@ namespace Behaviour.Behaviours.Moving
         {
             switch (_currentAction)
             {
-                case CharacterAction.Idle:
-                    _ctx.animator.SetBool(_idleHash, true);
-
-                    break;
-
                 case CharacterAction.Moving:
                     Move();
 
@@ -54,6 +49,8 @@ namespace Behaviour.Behaviours.Moving
 
         private void OnSwipeDirection(Direction direction)
         {
+            if (_currentAction == CharacterAction.Damage || _currentAction == CharacterAction.Idle) return;
+
             switch (direction)
             {
                 case Direction.Left:
@@ -74,14 +71,23 @@ namespace Behaviour.Behaviours.Moving
             var currentZonePos = _ctx.state.currentSaveZone.position;
             var newPosition = new Vector3(currentZonePos.x, _ctx.transform.position.y, currentZonePos.z);
 
-            var roadline = _ctx.state.currentRoadline;
+            _ctx.state.currentRoadline = _ctx.state.currentRoadline.List.First;
+            _ctx.rigidbody.DOMove(newPosition, _ctx.crashDelay).OnComplete(OnRespawned);
+        }
 
-            while (roadline.Previous != null)
-            {
-                roadline = roadline.Previous;
-            }
+        private void OnRespawned()
+        {
+            SetDefaultCondition();
+            _ctx.onRespawned?.Notify();
+        }
 
-            _ctx.rigidbody.DOMove(newPosition, _ctx.crashDelay);
+        private void SetDefaultCondition()
+        {
+            _ctx.collider.enabled = true;
+            _ctx.rigidbody.useGravity = false;
+            _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
+            _currentAction = CharacterAction.Moving;
+            _ctx.animator.SetTrigger(_flyingHash);
         }
 
         private void Lifting()

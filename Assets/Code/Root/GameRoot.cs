@@ -18,7 +18,7 @@ namespace Root
         private UIRoot _uiRoot;
 
         private readonly Ctx _ctx;
-        
+
         private ReactiveProperty<int> _lives;
         private ReactiveProperty<int> _coins;
 
@@ -49,41 +49,27 @@ namespace Root
             _ctx = ctx;
 
             InitializeRx();
+            InitializeInteractionHandler();
             InitializeUI(ctx);
             InitializeCharacter();
-            InitializeInteractionReporter();
         }
 
         private void InitializeRx()
         {
             _lives = AddUnsafe(new ReactiveProperty<int>(_ctx.playersConfigs.initialLives));
-            _coins = AddUnsafe(new ReactiveProperty<int>(_ctx.playersConfigs.initialLives));
+            _coins = AddUnsafe(new ReactiveProperty<int>());
 
+            _onInteractWithSaveZone = AddUnsafe(new ReactiveCommand<Transform>());
             _onSwipeDirection = AddUnsafe(new ReactiveCommand<Direction>());
             _onCharacterInitialized = AddUnsafe(new ReactiveCommand<Transform>());
             _onBehaviourTaken = AddUnsafe(new ReactiveCommand<BehaviourInfo>());
             _onInterraction = AddUnsafe(new ReactiveCommand<Collider>());
             _onInteractWithObstacle = AddUnsafe(new ReactiveCommand<GameObject>());
-            _onInteractWithSaveZone = AddUnsafe(new ReactiveCommand<Transform>());
             _onFinishReached = AddUnsafe(new ReactiveTrigger());
             _onCoinTaken = AddUnsafe(new ReactiveTrigger());
             _onGameLoose = AddUnsafe(new ReactiveTrigger());
 
             AddUnsafe(_onCharacterInitialized.Subscribe(InitializeCamera));
-        }
-
-        private void InitializeUI(Ctx ctx)
-        {
-            var uiRootCtx = new UIRoot.Ctx
-            {
-                uiTransform = ctx.uiTransform,
-                resourcesConfigs = ctx.resourcesConfigs,
-                onSwipeDirection = _onSwipeDirection,
-                lives = _lives,
-                coins = _coins
-            };
-
-            AddUnsafe(new UIRoot(uiRootCtx));
         }
 
         private void InitializeCharacter()
@@ -103,13 +89,15 @@ namespace Root
                 onSwipeDirection = _onSwipeDirection,
                 onBehaviourTaken = _onBehaviourTaken,
                 onInteractWithObstacle = _onInteractWithObstacle,
-                onFinishReached = _onFinishReached
+                onInteractWithSaveZone = _onInteractWithSaveZone,
+                onFinishReached = _onFinishReached,
+                onCoinTaken = _onCoinTaken
             };
 
             AddUnsafe(new CharacterRoot(ctx));
         }
 
-        private void InitializeInteractionReporter()
+        private void InitializeInteractionHandler()
         {
             var characterCtx = new InteractionHandlerPm.Ctx
             {
@@ -137,6 +125,20 @@ namespace Root
             };
 
             AddUnsafe(new CameraPm(ctx));
+        }
+
+        private void InitializeUI(Ctx ctx)
+        {
+            var uiRootCtx = new UIRoot.Ctx
+            {
+                uiTransform = ctx.uiTransform,
+                resourcesConfigs = ctx.resourcesConfigs,
+                onSwipeDirection = _onSwipeDirection,
+                lives = _lives,
+                coins = _coins
+            };
+
+            AddUnsafe(new UIRoot(uiRootCtx));
         }
     }
 }

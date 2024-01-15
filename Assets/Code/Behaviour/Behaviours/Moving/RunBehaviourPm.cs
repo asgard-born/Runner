@@ -18,7 +18,7 @@ namespace Behaviour.Behaviours.Moving
 
         public RunBehaviourPm(Ctx ctx) : base(ctx)
         {
-            AddUnsafe(_ctx.onSwipeDirection.Subscribe(OnSwipeDirection)); ;
+            AddUnsafe(_ctx.onSwipeDirection.Subscribe(OnSwipeDirection));
         }
 
         protected override void Initialize()
@@ -27,7 +27,7 @@ namespace Behaviour.Behaviours.Moving
             _ctx.state.jumpForce = _ctx.configs.jumpForce;
 
             SetDefaultCondition();
-            _ctx.animator.SetTrigger(_runningHash);
+
             _hasStarted = true;
         }
 
@@ -35,11 +35,6 @@ namespace Behaviour.Behaviours.Moving
         {
             switch (_currentAction)
             {
-                case CharacterAction.Idle:
-                    _ctx.animator.SetBool(_idleHash, true);
-
-                    break;
-
                 case CharacterAction.Moving:
                     Move();
 
@@ -60,6 +55,18 @@ namespace Behaviour.Behaviours.Moving
                     OnFalling();
 
                     break;
+
+                case CharacterAction.Damage:
+                    _ctx.rigidbody.velocity = Vector3.zero;
+                    _currentAction = CharacterAction.Idle;
+                    _ctx.state.lives.Value -= 1;
+
+                    if (_ctx.state.lives.Value > 0)
+                    {
+                        Respawn();
+                    }
+
+                    break;
             }
         }
 
@@ -67,22 +74,23 @@ namespace Behaviour.Behaviours.Moving
         {
             _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
             var currentZonePos = _ctx.state.currentSaveZone.position;
-            var roadline = _ctx.state.currentRoadline;
 
             _ctx.rigidbody.useGravity = false;
             _ctx.collider.enabled = false;
+            _ctx.state.currentRoadline = _ctx.state.currentRoadline.List.First;
 
-            while (roadline.Previous != null)
-            {
-                roadline = roadline.Previous;
-            }
-
-            _ctx.rigidbody.DOMove(currentZonePos, _ctx.crashDelay).OnComplete(SetDefaultCondition);
+            _ctx.rigidbody.DOMove(currentZonePos, _ctx.crashDelay).OnComplete(OnRespawned);
         }
 
         protected override void OnTimesOver()
         {
             _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
+        }
+
+        private void OnRespawned()
+        {
+            SetDefaultCondition();
+            _ctx.onRespawned?.Notify();
         }
 
         private void TryJump(float jumpForce)
@@ -99,6 +107,8 @@ namespace Behaviour.Behaviours.Moving
 
         private void OnSwipeDirection(Direction direction)
         {
+            if (_currentAction == CharacterAction.Damage || _currentAction == CharacterAction.Idle) return;
+
             switch (direction)
             {
                 case Direction.Left:
@@ -111,10 +121,15 @@ namespace Behaviour.Behaviours.Moving
                     TryJump(_ctx.state.jumpForce);
 
                     break;
-
-                case Direction.Down:
-                    break;
             }
+        }
+
+        protected override async void OnCrash(GameObject obstacle)
+        {
+            _currentAction = CharacterAction.Damage;
+            _ctx.animator.SetBool(_fallingHash, false);
+
+            base.OnCrash(obstacle);
         }
 
         private bool IsGrounded()
@@ -141,12 +156,14 @@ namespace Behaviour.Behaviours.Moving
         private void SetDefaultCondition()
         {
             var characterPosition = _ctx.transform.position;
-            
+
             _ctx.rigidbody.position = new Vector3(characterPosition.x, _ctx.state.currentRoadline.Value.transform.position.y, characterPosition.z);
+            _ctx.collider.enabled = true;
             _ctx.rigidbody.useGravity = false;
             _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
 
             _currentAction = CharacterAction.Moving;
+            _ctx.animator.SetTrigger(_runningHash);
         }
     }
 }

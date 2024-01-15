@@ -41,6 +41,7 @@ namespace Behaviour.Behaviours.Abstract
             public ReactiveCommand<GameObject> onCrash;
             public ReactiveTrigger onFinishReached;
             public ReactiveCommand<Transform> onInteractWithSaveZone;
+            public ReactiveTrigger onRespawned;
         }
 
         protected CharacterBehaviourPm(Ctx ctx)
