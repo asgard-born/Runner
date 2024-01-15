@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using Cysharp.Threading.Tasks;
-using Framework.Reactive;
+﻿using Framework.Reactive;
 using UniRx;
 using UnityEngine;
 
@@ -16,11 +13,6 @@ namespace Character
         [SerializeField] private Rigidbody _rigidbody;
         [SerializeField] private Collider _collider;
         [SerializeField] private Animator _animator;
-        [SerializeField] private LayerMask _mask;
-        [SerializeField, Range(.25f, .5f)] private float _overlapRadius = .3f;
-        [SerializeField] private int _updateFrequencyMillisec = 50;
-        [SerializeField] private Transform _interractingPointFirst;
-        [SerializeField] private Transform _interractingPointSecond;
 
         private bool _isChecking = true;
         private ReactiveCommand<Collider> _onInterraction;
@@ -36,11 +28,6 @@ namespace Character
             public ReactiveTrigger onRespawned;
         }
 
-        private void Awake()
-        {
-            CheckForInteractionProcessAsync();
-        }
-
         public void SetContext(Ctx ctx)
         {
             _onInterraction = ctx.onInterraction;
@@ -53,32 +40,14 @@ namespace Character
             _isChecking = true;
         }
 
-        private void OnCrash(GameObject o)
+        private void OnCrash(GameObject _)
         {
             _isChecking = false;
         }
 
-        private async void CheckForInteractionProcessAsync()
+        private void OnTriggerEnter(Collider otherCollider)
         {
-            while (true)
-            {
-                await UniTask.Delay(TimeSpan.FromMilliseconds(_updateFrequencyMillisec));
-
-                if (!_isChecking) continue;
-
-                var colliders = new Collider[10];
-                var count = Physics.OverlapCapsuleNonAlloc(_interractingPointFirst.position, _interractingPointSecond.position, _overlapRadius, colliders, _mask, QueryTriggerInteraction.Collide);
-
-                if (count > 0)
-                {
-                    var actualColliders = colliders.Where(x => x != null);
-
-                    foreach (var actualCollider in actualColliders)
-                    {
-                        _onInterraction?.Execute(actualCollider);
-                    }
-                }
-            }
+            _onInterraction?.Execute(otherCollider);
         }
     }
 }

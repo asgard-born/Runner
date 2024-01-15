@@ -22,6 +22,7 @@ namespace Behaviour.Behaviours.Moving
 
         protected override void Initialize()
         {
+            ClearAnimations();
             SetDefaultCondition();
 
             _hasStarted = true;
@@ -79,7 +80,7 @@ namespace Behaviour.Behaviours.Moving
         protected override void OnTimeOver()
         {
             Reset();
-            
+
             _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
         }
 
@@ -128,13 +129,15 @@ namespace Behaviour.Behaviours.Moving
         private void TryJump(float jumpForce)
         {
             if (_ctx.state.currentAction != CharacterAction.Moving) return;
+            if (!IsGrounded()) return;
+            if (_ctx.rigidbody.velocity.y < 0) return;
 
             _ctx.rigidbody.useGravity = true;
             _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
             _ctx.rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
-            _ctx.animator.SetBool(_runningHash, false);
-            _ctx.animator.SetBool(_jumpingHash, true);
+            _ctx.animator.ResetTrigger(_runningHash);
+            _ctx.animator.SetTrigger(_jumpingHash);
 
             _ctx.state.currentAction = CharacterAction.Jumping;
         }
@@ -171,11 +174,11 @@ namespace Behaviour.Behaviours.Moving
         {
             var isGrounded = IsGrounded();
 
-            _ctx.animator.SetBool(_jumpingHash, false);
-            _ctx.animator.SetBool(_fallingHash, !isGrounded);
+            _ctx.animator.ResetTrigger(_jumpingHash);
 
             if (isGrounded)
             {
+                _ctx.animator.SetTrigger(_fallingHash);
                 SetDefaultCondition();
             }
         }
@@ -190,17 +193,15 @@ namespace Behaviour.Behaviours.Moving
             _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
 
             _ctx.state.currentAction = CharacterAction.Moving;
-
-            ClearAnimations();
-            _ctx.animator.SetBool(_runningHash, true);
+            _ctx.animator.SetTrigger(_runningHash);
         }
 
         private void ClearAnimations()
         {
-            _ctx.animator.SetBool(_idleHash, false);
-            _ctx.animator.SetBool(_jumpingHash, false);
-            _ctx.animator.SetBool(_fallingHash, false);
-            _ctx.animator.SetBool(_runningHash, false);
+            _ctx.animator.ResetTrigger(_idleHash);
+            _ctx.animator.ResetTrigger(_jumpingHash);
+            _ctx.animator.ResetTrigger(_fallingHash);
+            _ctx.animator.ResetTrigger(_runningHash);
         }
     }
 }

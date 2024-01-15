@@ -20,7 +20,7 @@ namespace Behaviour.Behaviours.Moving
             _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
             _ctx.state.currentAction = CharacterAction.Lifting;
 
-            _ctx.animator.SetBool(_flyingHash, true);
+            _ctx.animator.SetTrigger(_flyingHash);
         }
 
         protected override void MovingProcess()
@@ -70,22 +70,21 @@ namespace Behaviour.Behaviours.Moving
         {
             if (_ctx.state.currentAction == CharacterAction.Respawn) return;
 
-            _ctx.animator.SetBool(_idleHash, false);
-            _ctx.animator.SetBool(_flyingHash, false);
+            Reset();
 
             base.OnCrash(obstacle);
         }
 
         protected override void Reset()
         {
-            _ctx.animator.SetBool(_flyingHash, false);
-            _ctx.animator.SetBool(_idleHash, false);
+            _ctx.animator.ResetTrigger(_idleHash);
+            _ctx.animator.ResetTrigger(_flyingHash);
         }
 
         private void OnBehaviourFinished()
         {
             Reset();
-            
+
             _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
         }
 
@@ -138,8 +137,8 @@ namespace Behaviour.Behaviours.Moving
             _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
             _ctx.state.currentAction = CharacterAction.Moving;
 
-            _ctx.animator.SetBool(_flyingHash, true);
-            _ctx.animator.SetBool(_idleHash, false);
+            _ctx.animator.SetTrigger(_flyingHash);
+            _ctx.animator.ResetTrigger(_idleHash);
         }
 
         private void Lifting()
@@ -184,7 +183,7 @@ namespace Behaviour.Behaviours.Moving
             _ctx.transform.position = new Vector3(characterPosition.x, _ctx.state.currentRoadline.Value.transform.position.y, characterPosition.z);
             _ctx.state.currentAction = CharacterAction.Finish;
 
-            _ctx.animator.SetBool(_flyingHash, false);
+            _ctx.animator.ResetTrigger(_flyingHash);
 
             OnBehaviourFinished();
         }

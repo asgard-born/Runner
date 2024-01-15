@@ -29,7 +29,7 @@ namespace Behaviour.Behaviours.Abstract
         /// <summary>
         /// Базовая логика перемещения персонажа
         /// </summary>
-        protected virtual void Move()
+        protected void Move()
         {
             var speedZ = _ctx.state.speed.z * VELOCITY_MULTIPLIER * Time.fixedDeltaTime;
             
@@ -100,7 +100,7 @@ namespace Behaviour.Behaviours.Abstract
         protected virtual void OnGameOver()
         {
             _ctx.rigidbody.Sleep();
-            _ctx.animator.SetBool(_idleHash, true);
+            _ctx.animator.SetTrigger(_idleHash);
             _ctx.state.currentAction = CharacterAction.Idle;
             _ctx.onFinishReached?.Notify();
         }
