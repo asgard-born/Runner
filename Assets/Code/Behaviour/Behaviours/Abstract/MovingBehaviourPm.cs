@@ -27,7 +27,7 @@ namespace Behaviour.Behaviours.Abstract
         {
             var speedZ = _ctx.state.speed.z * SPEED_MULTIPLIER * Time.fixedDeltaTime;
             var forwardVelocity = _ctx.transform.forward * speedZ;
-            
+
             var sideVelocity = CalculateSideVelocity();
 
             var verticalVelocity = Vector3.up * _ctx.rigidbody.velocity.y;

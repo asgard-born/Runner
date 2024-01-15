@@ -15,7 +15,7 @@ namespace Root
     public class EnterPoint : MonoBehaviour
     {
         [Header("Configs")] [SerializeField] private PlayersConfigs _playersConfigs;
-        [SerializeField] private LevelConfigs _levelConfigs;
+        [SerializeField] private GlobalConfigs _globalConfigs;
         [SerializeField] private ResourcesConfigs _resourcesConfigs;
         [SerializeField] private CameraConfigs _cameraConfigs;
         [SerializeField] private List<RoadlinePoint> _roadlinePoints;
@@ -37,7 +37,7 @@ namespace Root
             var rootCtx = new GameRoot.Ctx
             {
                 playersConfigs = _playersConfigs,
-                levelConfigs = _levelConfigs,
+                globalConfigs = _globalConfigs,
                 resourcesConfigs = _resourcesConfigs,
                 cameraConfigs = _cameraConfigs,
                 uiRoot = _uiRoot,
@@ -52,7 +52,7 @@ namespace Root
         private void ValidateData()
         {
             ValidateConfigs(_playersConfigs);
-            ValidateConfigs(_levelConfigs);
+            ValidateConfigs(_globalConfigs);
             ValidateConfigs(_resourcesConfigs);
             ValidateConfigs(_cameraConfigs);
             ValidateRoadlines();

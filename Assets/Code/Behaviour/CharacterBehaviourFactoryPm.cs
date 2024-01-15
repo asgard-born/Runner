@@ -3,7 +3,6 @@ using Behaviour.Behaviours.Moving;
 using Behaviour.Behaviours.Velocity;
 using Framework;
 using Framework.Reactive;
-using Obstacles;
 using Shared;
 using UniRx;
 using UnityEngine;
@@ -31,7 +30,7 @@ namespace Behaviour
             public ReactiveTrigger<BehaviourType, CharacterBehaviourPm> onNewBehaviourProduced;
             public ReactiveCommand<BehaviourType> onBehaviourAdded;
             public ReactiveCommand<BehaviourType> onBehaviourFinished;
-            public ReactiveCommand<Obstacle> onInteractedWithObstacle;
+            public ReactiveCommand<GameObject> onInteractedWithObstacle;
         }
 
         public CharacterBehaviourFactoryPm(Ctx ctx)

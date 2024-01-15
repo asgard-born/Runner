@@ -7,7 +7,6 @@ using Cysharp.Threading.Tasks;
 using Framework;
 using Framework.Reactive;
 using Interactions;
-using Obstacles;
 using Shared;
 using UI.Roots;
 using UniRx;
@@ -26,13 +25,13 @@ namespace Root
         private ReactiveCommand<Direction> _onSwipeDirection;
         private ReactiveCommand<Transform> _onCharacterInitialized;
         private ReactiveCommand<Collider> _onInterraction;
-        private ReactiveCommand<Obstacle> _onInteractedWithObstacle;
+        private ReactiveCommand<GameObject> _onInteractedWithObstacle;
         private ReactiveCommand<BehaviourInfo> _onBehaviourTaken;
 
         public struct Ctx
         {
             public PlayersConfigs playersConfigs;
-            public LevelConfigs levelConfigs;
+            public GlobalConfigs globalConfigs;
             public ResourcesConfigs resourcesConfigs;
             public CameraConfigs cameraConfigs;
             public RectTransform uiRoot;
@@ -56,7 +55,7 @@ namespace Root
             _onGameRun = AddUnsafe(new ReactiveTrigger());
             _onSwipeDirection = AddUnsafe(new ReactiveCommand<Direction>());
             _onCharacterInitialized = AddUnsafe(new ReactiveCommand<Transform>());
-            _onInteractedWithObstacle = AddUnsafe(new ReactiveCommand<Obstacle>());
+            _onInteractedWithObstacle = AddUnsafe(new ReactiveCommand<GameObject>());
             _onInterraction = AddUnsafe(new ReactiveCommand<Collider>());
             _onBehaviourTaken = AddUnsafe(new ReactiveCommand<BehaviourInfo>());
 
@@ -99,6 +98,7 @@ namespace Root
         {
             var characterCtx = new InteractionReporterPm.Ctx
             {
+                layersDictionary = _ctx.globalConfigs.layersDictionary,
                 onInterraction = _onInterraction,
                 onBehaviourTaken = _onBehaviourTaken,
                 onInteractedWithObstacle = _onInteractedWithObstacle
@@ -122,7 +122,7 @@ namespace Root
 
         private async void RunGameAsync()
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(_ctx.levelConfigs.startDelaySec));
+            await UniTask.Delay(TimeSpan.FromSeconds(_ctx.globalConfigs.startDelaySec));
 
             _onGameRun?.Notify();
         }

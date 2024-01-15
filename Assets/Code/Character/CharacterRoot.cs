@@ -5,7 +5,6 @@ using Configs;
 using Cysharp.Threading.Tasks;
 using Framework;
 using Framework.Reactive;
-using Obstacles;
 using Shared;
 using UniRx;
 using UnityEngine;
@@ -41,7 +40,7 @@ namespace Character
             public ReactiveCommand<Collider> onInterraction;
             public ReactiveCommand<Direction> onSwipeDirection;
             public ReactiveCommand<BehaviourInfo> onBehaviourTaken;
-            public ReactiveCommand<Obstacle> onInteractedWithObstacle;
+            public ReactiveCommand<GameObject> onInteractedWithObstacle;
         }
 
         public CharacterRoot(Ctx ctx)

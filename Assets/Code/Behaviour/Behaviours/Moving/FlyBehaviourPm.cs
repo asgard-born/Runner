@@ -1,5 +1,4 @@
 ﻿using Behaviour.Behaviours.Abstract;
-using Obstacles;
 using Shared;
 using UnityEngine;
 using UniRx;
@@ -70,8 +69,9 @@ namespace Behaviour.Behaviours.Moving
             _currentAction = CharacterAction.Landing;
         }
 
-        private void OnCrash(Obstacle obstacle)
+        private void OnCrash(GameObject obstacle)
         {
+            _ctx.rigidbody.velocity = Vector3.zero;
             _currentAction = CharacterAction.Idle;
         }
 

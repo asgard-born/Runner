@@ -1,6 +1,5 @@
 ﻿using Configs;
 using Framework;
-using Obstacles;
 using Shared;
 using UniRx;
 using UnityEngine;
@@ -35,7 +34,7 @@ namespace Behaviour.Behaviours.Abstract
             public CharacterState state;
             public float _crash;
 
-            public ReactiveCommand<Obstacle> onCrash;
+            public ReactiveCommand<GameObject> onCrash;
             public ReactiveCommand<Direction> onSwipeDirection;
             public ReactiveCommand<BehaviourType> onBehaviourAdded;
             public ReactiveCommand<BehaviourType> onBehaviourFinished;
