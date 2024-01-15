@@ -1,5 +1,4 @@
 ﻿using Behaviour.Behaviours.Abstract;
-using DG.Tweening;
 using Shared;
 using UnityEngine;
 using UniRx;
@@ -21,7 +20,7 @@ namespace Behaviour.Behaviours.Moving
             _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
             _ctx.state.currentAction = CharacterAction.Lifting;
 
-            _ctx.animator.SetTrigger(_flyingHash);
+            _ctx.animator.SetBool(_flyingHash, true);
         }
 
         protected override void MovingProcess()
@@ -49,23 +48,6 @@ namespace Behaviour.Behaviours.Moving
                     Respawn();
 
                     break;
-
-                case CharacterAction.Finish:
-                    break;
-            }
-        }
-
-        private void OnSwipeDirection(Direction direction)
-        {
-            if (_ctx.state.currentAction == CharacterAction.Respawn || _ctx.state.currentAction == CharacterAction.Idle) return;
-
-            switch (direction)
-            {
-                case Direction.Left:
-                case Direction.Right:
-                    OnChangeSide(direction);
-
-                    break;
             }
         }
 
@@ -82,6 +64,43 @@ namespace Behaviour.Behaviours.Moving
             _ctx.collider.enabled = false;
 
             MoveToSavePoint();
+        }
+
+        protected override void OnCrash(GameObject obstacle)
+        {
+            if (_ctx.state.currentAction == CharacterAction.Respawn) return;
+
+            _ctx.animator.SetBool(_idleHash, false);
+            _ctx.animator.SetBool(_flyingHash, false);
+
+            base.OnCrash(obstacle);
+        }
+
+        protected override void Reset()
+        {
+            _ctx.animator.SetBool(_flyingHash, false);
+            _ctx.animator.SetBool(_idleHash, false);
+        }
+
+        private void OnBehaviourFinished()
+        {
+            Reset();
+            
+            _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
+        }
+
+        private void OnSwipeDirection(Direction direction)
+        {
+            if (_ctx.state.currentAction == CharacterAction.Respawn || _ctx.state.currentAction == CharacterAction.Idle) return;
+
+            switch (direction)
+            {
+                case Direction.Left:
+                case Direction.Right:
+                    OnChangeSide(direction);
+
+                    break;
+            }
         }
 
         private void MoveToSavePoint()
@@ -118,7 +137,9 @@ namespace Behaviour.Behaviours.Moving
             _ctx.rigidbody.useGravity = false;
             _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
             _ctx.state.currentAction = CharacterAction.Moving;
-            _ctx.animator.SetTrigger(_flyingHash);
+
+            _ctx.animator.SetBool(_flyingHash, true);
+            _ctx.animator.SetBool(_idleHash, false);
         }
 
         private void Lifting()
@@ -126,7 +147,7 @@ namespace Behaviour.Behaviours.Moving
             var roadlinePosition = _ctx.state.currentRoadline.Value.transform.position;
             var localDistance = (roadlinePosition.y + _ctx.configs.height) - _ctx.transform.position.y;
 
-            if (Mathf.Abs(localDistance) > _ctx.toleranceDistance.y)
+            if (localDistance >= _ctx.toleranceDistance.y)
             {
                 MoveVertical(_ctx.transform.up);
             }
@@ -163,7 +184,9 @@ namespace Behaviour.Behaviours.Moving
             _ctx.transform.position = new Vector3(characterPosition.x, _ctx.state.currentRoadline.Value.transform.position.y, characterPosition.z);
             _ctx.state.currentAction = CharacterAction.Finish;
 
-            _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
+            _ctx.animator.SetBool(_flyingHash, false);
+
+            OnBehaviourFinished();
         }
 
         private void MoveVertical(Vector3 direction)

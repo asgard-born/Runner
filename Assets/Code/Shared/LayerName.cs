@@ -4,7 +4,7 @@
     {
         None = 0,
         Obstacle = 10,
-        SaveZone = 20,
+        SavePoint = 20,
         Finish = 250,
     }
 }

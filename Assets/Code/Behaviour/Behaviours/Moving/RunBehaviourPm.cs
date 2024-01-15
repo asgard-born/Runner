@@ -1,5 +1,4 @@
 ﻿using Behaviour.Behaviours.Abstract;
-using DG.Tweening;
 using Shared;
 using UnityEngine;
 using UniRx;
@@ -12,9 +11,9 @@ namespace Behaviour.Behaviours.Moving
     /// </summary>
     public class RunBehaviourPm : MovingBehaviourPm
     {
-        protected static readonly int _runningHash = Animator.StringToHash("Running");
-        protected static readonly int _jumpingHash = Animator.StringToHash("Jump");
-        protected static readonly int _fallingHash = Animator.StringToHash("Falling");
+        private static readonly int _runningHash = Animator.StringToHash("Running");
+        private static readonly int _jumpingHash = Animator.StringToHash("Jumping");
+        private static readonly int _fallingHash = Animator.StringToHash("Falling");
 
         public RunBehaviourPm(Ctx ctx) : base(ctx)
         {
@@ -72,13 +71,39 @@ namespace Behaviour.Behaviours.Moving
             MoveToSavePoint();
         }
 
+        protected override void Reset()
+        {
+            ClearAnimations();
+        }
+
+        protected override void OnTimeOver()
+        {
+            Reset();
+            
+            _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
+        }
+
+        protected override void OnCrash(GameObject obstacle)
+        {
+            if (_ctx.state.currentAction == CharacterAction.Respawn) return;
+
+            ClearAnimations();
+
+            base.OnCrash(obstacle);
+        }
+
+        protected override void OnGameOver()
+        {
+            ClearAnimations();
+
+            base.OnGameOver();
+        }
+
         private void MoveToSavePoint()
         {
             _ctx.state.currentRoadline = _ctx.state.currentRoadline.List.First;
-            
-            var roadlinePosition = _ctx.state.currentRoadline.Value.transform.position;
-            var targetPosition = new Vector3(roadlinePosition.x, roadlinePosition.y, _ctx.state.currentSavePoint.position.z);
 
+            var targetPosition = _ctx.state.currentSavePoint.position;
             var distanceVector = targetPosition - _ctx.transform.position;
 
             if (distanceVector.magnitude > _ctx.toleranceDistance.x)
@@ -89,14 +114,9 @@ namespace Behaviour.Behaviours.Moving
             {
                 _ctx.rigidbody.position = targetPosition;
                 _ctx.rigidbody.velocity = Vector3.zero;
-                
+
                 OnRespawned();
             }
-        }
-
-        protected override void OnTimeOver()
-        {
-            _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
         }
 
         private void OnRespawned()
@@ -112,7 +132,9 @@ namespace Behaviour.Behaviours.Moving
             _ctx.rigidbody.useGravity = true;
             _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
             _ctx.rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            _ctx.animator.SetTrigger(_jumpingHash);
+
+            _ctx.animator.SetBool(_runningHash, false);
+            _ctx.animator.SetBool(_jumpingHash, true);
 
             _ctx.state.currentAction = CharacterAction.Jumping;
         }
@@ -136,15 +158,6 @@ namespace Behaviour.Behaviours.Moving
             }
         }
 
-        protected override async void OnCrash(GameObject obstacle)
-        {
-            if (_ctx.state.currentAction == CharacterAction.Respawn) return;
-            
-            _ctx.animator.SetBool(_fallingHash, false);
-
-            base.OnCrash(obstacle);
-        }
-
         private bool IsGrounded()
         {
             return Physics.Raycast(
@@ -158,6 +171,7 @@ namespace Behaviour.Behaviours.Moving
         {
             var isGrounded = IsGrounded();
 
+            _ctx.animator.SetBool(_jumpingHash, false);
             _ctx.animator.SetBool(_fallingHash, !isGrounded);
 
             if (isGrounded)
@@ -177,8 +191,16 @@ namespace Behaviour.Behaviours.Moving
 
             _ctx.state.currentAction = CharacterAction.Moving;
 
+            ClearAnimations();
+            _ctx.animator.SetBool(_runningHash, true);
+        }
+
+        private void ClearAnimations()
+        {
+            _ctx.animator.SetBool(_idleHash, false);
+            _ctx.animator.SetBool(_jumpingHash, false);
             _ctx.animator.SetBool(_fallingHash, false);
-            _ctx.animator.SetTrigger(_runningHash);
+            _ctx.animator.SetBool(_runningHash, false);
         }
     }
 }

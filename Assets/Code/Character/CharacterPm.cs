@@ -42,10 +42,8 @@ namespace Character
         private void InitializeRx()
         {
             AddUnsafe(_ctx.onNewBehaviourProduced.Subscribe(OnNewBehaviourProduced));
-            AddUnsafe(_ctx.onBehaviourFinished.Subscribe(OnBehaviourFinished));
+            AddUnsafe(_ctx.onBehaviourFinished.Subscribe(onBehaviourFinished));
         }
-
-        
 
         private void InitializeCharacter()
         {
@@ -71,7 +69,7 @@ namespace Character
             _ctx.onBehaviourAdded?.Execute(type);
         }
 
-        private void OnBehaviourFinished(BehaviourType type)
+        private void onBehaviourFinished(BehaviourType type)
         {
             if (_behaviours.TryGetValue(type, out var finishedBehaviour))
             {

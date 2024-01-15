@@ -60,7 +60,7 @@ namespace Interactions
 
                             break;
 
-                        case LayerName.SaveZone:
+                        case LayerName.SavePoint:
                             _ctx.onInteractWithSaveZone?.Execute(gameObject.transform);
 
                             break;

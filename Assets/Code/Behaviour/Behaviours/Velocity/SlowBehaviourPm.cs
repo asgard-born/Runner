@@ -17,8 +17,13 @@ namespace Behaviour.Behaviours.Velocity
 
         protected override void OnTimeOver()
         {
-            _ctx.state.speed = _ctx.state.speed = new Vector3(_ctx.state.initialSpeed.x, _ctx.state.speed.y, _ctx.state.initialSpeed.z);
+            Reset();
             _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
+        }
+
+        protected override void Reset()
+        {
+            _ctx.state.speed = _ctx.state.speed = new Vector3(_ctx.state.initialSpeed.x, _ctx.state.speed.y, _ctx.state.initialSpeed.z);
         }
     }
 }

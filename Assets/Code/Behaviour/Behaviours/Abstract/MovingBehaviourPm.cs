@@ -1,6 +1,4 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
-using Shared;
+﻿using Shared;
 using UnityEngine;
 using UniRx;
 
@@ -20,7 +18,7 @@ namespace Behaviour.Behaviours.Abstract
 
         protected MovingBehaviourPm(Ctx ctx) : base(ctx)
         {
-            AddUnsafe(_ctx.onFinishReached.Subscribe(OnFinish));
+            AddUnsafe(_ctx.onFinishReached.Subscribe(OnGameOver));
             AddUnsafe(_ctx.onCrash.Subscribe(OnCrash));
             AddUnsafe(_ctx.onInteractWithSaveZone.Subscribe(OnInteractedWithSaveZone));
             AddUnsafe(Observable.EveryFixedUpdate().Subscribe(_ => MovingProcess()));
@@ -34,18 +32,18 @@ namespace Behaviour.Behaviours.Abstract
         protected virtual void Move()
         {
             var speedZ = _ctx.state.speed.z * VELOCITY_MULTIPLIER * Time.fixedDeltaTime;
+            
             var forwardVelocity = _ctx.transform.forward * speedZ;
-
             var sideVelocity = CalculateSideVelocity();
-
             var verticalVelocity = Vector3.up * _ctx.rigidbody.velocity.y;
 
             _ctx.rigidbody.velocity = forwardVelocity + sideVelocity + verticalVelocity;
         }
 
-        protected async virtual void OnCrash(GameObject _)
+        protected virtual void OnCrash(GameObject _)
         {
             _ctx.animator.SetTrigger(_damageHash);
+            
             _ctx.rigidbody.velocity = Vector3.zero;
             _ctx.rigidbody.useGravity = false;
             _ctx.collider.enabled = false;
@@ -99,8 +97,10 @@ namespace Behaviour.Behaviours.Abstract
             return false;
         }
 
-        protected virtual void OnFinish()
+        protected virtual void OnGameOver()
         {
+            _ctx.rigidbody.Sleep();
+            _ctx.animator.SetBool(_idleHash, true);
             _ctx.state.currentAction = CharacterAction.Idle;
             _ctx.onFinishReached?.Notify();
         }

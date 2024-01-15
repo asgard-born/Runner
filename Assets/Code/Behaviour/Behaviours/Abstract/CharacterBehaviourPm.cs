@@ -72,7 +72,6 @@ namespace Behaviour.Behaviours.Abstract
             }
 
             // Учитываем, что любое потенциальное поведение может выть временным или даваться на постоянной основе
-
             if (!_ctx.isEndless)
             {
                 AddUnsafe(Observable.EveryFixedUpdate().Subscribe(_ => DoTiming()));
@@ -103,6 +102,7 @@ namespace Behaviour.Behaviours.Abstract
             _spawnedEffects = null;
         }
 
+        protected abstract void Reset();
         protected abstract void OnTimeOver();
         protected abstract void Initialize();
     }
