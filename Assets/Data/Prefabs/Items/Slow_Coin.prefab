@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isRotating: 1
   _isCoin: 1
-  _rotationSpeed: 50
+  _rotationSpeed: 75
   _behaviours:
   - _configs: {fileID: 11400000, guid: 405bbb7950e446c49bd00d4842d2c492, type: 2}
     _isEndless: 0

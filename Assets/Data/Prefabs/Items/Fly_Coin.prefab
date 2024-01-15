@@ -483,7 +483,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6818167270396220995}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 0
@@ -491,7 +491,7 @@ Transform:
   - {fileID: 3208007403198554241}
   - {fileID: 8568958063265343577}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6278580169457425126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -506,7 +506,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isRotating: 1
   _isCoin: 1
-  _rotationSpeed: 50
+  _rotationSpeed: 75
   _behaviours:
   - _configs: {fileID: 11400000, guid: 58245e65188ea1c41b7db277a08b2116, type: 2}
     _isEndless: 0
@@ -607,7 +607,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 106e5917fb18e444caf9c05c37681c04, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 62904c0d6f367dd4792cdad4d0892ba9, type: 2}
+      objectReference: {fileID: 2100000, guid: 653ae29dba8e31547bc3a9159c4ff69f, type: 2}
     - target: {fileID: 919132149155446097, guid: 106e5917fb18e444caf9c05c37681c04, type: 3}
       propertyPath: m_Name
       value: low (2)
