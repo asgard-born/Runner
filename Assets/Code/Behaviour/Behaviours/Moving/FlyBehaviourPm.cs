@@ -17,7 +17,7 @@ namespace Behaviour.Behaviours.Moving
 
         protected override void Initialize()
         {
-            _ctx.state.speed = _ctx.configs.speed;
+            _ctx.state.speed = new Vector3(_ctx.state.speed.x, _ctx.configs.speed.y, _ctx.state.speed.z);
 
             _ctx.rigidbody.useGravity = false;
             _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
@@ -44,12 +44,17 @@ namespace Behaviour.Behaviours.Moving
                     Landing();
 
                     break;
+
+                case CharacterAction.Finish:
+                    Landing();
+
+                    break;
             }
         }
 
         private void OnSwipeDirection(Direction direction)
         {
-            if (_currentAction == CharacterAction.Damage || _currentAction == CharacterAction.Idle) return;
+            if (_currentAction == CharacterAction.Crash || _currentAction == CharacterAction.Idle) return;
 
             switch (direction)
             {
@@ -61,7 +66,7 @@ namespace Behaviour.Behaviours.Moving
             }
         }
 
-        protected override void OnTimesOver()
+        protected override void OnTimeOver()
         {
             _currentAction = CharacterAction.Landing;
         }
@@ -131,7 +136,8 @@ namespace Behaviour.Behaviours.Moving
             var characterPosition = _ctx.transform.position;
             _ctx.transform.position = new Vector3(characterPosition.x, _ctx.state.currentRoadline.Value.transform.position.y, characterPosition.z);
 
-            Finish();
+            _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
+            _currentAction = CharacterAction.Finish;
         }
 
         private void MoveVertical(Vector3 direction)
@@ -143,12 +149,6 @@ namespace Behaviour.Behaviours.Moving
 
             var newVelocity = verticalVelocity + sideVelocity;
             _ctx.rigidbody.velocity = newVelocity;
-        }
-
-        private void Finish()
-        {
-            _currentAction = CharacterAction.None;
-            _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
         }
     }
 }

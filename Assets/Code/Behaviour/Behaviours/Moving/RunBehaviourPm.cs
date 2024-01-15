@@ -56,16 +56,7 @@ namespace Behaviour.Behaviours.Moving
 
                     break;
 
-                case CharacterAction.Damage:
-                    _ctx.rigidbody.velocity = Vector3.zero;
-                    _currentAction = CharacterAction.Idle;
-                    _ctx.state.lives.Value -= 1;
-
-                    if (_ctx.state.lives.Value > 0)
-                    {
-                        Respawn();
-                    }
-
+                case CharacterAction.Crash:
                     break;
             }
         }
@@ -82,7 +73,7 @@ namespace Behaviour.Behaviours.Moving
             _ctx.rigidbody.DOMove(currentZonePos, _ctx.crashDelay).OnComplete(OnRespawned);
         }
 
-        protected override void OnTimesOver()
+        protected override void OnTimeOver()
         {
             _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
         }
@@ -107,7 +98,7 @@ namespace Behaviour.Behaviours.Moving
 
         private void OnSwipeDirection(Direction direction)
         {
-            if (_currentAction == CharacterAction.Damage || _currentAction == CharacterAction.Idle) return;
+            if (_currentAction == CharacterAction.Crash || _currentAction == CharacterAction.Idle) return;
 
             switch (direction)
             {
@@ -124,12 +115,12 @@ namespace Behaviour.Behaviours.Moving
             }
         }
 
-        protected override async void OnCrash(GameObject obstacle)
+        protected override async void Crash(GameObject obstacle)
         {
-            _currentAction = CharacterAction.Damage;
+            _currentAction = CharacterAction.Crash;
             _ctx.animator.SetBool(_fallingHash, false);
 
-            base.OnCrash(obstacle);
+            base.Crash(obstacle);
         }
 
         private bool IsGrounded()

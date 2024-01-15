@@ -12,6 +12,7 @@
         Falling = 40,
         Lifting = 50,
         Landing = 60,
-        Damage = 70,
+        Crash = 70,
+        Finish = 250
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Behaviour.Behaviours.Abstract;
+using UnityEngine;
 
 namespace Behaviour.Behaviours.Velocity
 {
@@ -8,19 +9,21 @@ namespace Behaviour.Behaviours.Velocity
     /// </summary>
     public class FastBehaviourPm : CharacterBehaviourPm
     {
+        private Vector3 _cachedSpeed;
+
         public FastBehaviourPm(Ctx ctx) : base(ctx)
         {
         }
 
         protected override void Initialize()
         {
+            _ctx.state.speed = new Vector3(_ctx.configs.speed.x, _ctx.state.speed.y, _ctx.configs.speed.z);
             _hasStarted = true;
-            _ctx.state.speed = _ctx.configs.speed;
         }
 
-        protected override void OnTimesOver()
+        protected override void OnTimeOver()
         {
-            _ctx.state.speed = _ctx.state.initialSpeed;
+            _ctx.state.speed = new Vector3(_ctx.state.initialSpeed.x, _ctx.state.speed.y, _ctx.state.initialSpeed.z);
             _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
         }
     }

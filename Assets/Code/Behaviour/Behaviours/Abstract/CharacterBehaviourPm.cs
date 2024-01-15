@@ -84,7 +84,7 @@ namespace Behaviour.Behaviours.Abstract
 
                 if (_secondsLeft <= 0)
                 {
-                    OnTimesOver();
+                    OnTimeOver();
                 }
             }
         }
@@ -101,7 +101,7 @@ namespace Behaviour.Behaviours.Abstract
             _spawnedEffects = null;
         }
 
-        protected abstract void OnTimesOver();
+        protected abstract void OnTimeOver();
         protected abstract void Initialize();
     }
 }
