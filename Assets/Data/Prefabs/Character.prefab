@@ -1033,7 +1033,7 @@ MonoBehaviour:
   _animator: {fileID: -147495752933334567}
   _mask:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 1472
   _overlapRadius: 0.35
   _updateFrequencyMillisec: 50
   _interractingPointFirst: {fileID: 3146263363203936661}

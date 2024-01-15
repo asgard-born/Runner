@@ -69,8 +69,6 @@ namespace Behaviour.Behaviours.Moving
             _currentAction = CharacterAction.Landing;
         }
 
-        
-
         protected override void Respawn()
         {
             var currentZonePos = _ctx.state.currentSaveZone.position;

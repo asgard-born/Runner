@@ -21,6 +21,7 @@ namespace Behaviour.Behaviours.Abstract
         {
             AddUnsafe(_ctx.onFinishReached.Subscribe(OnFinish));
             AddUnsafe(_ctx.onCrash.Subscribe(OnCrash));
+            AddUnsafe(_ctx.onInteractWithSaveZone.Subscribe(OnInteractedWithSaveZone));
         }
 
         /// <summary>
@@ -96,6 +97,11 @@ namespace Behaviour.Behaviours.Abstract
         {
             _currentAction = CharacterAction.Idle;
             _ctx.onFinishReached?.Notify();
+        }
+        
+        private void OnInteractedWithSaveZone(Transform saveZone)
+        {
+            _ctx.state.currentSaveZone = saveZone;
         }
 
         protected abstract void Respawn();

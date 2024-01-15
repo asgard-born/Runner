@@ -12,7 +12,7 @@ namespace Interactions
     /// Принимает в себя 'сырые' данные в виде коллайдеров
     /// Распознает объект взаимодействия и сообщает об этом в событиях
     /// </summary>
-    public class InteractionReporterPm : BaseDisposable
+    public class InteractionHandlerPm : BaseDisposable
     {
         private ReactiveCommand<BehaviourInfo> _onBehaviourTaken;
         private readonly Ctx _ctx;
@@ -26,9 +26,10 @@ namespace Interactions
             public ReactiveCommand<GameObject> onInteractWithObstacle;
             public ReactiveCommand<Transform> onInteractWithSaveZone;
             public ReactiveTrigger onFinishReached;
+            public ReactiveTrigger onCoinTaken;
         }
 
-        public InteractionReporterPm(Ctx ctx)
+        public InteractionHandlerPm(Ctx ctx)
         {
             _ctx = ctx;
             _onBehaviourTaken = ctx.onBehaviourTaken;
@@ -60,7 +61,6 @@ namespace Interactions
                             break;
 
                         case LayerName.SaveZone:
-
                             _ctx.onInteractWithSaveZone?.Execute(gameObject.transform);
 
                             break;
@@ -82,6 +82,11 @@ namespace Interactions
                 foreach (var behaviourInfo in item.behaviours)
                 {
                     _onBehaviourTaken?.Execute(behaviourInfo);
+                }
+
+                if (item.isCoin)
+                {
+                    _ctx.onCoinTaken.Notify();
                 }
 
                 item.gameObject.SetActive(false);

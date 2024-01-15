@@ -18,6 +18,9 @@ namespace Root
         private UIRoot _uiRoot;
 
         private readonly Ctx _ctx;
+        
+        private ReactiveProperty<int> _lives;
+        private ReactiveProperty<int> _coins;
 
         private ReactiveCommand<Direction> _onSwipeDirection;
         private ReactiveCommand<Transform> _onCharacterInitialized;
@@ -26,9 +29,8 @@ namespace Root
         private ReactiveCommand<BehaviourInfo> _onBehaviourTaken;
         private ReactiveCommand<Transform> _onInteractWithSaveZone;
         private ReactiveTrigger _onFinishReached;
+        private ReactiveTrigger _onCoinTaken;
         private ReactiveTrigger _onGameLoose;
-        private ReactiveProperty<int> _lives;
-        private ReactiveProperty<int> _coins;
 
         public struct Ctx
         {
@@ -64,6 +66,8 @@ namespace Root
             _onInteractWithObstacle = AddUnsafe(new ReactiveCommand<GameObject>());
             _onInteractWithSaveZone = AddUnsafe(new ReactiveCommand<Transform>());
             _onFinishReached = AddUnsafe(new ReactiveTrigger());
+            _onCoinTaken = AddUnsafe(new ReactiveTrigger());
+            _onGameLoose = AddUnsafe(new ReactiveTrigger());
 
             AddUnsafe(_onCharacterInitialized.Subscribe(InitializeCamera));
         }
@@ -107,7 +111,7 @@ namespace Root
 
         private void InitializeInteractionReporter()
         {
-            var characterCtx = new InteractionReporterPm.Ctx
+            var characterCtx = new InteractionHandlerPm.Ctx
             {
                 layersDictionary = _ctx.globalConfigs.layersDictionary,
 
@@ -115,10 +119,11 @@ namespace Root
                 onBehaviourTaken = _onBehaviourTaken,
                 onInteractWithObstacle = _onInteractWithObstacle,
                 onInteractWithSaveZone = _onInteractWithSaveZone,
-                onFinishReached = _onFinishReached
+                onFinishReached = _onFinishReached,
+                onCoinTaken = _onCoinTaken
             };
 
-            AddUnsafe(new InteractionReporterPm(characterCtx));
+            AddUnsafe(new InteractionHandlerPm(characterCtx));
         }
 
         private void InitializeCamera(Transform characterTransform)

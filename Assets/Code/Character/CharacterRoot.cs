@@ -97,7 +97,6 @@ namespace Character
                 onBehaviourTaken = _ctx.onBehaviourTaken,
                 onNewBehaviourProduced = _onNewBehaviourProduced,
                 onBehaviourAdded = _onBehaviourAdded,
-                onInteractWithSaveZone = _onInteractWithSaveZone,
                 onBehaviourFinished = _onBehaviourFinished
             };
 
@@ -109,7 +108,6 @@ namespace Character
             _state = new CharacterState
             {
                 currentRoadline = new LinkedList<RoadlinePoint>(_ctx.roadlinePoints).Find(_ctx.spawnPoint),
-                    
                 lives = _ctx.lives,
                 coins = _ctx.coins,
             };
@@ -134,7 +132,8 @@ namespace Character
                 onBehaviourAdded = _onBehaviourAdded,
                 onBehaviourFinished = _onBehaviourFinished,
                 onInteractWithObstacle = _ctx.onInteractWithObstacle,
-                onFinishReached = _ctx.onFinishReached
+                onInteractWithSaveZone = _onInteractWithSaveZone,
+                onFinishReached = _ctx.onFinishReached,
             };
 
             AddUnsafe(new CharacterBehaviourFactoryPm(behaviourFactoryCtx));
