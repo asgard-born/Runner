@@ -78813,7 +78813,7 @@ GameObject:
   - component: {fileID: 1920325297268671248}
   - component: {fileID: 6775163740762971241}
   m_Layer: 0
-  m_Name: Ef_IceMagicGlowFree01
+  m_Name: Ice_Effect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

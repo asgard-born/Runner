@@ -1031,13 +1031,6 @@ MonoBehaviour:
   _rigidbody: {fileID: 4278587929373083817}
   _collider: {fileID: 1109826506598995632}
   _animator: {fileID: -147495752933334567}
-  _mask:
-    serializedVersion: 2
-    m_Bits: 1472
-  _overlapRadius: 0.35
-  _updateFrequencyMillisec: 50
-  _interractingPointFirst: {fileID: 3146263363203936661}
-  _interractingPointSecond: {fileID: 3306762774082564640}
 --- !u!54 &4278587929373083817
 Rigidbody:
   m_ObjectHideFlags: 0

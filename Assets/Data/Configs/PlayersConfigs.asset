@@ -21,5 +21,5 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   _crashDelay: 2
-  _initialSpeed: {x: 3, y: 5, z: 5}
+  _initialSpeed: {x: 5, y: 7, z: 6}
   _initialLives: 5
