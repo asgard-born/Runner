@@ -14,12 +14,9 @@ namespace Behaviour.Behaviours.Velocity
             _ctx.state.speed = _ctx.configs.speed;
         }
 
-        protected override void Behave()
-        {
-        }
-
         protected override void OnTimesOver()
         {
+            _ctx.state.speed = _ctx.state.initialSpeed;
             _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
         }
     }

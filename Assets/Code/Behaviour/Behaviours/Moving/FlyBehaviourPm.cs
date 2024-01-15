@@ -26,7 +26,7 @@ namespace Behaviour.Behaviours.Moving
             _ctx.animator.SetTrigger(_flyingHash);
         }
 
-        protected override void Behave()
+        protected override void MovingProcess()
         {
             switch (_currentAction)
             {

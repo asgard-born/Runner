@@ -24,7 +24,10 @@ namespace Behaviour.Behaviours.Abstract
             AddUnsafe(_ctx.onFinishReached.Subscribe(OnFinish));
             AddUnsafe(_ctx.onCrash.Subscribe(OnCrash));
             AddUnsafe(_ctx.onInteractWithSaveZone.Subscribe(OnInteractedWithSaveZone));
+            AddUnsafe(Observable.EveryFixedUpdate().Subscribe(_ => MovingProcess()));
         }
+
+        protected abstract void MovingProcess();
 
         /// <summary>
         /// Базовая логика перемещения персонажа
@@ -44,14 +47,14 @@ namespace Behaviour.Behaviours.Abstract
         protected async virtual void OnCrash(GameObject obstacle)
         {
             if (_currentAction == CharacterAction.Damage) return;
-            
+
             _currentAction = CharacterAction.Damage;
-            
+
             _ctx.rigidbody.velocity = Vector3.zero;
             _ctx.rigidbody.useGravity = false;
             _ctx.collider.enabled = false;
             _ctx.state.lives.Value -= 1;
-            
+
             _ctx.animator.SetTrigger(_damageHash);
 
             await UniTask.Delay(TimeSpan.FromSeconds(_ctx.crashDelay));

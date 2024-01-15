@@ -71,14 +71,13 @@ namespace Behaviour.Behaviours.Abstract
                 }
             }
 
-            AddUnsafe(Observable.EveryFixedUpdate().Subscribe(_ => DoBehaveProcess()));
+            // Учитываем, что любое потенциальное поведение может выть временным или даваться на постоянной основе
+            
+            AddUnsafe(Observable.EveryFixedUpdate().Subscribe(_ => DoTiming()));
         }
 
-        private void DoBehaveProcess()
+        private void DoTiming()
         {
-            Behave();
-
-            // Учитываем, что любое потенциальное поведение может выть временным или даваться на постоянной основе
             if (!_ctx.isEndless && _hasStarted)
             {
                 _secondsLeft -= Time.fixedDeltaTime;
@@ -104,6 +103,5 @@ namespace Behaviour.Behaviours.Abstract
 
         protected abstract void OnTimesOver();
         protected abstract void Initialize();
-        protected abstract void Behave();
     }
 }

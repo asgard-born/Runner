@@ -6,6 +6,7 @@ namespace Shared
 {
     public class CharacterState
     {
+        public Vector3 initialSpeed;
         public Vector3 speed;
         public float jumpForce;
         public Transform currentSaveZone;

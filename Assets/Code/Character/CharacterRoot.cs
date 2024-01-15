@@ -123,6 +123,7 @@ namespace Character
             _state = new CharacterState
             {
                 currentRoadline = new LinkedList<RoadlinePoint>(_ctx.roadlinePoints).Find(_ctx.spawnPoint),
+                initialSpeed = _ctx.initialBehaviourInfo.configs.speed,
                 lives = _ctx.lives,
             };
         }

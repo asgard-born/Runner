@@ -31,7 +31,7 @@ namespace Behaviour.Behaviours.Moving
             _hasStarted = true;
         }
 
-        protected override void Behave()
+        protected override void MovingProcess()
         {
             switch (_currentAction)
             {
