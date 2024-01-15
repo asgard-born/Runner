@@ -23,8 +23,6 @@ namespace Character
         private CharacterView _view;
         private CharacterState _state;
 
-        private ReactiveProperty<int> _lives;
-
         private ReactiveTrigger<float> _onSpeedChangedCallback;
         private ReactiveCommand<BehaviourType> _onBehaviourAdded;
         private ReactiveTrigger<BehaviourType, CharacterBehaviourPm> _onNewBehaviourProduced;
@@ -38,6 +36,9 @@ namespace Character
             public BehaviourInfo initialBehaviourInfo;
             public RoadlinePoint spawnPoint;
             public List<RoadlinePoint> roadlinePoints;
+
+            public ReactiveProperty<int> lives;
+            public ReactiveProperty<int> coins;
 
             public ReactiveCommand<Transform> onCharacterInitialized;
             public ReactiveCommand<Collider> onInterraction;
@@ -65,7 +66,6 @@ namespace Character
 
         private void InitializeRx()
         {
-            
             _onNewBehaviourProduced = AddUnsafe(new ReactiveTrigger<BehaviourType, CharacterBehaviourPm>());
             _onBehaviourAdded = AddUnsafe(new ReactiveCommand<BehaviourType>());
             _onBehaviourFinished = AddUnsafe(new ReactiveCommand<BehaviourType>());
@@ -108,8 +108,10 @@ namespace Character
         {
             _state = new CharacterState
             {
-                lives = _lives,
-                currentRoadline = new LinkedList<RoadlinePoint>(_ctx.roadlinePoints).Find(_ctx.spawnPoint)
+                currentRoadline = new LinkedList<RoadlinePoint>(_ctx.roadlinePoints).Find(_ctx.spawnPoint),
+                    
+                lives = _ctx.lives,
+                coins = _ctx.coins,
             };
         }
 

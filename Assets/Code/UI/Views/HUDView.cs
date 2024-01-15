@@ -18,7 +18,7 @@ namespace UI.Views
         public void SetContext(Ctx ctx)
         {
             ctx.lives.Subscribe(OnLivesChanges).AddTo(this);
-            ctx.coins.Subscribe(OnLivesChanges).AddTo(this);
+            ctx.coins.Subscribe(OnCoinsChanges).AddTo(this);
         }
 
         private void OnLivesChanges(int newValue)

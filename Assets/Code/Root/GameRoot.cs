@@ -28,6 +28,7 @@ namespace Root
         private ReactiveTrigger _onFinishReached;
         private ReactiveTrigger _onGameLoose;
         private ReactiveProperty<int> _lives;
+        private ReactiveProperty<int> _coins;
 
         public struct Ctx
         {
@@ -54,6 +55,7 @@ namespace Root
         private void InitializeRx()
         {
             _lives = AddUnsafe(new ReactiveProperty<int>(_ctx.playersConfigs.initialLives));
+            _coins = AddUnsafe(new ReactiveProperty<int>(_ctx.playersConfigs.initialLives));
 
             _onSwipeDirection = AddUnsafe(new ReactiveCommand<Direction>());
             _onCharacterInitialized = AddUnsafe(new ReactiveCommand<Transform>());
@@ -72,7 +74,9 @@ namespace Root
             {
                 uiTransform = ctx.uiTransform,
                 resourcesConfigs = ctx.resourcesConfigs,
-                onSwipeDirection = _onSwipeDirection
+                onSwipeDirection = _onSwipeDirection,
+                lives = _lives,
+                coins = _coins
             };
 
             AddUnsafe(new UIRoot(uiRootCtx));
@@ -87,6 +91,8 @@ namespace Root
                 initialBehaviourInfo = _ctx.playersConfigs.initialBehaviourInfo,
                 spawnPoint = _ctx.spawnPoint,
                 roadlinePoints = _ctx.roadlinePoints,
+                lives = _lives,
+                coins = _coins,
 
                 onCharacterInitialized = _onCharacterInitialized,
                 onInterraction = _onInterraction,

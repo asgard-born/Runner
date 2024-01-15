@@ -10,15 +10,15 @@ namespace UI.Roots
     public class UIRoot : BaseDisposable
     {
         private readonly Ctx _ctx;
-        private WinView _winView;
-        private LooseView _looseView;
-        private HUDView _hudView;
 
         public struct Ctx
         {
             public Transform uiRoot;
             public RectTransform uiTransform;
             public ResourcesConfigs resourcesConfigs;
+
+            public ReactiveProperty<int> lives;
+            public ReactiveProperty<int> coins;
 
             public ReactiveCommand<Direction> onSwipeDirection;
         }
@@ -43,23 +43,25 @@ namespace UI.Roots
         {
             var ctx = new HUDView.Ctx
             {
-                
+                lives = _ctx.lives,
+                coins = _ctx.coins
             };
-            
+
             var hudViewPrefab = await LoadAndTrackPrefab<HUDView>(_ctx.resourcesConfigs.hudViewReference);
-            _hudView = Object.Instantiate(hudViewPrefab, _ctx.uiRoot);
+            var hudView = Object.Instantiate(hudViewPrefab, _ctx.uiRoot);
+            hudView.SetContext(ctx);
         }
 
         private async void InitWinViewAsync()
         {
             var winViewprefab = await LoadAndTrackPrefab<WinView>(_ctx.resourcesConfigs.winViewReference);
-            _winView = Object.Instantiate(winViewprefab, _ctx.uiRoot);
+            Object.Instantiate(winViewprefab, _ctx.uiRoot);
         }
 
         private async void InitWinLooseAsync()
         {
             var looseViewprefab = await LoadAndTrackPrefab<LooseView>(_ctx.resourcesConfigs.looseViewReference);
-            _looseView = Object.Instantiate(looseViewprefab, _ctx.uiRoot);
+            Object.Instantiate(looseViewprefab, _ctx.uiRoot);
         }
     }
 }
