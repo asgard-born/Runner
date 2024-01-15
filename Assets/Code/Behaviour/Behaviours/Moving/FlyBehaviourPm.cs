@@ -140,7 +140,7 @@ namespace Behaviour.Behaviours.Moving
         {
             _ctx.collider.enabled = true;
             _ctx.rigidbody.useGravity = false;
-            _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
+            _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
             _ctx.state.currentAction = CharacterAction.Moving;
 
             _ctx.animator.SetTrigger(_flyingHash);
