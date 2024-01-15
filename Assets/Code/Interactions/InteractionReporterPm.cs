@@ -24,7 +24,7 @@ namespace Interactions
             public ReactiveCommand<Collider> onInterraction;
             public ReactiveCommand<BehaviourInfo> onBehaviourTaken;
             public ReactiveCommand<GameObject> onInteractedWithObstacle;
-            public ReactiveCommand<GameObject> onInteractedWithSaveZone;
+            public ReactiveCommand<Transform> onInteractedWithSaveZone;
             public ReactiveTrigger onFinish;
         }
 
@@ -73,7 +73,7 @@ namespace Interactions
 
                     case LayerName.SaveZone:
 
-                        _ctx.onInteractedWithSaveZone?.Execute(gameObject);
+                        _ctx.onInteractedWithSaveZone?.Execute(gameObject.transform);
 
                         break;
 

@@ -21,7 +21,7 @@ namespace Root
         [SerializeField] private List<RoadlinePoint> _roadlinePoints;
         [SerializeField] private Transform _spawnPoint;
         [SerializeField] private Camera _camera;
-        [Space, Header("UI")] [SerializeField] private RectTransform _uiRoot;
+        [Space, Header("UI")] [SerializeField] private RectTransform _uiTransform;
 
         private GameRoot _root;
 
@@ -40,7 +40,7 @@ namespace Root
                 globalConfigs = _globalConfigs,
                 resourcesConfigs = _resourcesConfigs,
                 cameraConfigs = _cameraConfigs,
-                uiRoot = _uiRoot,
+                uiTransform = _uiTransform,
                 roadlinePoints = _roadlinePoints,
                 spawnPoint = _roadlinePoints.First(r => r.transform == _spawnPoint),
                 camera = _camera
@@ -67,7 +67,7 @@ namespace Root
                 Debug.LogException(new NullReferenceException("Camera cannot be null"));
             }
 
-            if (_uiRoot == null)
+            if (_uiTransform == null)
             {
                 Debug.LogException(new NullReferenceException("UI Root cannot be null"));
             }

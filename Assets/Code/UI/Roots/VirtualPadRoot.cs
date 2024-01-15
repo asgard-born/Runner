@@ -15,7 +15,7 @@ namespace UI.Roots
 
         public struct Ctx
         {
-            public RectTransform rootTransform;
+            public RectTransform uiTransform;
             public AssetReference virtualPadViewReference;
             public ReactiveCommand<Direction> onSwipeDirection;
         }
@@ -49,7 +49,7 @@ namespace UI.Roots
 
             var prefab = await LoadAndTrackPrefab<VirtualPadView>(_ctx.virtualPadViewReference);
 
-            VirtualPadView virtualPadView = Object.Instantiate(prefab, _ctx.rootTransform);
+            VirtualPadView virtualPadView = Object.Instantiate(prefab, _ctx.uiTransform);
             virtualPadView.SetCtx(ctx);
         }
     }

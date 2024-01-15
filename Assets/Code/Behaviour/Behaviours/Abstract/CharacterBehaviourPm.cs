@@ -1,5 +1,6 @@
 ﻿using Configs;
 using Framework;
+using Framework.Reactive;
 using Shared;
 using UniRx;
 using UnityEngine;
@@ -34,18 +35,19 @@ namespace Behaviour.Behaviours.Abstract
             public CharacterState state;
             public float _crash;
 
-            public ReactiveCommand<GameObject> onCrash;
             public ReactiveCommand<Direction> onSwipeDirection;
             public ReactiveCommand<BehaviourType> onBehaviourAdded;
             public ReactiveCommand<BehaviourType> onBehaviourFinished;
+            public ReactiveCommand<GameObject> onCrash;
+            public ReactiveTrigger onFinish;
         }
 
         protected CharacterBehaviourPm(Ctx ctx)
         {
             _ctx = ctx;
-            
+
             Initialize();
-            
+
             AddUnsafe(_ctx.onBehaviourAdded.Subscribe(OnBehaviourAdded));
         }
 

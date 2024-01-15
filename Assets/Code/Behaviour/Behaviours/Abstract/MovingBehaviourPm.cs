@@ -18,6 +18,7 @@ namespace Behaviour.Behaviours.Abstract
 
         protected MovingBehaviourPm(Ctx ctx) : base(ctx)
         {
+            AddUnsafe(_ctx.onFinish.Subscribe(OnFinish));
         }
 
         /// <summary>
@@ -75,6 +76,11 @@ namespace Behaviour.Behaviours.Abstract
             }
 
             return false;
+        }
+
+        protected virtual void OnFinish()
+        {
+            _currentAction = CharacterAction.Idle;
         }
     }
 }

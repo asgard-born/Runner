@@ -9,7 +9,7 @@ using UnityEngine;
 namespace Character
 {
     /// <summary>
-    /// Управляет поведениями  персонажа
+    /// Управляет поведениями персонажа и тем состоянием, которое не зависит от поведений
     /// </summary>
     public class CharacterPm : BaseDisposable
     {
@@ -19,6 +19,7 @@ namespace Character
 
         public struct Ctx
         {
+            public CharacterState state;
             public Transform characterTransform;
             public RoadlinePoint spawnPoint;
             public BehaviourInfo initialBehaviourInfo;
@@ -27,6 +28,7 @@ namespace Character
             public ReactiveTrigger<BehaviourType, CharacterBehaviourPm> onNewBehaviourProduced;
             public ReactiveCommand<BehaviourType> onBehaviourAdded;
             public ReactiveCommand<Transform> onCharacterInitialized;
+            public ReactiveCommand<Transform> onInteractedWithSaveZone;
             public ReactiveCommand<BehaviourType> onBehaviourFinished;
         }
 
@@ -42,6 +44,12 @@ namespace Character
         {
             AddUnsafe(_ctx.onNewBehaviourProduced.Subscribe(OnNewBehaviourProduced));
             AddUnsafe(_ctx.onBehaviourFinished.Subscribe(OnBehaviourFinished));
+            AddUnsafe(_ctx.onInteractedWithSaveZone.Subscribe(OnInteractedWithSaveZone));
+        }
+
+        private void OnInteractedWithSaveZone(Transform saveZone)
+        {
+            _ctx.state.currentSaveZone = saveZone;
         }
 
         private void InitializeCharacter()
