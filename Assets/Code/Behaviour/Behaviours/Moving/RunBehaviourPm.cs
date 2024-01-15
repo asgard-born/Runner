@@ -75,7 +75,9 @@ namespace Behaviour.Behaviours.Moving
         private void MoveToSavePoint()
         {
             _ctx.state.currentRoadline = _ctx.state.currentRoadline.List.First;
-            var targetPosition = _ctx.state.currentSavePoint.position;
+            
+            var roadlinePosition = _ctx.state.currentRoadline.Value.transform.position;
+            var targetPosition = new Vector3(roadlinePosition.x, roadlinePosition.y, _ctx.state.currentSavePoint.position.z);
 
             var distanceVector = targetPosition - _ctx.transform.position;
 
@@ -134,11 +136,13 @@ namespace Behaviour.Behaviours.Moving
             }
         }
 
-        protected override async void OnCrashEvent(GameObject obstacle)
+        protected override async void OnCrash(GameObject obstacle)
         {
+            if (_ctx.state.currentAction == CharacterAction.Respawn) return;
+            
             _ctx.animator.SetBool(_fallingHash, false);
 
-            base.OnCrashEvent(obstacle);
+            base.OnCrash(obstacle);
         }
 
         private bool IsGrounded()

@@ -21,7 +21,7 @@ namespace Behaviour.Behaviours.Abstract
         protected MovingBehaviourPm(Ctx ctx) : base(ctx)
         {
             AddUnsafe(_ctx.onFinishReached.Subscribe(OnFinish));
-            AddUnsafe(_ctx.onCrash.Subscribe(OnCrashEvent));
+            AddUnsafe(_ctx.onCrash.Subscribe(OnCrash));
             AddUnsafe(_ctx.onInteractWithSaveZone.Subscribe(OnInteractedWithSaveZone));
             AddUnsafe(Observable.EveryFixedUpdate().Subscribe(_ => MovingProcess()));
         }
@@ -43,17 +43,13 @@ namespace Behaviour.Behaviours.Abstract
             _ctx.rigidbody.velocity = forwardVelocity + sideVelocity + verticalVelocity;
         }
 
-        protected async virtual void OnCrashEvent(GameObject _)
+        protected async virtual void OnCrash(GameObject _)
         {
-            if (_ctx.state.currentAction == CharacterAction.Respawn) return;
-
             _ctx.animator.SetTrigger(_damageHash);
             _ctx.rigidbody.velocity = Vector3.zero;
             _ctx.rigidbody.useGravity = false;
             _ctx.collider.enabled = false;
             _ctx.state.lives.Value -= 1;
-
-            await UniTask.Delay(TimeSpan.FromSeconds(_ctx.crashDelay));
 
             if (_ctx.state.lives.Value > 0)
             {

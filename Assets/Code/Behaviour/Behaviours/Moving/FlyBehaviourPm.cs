@@ -27,7 +27,7 @@ namespace Behaviour.Behaviours.Moving
         protected override void MovingProcess()
         {
             Debug.Log($"<color='red'>Current action/behaviour {_ctx.state.currentAction.ToString()}, {_ctx.configs.name}</color>");
-            
+
             switch (_ctx.state.currentAction)
             {
                 case CharacterAction.Moving:
@@ -45,13 +45,12 @@ namespace Behaviour.Behaviours.Moving
 
                     break;
 
-                case CharacterAction.Finish:
-                    Landing();
-
-                    break;
                 case CharacterAction.Respawn:
                     Respawn();
 
+                    break;
+
+                case CharacterAction.Finish:
                     break;
             }
         }
@@ -77,11 +76,34 @@ namespace Behaviour.Behaviours.Moving
 
         protected override void Respawn()
         {
-            var currentZonePos = _ctx.state.currentSavePoint.position;
-            var newPosition = new Vector3(currentZonePos.x, _ctx.transform.position.y, currentZonePos.z);
+            _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
 
+            _ctx.rigidbody.useGravity = false;
+            _ctx.collider.enabled = false;
+
+            MoveToSavePoint();
+        }
+
+        private void MoveToSavePoint()
+        {
             _ctx.state.currentRoadline = _ctx.state.currentRoadline.List.First;
-            _ctx.rigidbody.DOMove(newPosition, _ctx.crashDelay).OnComplete(OnRespawned);
+
+            var roadlinePosition = _ctx.state.currentRoadline.Value.transform.position;
+            var targetPosition = new Vector3(roadlinePosition.x, _ctx.transform.position.y, _ctx.state.currentSavePoint.position.z);
+
+            var distanceVector = targetPosition - _ctx.transform.position;
+
+            if (distanceVector.magnitude > _ctx.toleranceDistance.x)
+            {
+                _ctx.rigidbody.velocity = distanceVector.normalized * _ctx.state.speed.z * VELOCITY_MULTIPLIER * Time.fixedDeltaTime;
+            }
+            else
+            {
+                _ctx.rigidbody.position = targetPosition;
+                _ctx.rigidbody.velocity = Vector3.zero;
+
+                OnRespawned();
+            }
         }
 
         private void OnRespawned()
@@ -140,7 +162,7 @@ namespace Behaviour.Behaviours.Moving
             var characterPosition = _ctx.transform.position;
             _ctx.transform.position = new Vector3(characterPosition.x, _ctx.state.currentRoadline.Value.transform.position.y, characterPosition.z);
             _ctx.state.currentAction = CharacterAction.Finish;
-            
+
             _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
         }
 
