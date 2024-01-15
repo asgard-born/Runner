@@ -71,13 +71,13 @@ namespace Behaviour.Behaviours.Moving
             MoveToSavePoint();
         }
 
-        protected override void OnCrash(GameObject obstacle)
+        protected override void onInteractedWIthObstacle(GameObject obstacle)
         {
             if (_ctx.state.currentAction == CharacterAction.Respawn) return;
 
             Reset();
             _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
-            base.OnCrash(obstacle);
+            base.onInteractedWIthObstacle(obstacle);
         }
 
         protected override void Reset()

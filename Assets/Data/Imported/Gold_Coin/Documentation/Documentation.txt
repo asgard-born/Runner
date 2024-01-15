@@ -1,0 +1,48 @@
+	
+- - - - - - - - - - - - - - - - - - - - - Gold Coin - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+This pack contains 3d Model of a Gold coin.
+
+
+Technical Details:-
+				
+		- Vertex count : 82
+		- Tris count :  160
+		- Animations : No
+		- Texture Variations : 4
+		- Used Material(s) : Unity Standard Shader
+		- Texture maps : Albedo/Base Color, Metalic, Normal
+		- Texture Size : 2048(.png)
+		- Simple colliders attached
+
+Features:-
+	- Lowpoly
+	- Texture variations
+	- Colliders attached
+	- PBR HQ Textures
+	- Mobile, AR supported
+
+Folder details:-
+
+	Materials : Where the materials for the model located.
+	
+	Meshes : Contain FBX format of the 3d model.
+	
+	Textures : Contains Textures, that are in (.PNG) file format
+	
+	(Other folders - Prefabs, Scenes)
+
+
+How to use:-
+	
+	Simply drag and drop the prefab to your scene and use it.
+	(Prefab(s) located under 
+	Asset > Gold_Coin > Prefabs).
+
+..................................................................................
+
+About Me : "SR Studios Kerala", Indie Game developer & 3D Artist from Alappuzha, Kerala, India
+
+Contact : srstudioskerala@gmail.com
+
+................Thank you for downloading this package................................

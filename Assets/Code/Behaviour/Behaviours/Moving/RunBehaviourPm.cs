@@ -88,13 +88,13 @@ namespace Behaviour.Behaviours.Moving
             _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
         }
 
-        protected override void OnCrash(GameObject obstacle)
+        protected override void onInteractedWIthObstacle(GameObject obstacle)
         {
             if (_ctx.state.currentAction == CharacterAction.Respawn) return;
 
             ClearAnimations();
 
-            base.OnCrash(obstacle);
+            base.onInteractedWIthObstacle(obstacle);
         }
 
         protected override void OnGameWin()

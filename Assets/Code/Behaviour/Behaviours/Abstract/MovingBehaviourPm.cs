@@ -19,7 +19,7 @@ namespace Behaviour.Behaviours.Abstract
         protected MovingBehaviourPm(Ctx ctx) : base(ctx)
         {
             AddUnsafe(_ctx.onFinishReached.Subscribe(OnGameWin));
-            AddUnsafe(_ctx.onCrash.Subscribe(OnCrash));
+            AddUnsafe(_ctx.onInteractedWIthObstacle.Subscribe(onInteractedWIthObstacle));
             AddUnsafe(_ctx.onInteractWithSaveZone.Subscribe(OnInteractedWithSaveZone));
             AddUnsafe(Observable.EveryFixedUpdate().Subscribe(_ => MovingProcess()));
         }
@@ -40,7 +40,7 @@ namespace Behaviour.Behaviours.Abstract
             _ctx.rigidbody.velocity = forwardVelocity + sideVelocity + verticalVelocity;
         }
 
-        protected virtual void OnCrash(GameObject _)
+        protected virtual void onInteractedWIthObstacle(GameObject _)
         {
             _ctx.animator.SetTrigger(_damageHash);
             

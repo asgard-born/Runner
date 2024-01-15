@@ -38,7 +38,7 @@ namespace Behaviour.Behaviours.Abstract
             public ReactiveCommand<Direction> onSwipeDirection;
             public ReactiveCommand<BehaviourType> onBehaviourAdded;
             public ReactiveCommand<BehaviourType> onBehaviourFinished;
-            public ReactiveCommand<GameObject> onCrash;
+            public ReactiveCommand<GameObject> onInteractedWIthObstacle;
             public ReactiveTrigger onFinishReached;
             public ReactiveCommand<Transform> onInteractWithSaveZone;
             public ReactiveTrigger onRespawned;

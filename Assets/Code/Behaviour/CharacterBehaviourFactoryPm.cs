@@ -66,7 +66,7 @@ namespace Behaviour
                 onSwipeDirection = _ctx.onSwipeDirection,
                 onBehaviourAdded = _ctx.onBehaviourAdded,
                 onBehaviourFinished = _ctx.onBehaviourFinished,
-                onCrash = _ctx.onInteractWithObstacle,
+                onInteractedWIthObstacle = _ctx.onInteractWithObstacle,
                 onFinishReached = _ctx.onFinishReached,
                 onInteractWithSaveZone = _ctx.onInteractWithSaveZone
             };

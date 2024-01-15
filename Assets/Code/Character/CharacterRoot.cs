@@ -93,7 +93,7 @@ namespace Character
             var viewCtx = new CharacterView.Ctx
             {
                 onInterraction = _ctx.onInterraction,
-                onCrash = _ctx.onInteractWithObstacle,
+                onInteractedWIthObstacle = _ctx.onInteractWithObstacle,
                 onRespawned = _onRespawned
             };
 

@@ -24,14 +24,14 @@ namespace Character
         public struct Ctx
         {
             public ReactiveCommand<Collider> onInterraction;
-            public ReactiveCommand<GameObject> onCrash;
+            public ReactiveCommand<GameObject> onInteractedWIthObstacle;
             public ReactiveTrigger onRespawned;
         }
 
         public void SetContext(Ctx ctx)
         {
             _onInterraction = ctx.onInterraction;
-            ctx.onCrash.Subscribe(OnCrash).AddTo(this);
+            ctx.onInteractedWIthObstacle.Subscribe(onInteractedWIthObstacle).AddTo(this);
             ctx.onRespawned.Subscribe(OnRespawned).AddTo(this);
         }
 
@@ -40,7 +40,7 @@ namespace Character
             _isChecking = true;
         }
 
-        private void OnCrash(GameObject _)
+        private void onInteractedWIthObstacle(GameObject _)
         {
             _isChecking = false;
         }
