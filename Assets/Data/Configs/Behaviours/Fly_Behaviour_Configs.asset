@@ -16,6 +16,6 @@ MonoBehaviour:
   _name: 20
   _effects:
   - {fileID: 1311965450642704, guid: 8237f7b8f33ea8a4c84650594a690807, type: 3}
-  _speed: {x: 3, y: 5, z: 5}
-  _jumpForce: 0
-  _height: 3
+  _hasSpeed: 1
+  _speed: {x: 0, y: 2, z: 0}
+  _height: 7

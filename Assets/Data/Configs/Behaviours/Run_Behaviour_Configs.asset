@@ -15,6 +15,6 @@ MonoBehaviour:
   _type: 10
   _name: 10
   _effects: []
-  _speed: {x: 3, y: 0, z: 5}
-  _jumpForce: 48
-  _height: 0
+  _hasSpeed: 0
+  _speed: {x: 0, y: 0, z: 0}
+  _height: 48

@@ -23,9 +23,6 @@ namespace Behaviour.Behaviours.Moving
 
         protected override void Initialize()
         {
-            _ctx.state.speed = _ctx.configs.speed;
-            _ctx.state.jumpForce = _ctx.configs.jumpForce;
-
             SetDefaultCondition();
 
             _hasStarted = true;
@@ -33,7 +30,9 @@ namespace Behaviour.Behaviours.Moving
 
         protected override void MovingProcess()
         {
-            switch (_currentAction)
+            Debug.Log($"<color='red'>Current action/behaviour {_ctx.state.currentAction.ToString()}, {_ctx.configs.name}</color>");
+
+            switch (_ctx.state.currentAction)
             {
                 case CharacterAction.Moving:
                     Move();
@@ -45,7 +44,7 @@ namespace Behaviour.Behaviours.Moving
 
                     if (!IsGrounded())
                     {
-                        _currentAction = CharacterAction.Falling;
+                        _ctx.state.currentAction = CharacterAction.Falling;
                     }
 
                     break;
@@ -56,7 +55,9 @@ namespace Behaviour.Behaviours.Moving
 
                     break;
 
-                case CharacterAction.Crash:
+                case CharacterAction.Respawn:
+                    Respawn();
+
                     break;
             }
         }
@@ -64,13 +65,31 @@ namespace Behaviour.Behaviours.Moving
         protected override void Respawn()
         {
             _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
-            var currentZonePos = _ctx.state.currentSaveZone.position;
 
             _ctx.rigidbody.useGravity = false;
             _ctx.collider.enabled = false;
-            _ctx.state.currentRoadline = _ctx.state.currentRoadline.List.First;
 
-            _ctx.rigidbody.DOMove(currentZonePos, _ctx.crashDelay).OnComplete(OnRespawned);
+            MoveToSavePoint();
+        }
+
+        private void MoveToSavePoint()
+        {
+            _ctx.state.currentRoadline = _ctx.state.currentRoadline.List.First;
+            var targetPosition = _ctx.state.currentSavePoint.position;
+
+            var distanceVector = targetPosition - _ctx.transform.position;
+
+            if (distanceVector.magnitude > _ctx.toleranceDistance.x)
+            {
+                _ctx.rigidbody.velocity = distanceVector.normalized * _ctx.state.speed.z * VELOCITY_MULTIPLIER * Time.fixedDeltaTime;
+            }
+            else
+            {
+                _ctx.rigidbody.position = targetPosition;
+                _ctx.rigidbody.velocity = Vector3.zero;
+                
+                OnRespawned();
+            }
         }
 
         protected override void OnTimeOver()
@@ -86,19 +105,19 @@ namespace Behaviour.Behaviours.Moving
 
         private void TryJump(float jumpForce)
         {
-            if (_currentAction != CharacterAction.Moving) return;
+            if (_ctx.state.currentAction != CharacterAction.Moving) return;
 
             _ctx.rigidbody.useGravity = true;
             _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
             _ctx.rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             _ctx.animator.SetTrigger(_jumpingHash);
 
-            _currentAction = CharacterAction.Jumping;
+            _ctx.state.currentAction = CharacterAction.Jumping;
         }
 
         private void OnSwipeDirection(Direction direction)
         {
-            if (_currentAction == CharacterAction.Crash || _currentAction == CharacterAction.Idle) return;
+            if (_ctx.state.currentAction == CharacterAction.Respawn || _ctx.state.currentAction == CharacterAction.Idle) return;
 
             switch (direction)
             {
@@ -109,18 +128,17 @@ namespace Behaviour.Behaviours.Moving
                     break;
 
                 case Direction.Up:
-                    TryJump(_ctx.state.jumpForce);
+                    TryJump(_ctx.state.height);
 
                     break;
             }
         }
 
-        protected override async void Crash(GameObject obstacle)
+        protected override async void OnCrashEvent(GameObject obstacle)
         {
-            _currentAction = CharacterAction.Crash;
             _ctx.animator.SetBool(_fallingHash, false);
 
-            base.Crash(obstacle);
+            base.OnCrashEvent(obstacle);
         }
 
         private bool IsGrounded()
@@ -148,12 +166,14 @@ namespace Behaviour.Behaviours.Moving
         {
             var characterPosition = _ctx.transform.position;
 
-            _ctx.rigidbody.position = new Vector3(characterPosition.x, _ctx.state.currentRoadline.Value.transform.position.y, characterPosition.z);
             _ctx.collider.enabled = true;
             _ctx.rigidbody.useGravity = false;
+            _ctx.transform.position = new Vector3(characterPosition.x, _ctx.state.currentRoadline.Value.transform.position.y, characterPosition.z);
             _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
 
-            _currentAction = CharacterAction.Moving;
+            _ctx.state.currentAction = CharacterAction.Moving;
+
+            _ctx.animator.SetBool(_fallingHash, false);
             _ctx.animator.SetTrigger(_runningHash);
         }
     }

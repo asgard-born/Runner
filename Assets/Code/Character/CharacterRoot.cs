@@ -122,9 +122,11 @@ namespace Character
         {
             _state = new CharacterState
             {
-                currentRoadline = new LinkedList<RoadlinePoint>(_ctx.roadlinePoints).Find(_ctx.spawnPoint),
-                initialSpeed = _ctx.initialBehaviourInfo.configs.speed,
+                initialSpeed = _ctx.playersConfigs.initialSpeed,
+                speed = _ctx.playersConfigs.initialSpeed,
+                height = _ctx.initialBehaviourInfo.configs.height,
                 lives = _ctx.lives,
+                currentRoadline = new LinkedList<RoadlinePoint>(_ctx.roadlinePoints).Find(_ctx.spawnPoint),
             };
         }
 

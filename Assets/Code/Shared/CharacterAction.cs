@@ -12,7 +12,7 @@
         Falling = 40,
         Lifting = 50,
         Landing = 60,
-        Crash = 70,
+        Respawn = 70,
         Finish = 250
     }
 }

@@ -72,20 +72,22 @@ namespace Behaviour.Behaviours.Abstract
             }
 
             // Учитываем, что любое потенциальное поведение может выть временным или даваться на постоянной основе
-            
-            AddUnsafe(Observable.EveryFixedUpdate().Subscribe(_ => DoTiming()));
+
+            if (!_ctx.isEndless)
+            {
+                AddUnsafe(Observable.EveryFixedUpdate().Subscribe(_ => DoTiming()));
+            }
         }
 
         private void DoTiming()
         {
-            if (!_ctx.isEndless && _hasStarted)
-            {
-                _secondsLeft -= Time.fixedDeltaTime;
+            if (!_hasStarted) return;
 
-                if (_secondsLeft <= 0)
-                {
-                    OnTimeOver();
-                }
+            _secondsLeft -= Time.fixedDeltaTime;
+
+            if (_secondsLeft <= 0)
+            {
+                OnTimeOver();
             }
         }
 

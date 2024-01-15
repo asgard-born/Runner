@@ -13,8 +13,7 @@ namespace Behaviour.Behaviours.Abstract
     /// </summary>
     public abstract class MovingBehaviourPm : CharacterBehaviourPm
     {
-        protected CharacterAction _currentAction;
-        protected const int SPEED_MULTIPLIER = 100;
+        protected const int VELOCITY_MULTIPLIER = 100;
 
         protected static readonly int _idleHash = Animator.StringToHash("Idle");
         protected static readonly int _damageHash = Animator.StringToHash("Damage");
@@ -22,7 +21,7 @@ namespace Behaviour.Behaviours.Abstract
         protected MovingBehaviourPm(Ctx ctx) : base(ctx)
         {
             AddUnsafe(_ctx.onFinishReached.Subscribe(OnFinish));
-            AddUnsafe(_ctx.onCrash.Subscribe(Crash));
+            AddUnsafe(_ctx.onCrash.Subscribe(OnCrashEvent));
             AddUnsafe(_ctx.onInteractWithSaveZone.Subscribe(OnInteractedWithSaveZone));
             AddUnsafe(Observable.EveryFixedUpdate().Subscribe(_ => MovingProcess()));
         }
@@ -34,7 +33,7 @@ namespace Behaviour.Behaviours.Abstract
         /// </summary>
         protected virtual void Move()
         {
-            var speedZ = _ctx.state.speed.z * SPEED_MULTIPLIER * Time.fixedDeltaTime;
+            var speedZ = _ctx.state.speed.z * VELOCITY_MULTIPLIER * Time.fixedDeltaTime;
             var forwardVelocity = _ctx.transform.forward * speedZ;
 
             var sideVelocity = CalculateSideVelocity();
@@ -44,11 +43,9 @@ namespace Behaviour.Behaviours.Abstract
             _ctx.rigidbody.velocity = forwardVelocity + sideVelocity + verticalVelocity;
         }
 
-        protected async virtual void Crash(GameObject _)
+        protected async virtual void OnCrashEvent(GameObject _)
         {
-            if (_currentAction == CharacterAction.Crash) return;
-
-            _currentAction = CharacterAction.Crash;
+            if (_ctx.state.currentAction == CharacterAction.Respawn) return;
 
             _ctx.animator.SetTrigger(_damageHash);
             _ctx.rigidbody.velocity = Vector3.zero;
@@ -60,13 +57,13 @@ namespace Behaviour.Behaviours.Abstract
 
             if (_ctx.state.lives.Value > 0)
             {
-                Respawn();
+                _ctx.state.currentAction = CharacterAction.Respawn;
             }
         }
 
         protected Vector3 CalculateSideVelocity()
         {
-            var speedX = _ctx.state.speed.x * SPEED_MULTIPLIER * Time.fixedDeltaTime;
+            var speedX = _ctx.state.speed.x * VELOCITY_MULTIPLIER * Time.fixedDeltaTime;
 
             var roadlinePosition = _ctx.state.currentRoadline.Value.transform.position;
             var sideVelocity = Vector3.zero;
@@ -108,13 +105,13 @@ namespace Behaviour.Behaviours.Abstract
 
         protected virtual void OnFinish()
         {
-            _currentAction = CharacterAction.Idle;
+            _ctx.state.currentAction = CharacterAction.Idle;
             _ctx.onFinishReached?.Notify();
         }
 
         private void OnInteractedWithSaveZone(Transform saveZone)
         {
-            _ctx.state.currentSaveZone = saveZone;
+            _ctx.state.currentSavePoint = saveZone;
         }
 
         protected abstract void Respawn();

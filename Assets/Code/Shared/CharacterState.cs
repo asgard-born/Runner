@@ -8,8 +8,9 @@ namespace Shared
     {
         public Vector3 initialSpeed;
         public Vector3 speed;
-        public float jumpForce;
-        public Transform currentSaveZone;
+        public float height;
+        public CharacterAction currentAction;
+        public Transform currentSavePoint;
         public LinkedListNode<RoadlinePoint> currentRoadline;
         public ReactiveProperty<int> lives;
     }

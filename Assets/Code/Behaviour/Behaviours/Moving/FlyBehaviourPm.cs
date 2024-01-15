@@ -17,18 +17,18 @@ namespace Behaviour.Behaviours.Moving
 
         protected override void Initialize()
         {
-            _ctx.state.speed = new Vector3(_ctx.state.speed.x, _ctx.configs.speed.y, _ctx.state.speed.z);
-
             _ctx.rigidbody.useGravity = false;
             _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
-            _currentAction = CharacterAction.Lifting;
+            _ctx.state.currentAction = CharacterAction.Lifting;
 
             _ctx.animator.SetTrigger(_flyingHash);
         }
 
         protected override void MovingProcess()
         {
-            switch (_currentAction)
+            Debug.Log($"<color='red'>Current action/behaviour {_ctx.state.currentAction.ToString()}, {_ctx.configs.name}</color>");
+            
+            switch (_ctx.state.currentAction)
             {
                 case CharacterAction.Moving:
                     Move();
@@ -49,12 +49,16 @@ namespace Behaviour.Behaviours.Moving
                     Landing();
 
                     break;
+                case CharacterAction.Respawn:
+                    Respawn();
+
+                    break;
             }
         }
 
         private void OnSwipeDirection(Direction direction)
         {
-            if (_currentAction == CharacterAction.Crash || _currentAction == CharacterAction.Idle) return;
+            if (_ctx.state.currentAction == CharacterAction.Respawn || _ctx.state.currentAction == CharacterAction.Idle) return;
 
             switch (direction)
             {
@@ -68,12 +72,12 @@ namespace Behaviour.Behaviours.Moving
 
         protected override void OnTimeOver()
         {
-            _currentAction = CharacterAction.Landing;
+            _ctx.state.currentAction = CharacterAction.Landing;
         }
 
         protected override void Respawn()
         {
-            var currentZonePos = _ctx.state.currentSaveZone.position;
+            var currentZonePos = _ctx.state.currentSavePoint.position;
             var newPosition = new Vector3(currentZonePos.x, _ctx.transform.position.y, currentZonePos.z);
 
             _ctx.state.currentRoadline = _ctx.state.currentRoadline.List.First;
@@ -91,7 +95,7 @@ namespace Behaviour.Behaviours.Moving
             _ctx.collider.enabled = true;
             _ctx.rigidbody.useGravity = false;
             _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
-            _currentAction = CharacterAction.Moving;
+            _ctx.state.currentAction = CharacterAction.Moving;
             _ctx.animator.SetTrigger(_flyingHash);
         }
 
@@ -113,7 +117,7 @@ namespace Behaviour.Behaviours.Moving
         private void OnLifted()
         {
             _hasStarted = true;
-            _currentAction = CharacterAction.Moving;
+            _ctx.state.currentAction = CharacterAction.Moving;
         }
 
         private void Landing()
@@ -135,20 +139,17 @@ namespace Behaviour.Behaviours.Moving
         {
             var characterPosition = _ctx.transform.position;
             _ctx.transform.position = new Vector3(characterPosition.x, _ctx.state.currentRoadline.Value.transform.position.y, characterPosition.z);
-
+            _ctx.state.currentAction = CharacterAction.Finish;
+            
             _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
-            _currentAction = CharacterAction.Finish;
         }
 
         private void MoveVertical(Vector3 direction)
         {
-            var speedY = _ctx.state.speed.y;
-            var verticalVelocity = Vector3.up + direction * speedY * SPEED_MULTIPLIER * Time.fixedDeltaTime;
-
+            var verticalVelocity = _ctx.transform.up + direction * _ctx.configs.speed.y * VELOCITY_MULTIPLIER * Time.fixedDeltaTime;
             var sideVelocity = CalculateSideVelocity();
 
-            var newVelocity = verticalVelocity + sideVelocity;
-            _ctx.rigidbody.velocity = newVelocity;
+            _ctx.rigidbody.velocity = verticalVelocity + sideVelocity;
         }
     }
 }
