@@ -91,7 +91,7 @@ namespace Behaviour.Behaviours.Moving
 
         private void OnSwipeDirection(Direction direction)
         {
-            if (_ctx.state.currentAction == CharacterAction.Respawn || _ctx.state.currentAction == CharacterAction.Idle) return;
+            if (_ctx.state.currentAction is CharacterAction.Respawn or CharacterAction.Idle) return;
 
             switch (direction)
             {
