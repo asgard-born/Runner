@@ -126,6 +126,7 @@ namespace Character
                 speed = _ctx.playersConfigs.initialSpeed,
                 height = _ctx.initialBehaviourInfo.configs.height,
                 lives = _ctx.lives,
+                currentAction = CharacterAction.Moving,
                 currentRoadline = new LinkedList<RoadlinePoint>(_ctx.roadlinePoints).Find(_ctx.spawnPoint),
             };
         }

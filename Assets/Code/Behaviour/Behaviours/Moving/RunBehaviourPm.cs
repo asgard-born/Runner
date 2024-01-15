@@ -18,14 +18,18 @@ namespace Behaviour.Behaviours.Moving
         public RunBehaviourPm(Ctx ctx) : base(ctx)
         {
             AddUnsafe(_ctx.onSwipeDirection.Subscribe(OnSwipeDirection));
+            Initialize();
         }
 
         protected override void Initialize()
         {
-            ClearAnimations();
-            SetDefaultCondition();
+            if (_ctx.state.currentAction != CharacterAction.Respawn)
+            {
+                ClearAnimations();
+                SetDefaultCondition();
+            }
 
-            _hasStarted = true;
+            _canTiming = !_ctx.isEndless;
         }
 
         protected override void MovingProcess()
@@ -93,11 +97,11 @@ namespace Behaviour.Behaviours.Moving
             base.OnCrash(obstacle);
         }
 
-        protected override void OnGameOver()
+        protected override void OnGameWin()
         {
             ClearAnimations();
 
-            base.OnGameOver();
+            base.OnGameWin();
         }
 
         private void MoveToSavePoint()
@@ -122,6 +126,7 @@ namespace Behaviour.Behaviours.Moving
 
         private void OnRespawned()
         {
+            ClearAnimations();
             SetDefaultCondition();
             _ctx.onRespawned?.Notify();
         }
@@ -202,6 +207,7 @@ namespace Behaviour.Behaviours.Moving
             _ctx.animator.ResetTrigger(_jumpingHash);
             _ctx.animator.ResetTrigger(_fallingHash);
             _ctx.animator.ResetTrigger(_runningHash);
+            _ctx.animator.ResetTrigger(_damageHash);
         }
     }
 }

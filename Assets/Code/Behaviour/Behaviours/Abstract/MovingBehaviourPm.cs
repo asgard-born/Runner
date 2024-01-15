@@ -18,7 +18,7 @@ namespace Behaviour.Behaviours.Abstract
 
         protected MovingBehaviourPm(Ctx ctx) : base(ctx)
         {
-            AddUnsafe(_ctx.onFinishReached.Subscribe(OnGameOver));
+            AddUnsafe(_ctx.onFinishReached.Subscribe(OnGameWin));
             AddUnsafe(_ctx.onCrash.Subscribe(OnCrash));
             AddUnsafe(_ctx.onInteractWithSaveZone.Subscribe(OnInteractedWithSaveZone));
             AddUnsafe(Observable.EveryFixedUpdate().Subscribe(_ => MovingProcess()));
@@ -97,7 +97,7 @@ namespace Behaviour.Behaviours.Abstract
             return false;
         }
 
-        protected virtual void OnGameOver()
+        protected virtual void OnGameWin()
         {
             _ctx.rigidbody.Sleep();
             _ctx.animator.SetTrigger(_idleHash);

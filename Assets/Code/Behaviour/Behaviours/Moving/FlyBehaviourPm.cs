@@ -12,13 +12,18 @@ namespace Behaviour.Behaviours.Moving
         public FlyBehaviourPm(Ctx ctx) : base(ctx)
         {
             AddUnsafe(_ctx.onSwipeDirection.Subscribe(OnSwipeDirection));
+            Initialize();
         }
 
         protected override void Initialize()
         {
             _ctx.rigidbody.useGravity = false;
             _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
-            _ctx.state.currentAction = CharacterAction.Lifting;
+
+            if (_ctx.state.currentAction != CharacterAction.Respawn)
+            {
+                _ctx.state.currentAction = CharacterAction.Lifting;
+            }
 
             _ctx.animator.SetTrigger(_flyingHash);
         }
@@ -58,7 +63,7 @@ namespace Behaviour.Behaviours.Moving
 
         protected override void Respawn()
         {
-            _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+            _canTiming = false;
 
             _ctx.rigidbody.useGravity = false;
             _ctx.collider.enabled = false;
@@ -79,6 +84,7 @@ namespace Behaviour.Behaviours.Moving
         {
             _ctx.animator.ResetTrigger(_idleHash);
             _ctx.animator.ResetTrigger(_flyingHash);
+            _ctx.animator.ResetTrigger(_damageHash);
         }
 
         private void OnBehaviourFinished()
@@ -126,6 +132,8 @@ namespace Behaviour.Behaviours.Moving
 
         private void OnRespawned()
         {
+            _canTiming = !_ctx.isEndless;
+            
             SetDefaultCondition();
             _ctx.onRespawned?.Notify();
         }
@@ -158,7 +166,7 @@ namespace Behaviour.Behaviours.Moving
 
         private void OnLifted()
         {
-            _hasStarted = true;
+            _canTiming = true;
             _ctx.state.currentAction = CharacterAction.Moving;
         }
 

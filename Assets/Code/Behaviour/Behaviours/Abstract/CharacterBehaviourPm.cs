@@ -19,7 +19,7 @@ namespace Behaviour.Behaviours.Abstract
         protected GameObject[] _spawnedEffects;
 
         protected Ctx _ctx;
-        protected bool _hasStarted;
+        protected bool _canTiming;
 
         public struct Ctx
         {
@@ -47,9 +47,7 @@ namespace Behaviour.Behaviours.Abstract
         protected CharacterBehaviourPm(Ctx ctx)
         {
             _ctx = ctx;
-
-            Initialize();
-
+            
             AddUnsafe(_ctx.onBehaviourAdded.Subscribe(OnBehaviourAdded));
         }
 
@@ -71,7 +69,8 @@ namespace Behaviour.Behaviours.Abstract
                 }
             }
 
-            // Учитываем, что любое потенциальное поведение может выть временным или даваться на постоянной основе
+            // Учитываем, что любое потенциальное поведение может выть временным
+            // или даваться на постоянной основе, поэтому пишем обработку в базовом классе
             if (!_ctx.isEndless)
             {
                 AddUnsafe(Observable.EveryFixedUpdate().Subscribe(_ => DoTiming()));
@@ -80,7 +79,7 @@ namespace Behaviour.Behaviours.Abstract
 
         private void DoTiming()
         {
-            if (!_hasStarted) return;
+            if (!_canTiming) return;
 
             _secondsLeft -= Time.fixedDeltaTime;
 

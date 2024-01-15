@@ -13,12 +13,13 @@ namespace Behaviour.Behaviours.Velocity
 
         public FastBehaviourPm(Ctx ctx) : base(ctx)
         {
+            Initialize();
         }
 
         protected override void Initialize()
         {
             _ctx.state.speed = new Vector3(_ctx.configs.speed.x, _ctx.state.speed.y, _ctx.configs.speed.z);
-            _hasStarted = true;
+            _canTiming = true;
         }
 
         protected override void OnTimeOver()
