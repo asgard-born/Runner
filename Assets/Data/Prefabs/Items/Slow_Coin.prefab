@@ -44,14 +44,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 6818167270396220995}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1c57e38299f43eebc616bc79636df66, type: 3}
+  m_Script: {fileID: 11500000, guid: 250f6fd1845c4031b8116ce1c80cd99a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isRotating: 1
+  _isCoin: 1
+  _rotationSpeed: 50
   _behaviours:
   - _configs: {fileID: 11400000, guid: 405bbb7950e446c49bd00d4842d2c492, type: 2}
     _isEndless: 0
     _durationSec: 10
-  _rotationSpeed: 85
 --- !u!33 &1695149266354087611
 MeshFilter:
   m_ObjectHideFlags: 0

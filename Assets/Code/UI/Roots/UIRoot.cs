@@ -13,7 +13,6 @@ namespace UI.Roots
 
         public struct Ctx
         {
-            public Transform uiRoot;
             public RectTransform uiTransform;
             public ResourcesConfigs resourcesConfigs;
 
@@ -48,20 +47,20 @@ namespace UI.Roots
             };
 
             var hudViewPrefab = await LoadAndTrackPrefab<HUDView>(_ctx.resourcesConfigs.hudViewReference);
-            var hudView = Object.Instantiate(hudViewPrefab, _ctx.uiRoot);
+            var hudView = Object.Instantiate(hudViewPrefab, _ctx.uiTransform);
             hudView.SetContext(ctx);
         }
 
         private async void InitWinViewAsync()
         {
             var winViewprefab = await LoadAndTrackPrefab<WinView>(_ctx.resourcesConfigs.winViewReference);
-            Object.Instantiate(winViewprefab, _ctx.uiRoot);
+            Object.Instantiate(winViewprefab, _ctx.uiTransform);
         }
 
         private async void InitWinLooseAsync()
         {
             var looseViewprefab = await LoadAndTrackPrefab<LooseView>(_ctx.resourcesConfigs.looseViewReference);
-            Object.Instantiate(looseViewprefab, _ctx.uiRoot);
+            Object.Instantiate(looseViewprefab, _ctx.uiTransform);
         }
     }
 }
