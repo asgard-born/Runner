@@ -76,7 +76,7 @@ namespace Behaviour.Behaviours.Moving
             if (_ctx.state.currentAction == CharacterAction.Respawn) return;
 
             Reset();
-
+            _ctx.rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
             base.OnCrash(obstacle);
         }
 
@@ -110,16 +110,14 @@ namespace Behaviour.Behaviours.Moving
 
         private void MoveToSavePoint()
         {
-            _ctx.state.currentRoadline = _ctx.state.currentRoadline.List.First;
+            var savePointPosition = _ctx.state.currentSavePoint.position;
+            var targetPosition = savePointPosition + Vector3.up * Mathf.Abs(_ctx.transform.position.y - savePointPosition.y);
 
-            var roadlinePosition = _ctx.state.currentRoadline.Value.transform.position;
-            var targetPosition = new Vector3(roadlinePosition.x, _ctx.transform.position.y, _ctx.state.currentSavePoint.position.z);
-
-            var distanceVector = targetPosition - _ctx.transform.position;
-
-            if (distanceVector.magnitude > _ctx.toleranceDistance.x)
+            var directionVector = targetPosition - _ctx.transform.position;
+            
+            if (directionVector.magnitude > _ctx.toleranceDistance.x)
             {
-                _ctx.rigidbody.velocity = distanceVector.normalized * _ctx.state.speed.z * VELOCITY_MULTIPLIER * Time.fixedDeltaTime;
+                _ctx.rigidbody.velocity = directionVector.normalized * _ctx.state.speed.z * VELOCITY_MULTIPLIER * Time.fixedDeltaTime;
             }
             else
             {
