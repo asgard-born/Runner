@@ -42,7 +42,7 @@ public class AudioPlayerPm : BaseDisposable
 
     private void PlayingMusicProcess(long _)
     {
-        if (_ctx.audioSource != null && _ctx.audioSource.isPlaying)
+        if (_ctx.audioSource != null && !_ctx.audioSource.isPlaying)
         {
             PlayRandomSound();
         }

@@ -207,11 +207,11 @@ namespace Behaviour.Behaviours.Moving
 
         private void ClearAnimations()
         {
+            _ctx.animator.ResetTrigger(_damageHash);
             _ctx.animator.ResetTrigger(_idleHash);
             _ctx.animator.ResetTrigger(_jumpingHash);
             _ctx.animator.ResetTrigger(_fallingHash);
             _ctx.animator.ResetTrigger(_runningHash);
-            _ctx.animator.ResetTrigger(_damageHash);
         }
     }
 }

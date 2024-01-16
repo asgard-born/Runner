@@ -29,12 +29,12 @@ public class GameStateListenerPm : BaseDisposable
     {
         _ctx = ctx;
 
-        AddUnsafe(_ctx.onFinishZoneReached.Subscribe(OnEnteredFinishZone));
+        AddUnsafe(_ctx.onFinishZoneReached.Subscribe(SetWinState));
         AddUnsafe(_ctx.onGameInitialized.Subscribe(OnInitialized));
         AddUnsafe(_ctx.lives.Subscribe(OnLivesChanged));
     }
 
-    private void OnEnteredFinishZone()
+    private void SetWinState()
     {
         _ctx.onGameWin?.Notify();
     }

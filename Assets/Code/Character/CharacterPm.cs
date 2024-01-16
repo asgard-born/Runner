@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Behaviour.Behaviours.Abstract;
 using Framework;
 using Framework.Reactive;
@@ -47,8 +48,13 @@ namespace Character
         {
             AddUnsafe(_ctx.onNewBehaviourProduced.Subscribe(OnNewBehaviourProduced));
             AddUnsafe(_ctx.onBehaviourFinished.Subscribe(OnBehaviourFinished));
-            AddUnsafe(_ctx.onGameRun.Subscribe(() => _ctx.onBehaviourTaken?.Execute(_ctx.initialBehaviourInfo)));
+            AddUnsafe(_ctx.onGameRun.Subscribe(OnGameRun));
             AddUnsafe(_ctx.onFinishZoneReached.Subscribe(DisposeAll));
+        }
+
+        private void OnGameRun()
+        {
+            _ctx.onBehaviourTaken?.Execute(_ctx.initialBehaviourInfo);
         }
 
         private void InitializeCharacter()
@@ -97,7 +103,7 @@ namespace Character
             {
                 behaviour.Value.Dispose();
             }
-            
+
             _behaviours.Clear();
         }
     }

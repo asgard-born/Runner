@@ -27,6 +27,6 @@ public class SceneLoaderPm : BaseDisposable
 
     private void ReloadScene()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
     }
 }
