@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Behaviour.Behaviours.Abstract;
 using Framework;
 using Framework.Reactive;
@@ -12,7 +11,7 @@ namespace Character
     /// <summary>
     /// Управляет поведениями персонажа: добавляет новые, если находит по типу
     /// в словаре старое взаимоисключающее поведение, то меняет его на новое.
-    /// Например: Run/Fly типа Move.
+    /// Например, Run/Fly типа Move или Fast/Slow типа Velocity
     /// </summary>
     public class CharacterPm : BaseDisposable
     {

@@ -5,6 +5,10 @@ using UnityEngine;
 
 namespace UI.Pms
 {
+    /// <summary>
+    /// Обрабатывает сырой пользовательский ввод от представления, определяя
+    /// направление и передает направление в реактивной команде
+    /// </summary>
     public class VirtualPadPm : BaseDisposable
     {
         private Vector2 _playerInputData;

@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 namespace UI.Views
 {
+    /// <summary>
+    /// Дисплей выигрыша
+    /// </summary>
     public class WinView : MonoBehaviour
     {
         [SerializeField] private Button _nextLevelButton;
@@ -26,6 +29,7 @@ namespace UI.Views
         private void OnValidate()
         {
             Assert.IsTrue(_nextLevelButton != null, "Next level button cannot be null");
+            Assert.IsTrue(_coins != null, "Coins button cannot be null");
         }
     }
 }

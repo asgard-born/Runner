@@ -4,6 +4,10 @@ using UnityEngine.EventSystems;
 
 namespace UI.Views
 {
+    /// <summary>
+    /// Панель, которая принимает в себя пользовательский ввод, проверяет его
+    /// соответствие заданным условиям и передает отфильтрованный ввод в реактивной команде
+    /// </summary>
     public class VirtualPadView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
     {
         [SerializeField, Range(1,4)] private float _distanceThreshold = 2.2f;

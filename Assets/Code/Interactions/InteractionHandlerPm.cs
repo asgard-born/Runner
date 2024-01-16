@@ -9,8 +9,7 @@ using UnityEngine;
 namespace Interactions
 {
     /// <summary>
-    /// Принимает в себя 'сырые' данные в виде коллайдеров
-    /// Распознает объект взаимодействия и сообщает об этом в событиях
+    /// Принимает в себя 'сырые' данные в виде коллайдеров. Распознает объект взаимодействия и сообщает об этом в событиях
     /// </summary>
     public class InteractionHandlerPm : BaseDisposable
     {
@@ -75,7 +74,7 @@ namespace Interactions
                 }
             }
 
-            var item = collider.GetComponent<Item>();
+            var item = collider.GetComponent<ItemView>();
 
             if (item != null)
             {

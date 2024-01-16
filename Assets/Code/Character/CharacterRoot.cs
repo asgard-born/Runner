@@ -14,8 +14,8 @@ using Object = UnityEngine.Object;
 namespace Character
 {
     /// <summary>
-    /// Доменная зона персонажа. Является входной точкой, которая создает
-    /// PresentationModel, View и Фабрику поведений персонажа и связывает их посредством реактивных команд
+    /// Доменная зона персонажа. Является входной точкой, которая создает PresentationModel, View
+    /// и Фабрику поведений персонажа и организовывает слабое сцепление между ними с помощью реактивных команд 
     /// </summary>
     public class CharacterRoot : BaseDisposable
     {

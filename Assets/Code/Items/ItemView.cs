@@ -5,7 +5,11 @@ using UnityEngine;
 
 namespace Items
 {
-    public class Item : MonoBehaviour
+    /// <summary>
+    /// Класс-представление собираемых предметов. Им может быть как монета, так и другой объект
+    /// Имеет возможность содержать или не содержать в себе конфиги поведений
+    /// </summary>
+    public class ItemView : MonoBehaviour
     {
         [SerializeField] private bool _isRotating;
         [SerializeField] private bool _isCoin;

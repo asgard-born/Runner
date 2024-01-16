@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace Behaviour.Behaviours.Velocity
 {
+    /// <summary>
+    /// Поведение игрока типа Медленное. Данному поведению делегируется исключительно
+    /// работа с состоянием персонажа, а именно с его скоростью
+    /// </summary>
     public class SlowBehaviourPm : CharacterBehaviourPm
     {
         public SlowBehaviourPm(Ctx ctx) : base(ctx)

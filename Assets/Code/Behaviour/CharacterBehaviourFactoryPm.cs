@@ -9,6 +9,10 @@ using UnityEngine;
 
 namespace Behaviour
 {
+    /// <summary>
+    /// Данному классу делегируется создание объектов поведений и их передача. Реализует шаблон проектирования 'Стратегия'
+    /// Загружает контекст поведения по абстракции и, производя проверку от полученных кофигов по ключу, создает нужную реализацию
+    /// </summary>
     public class CharacterBehaviourFactoryPm : BaseDisposable
     {
         private readonly Ctx _ctx;

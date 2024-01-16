@@ -5,6 +5,10 @@ using UniRx;
 
 namespace Behaviour.Behaviours.Moving
 {
+    /// <summary>
+    /// Поведение игрока типа Полет. Поведению делегируется работа с компонентами представления
+    /// и обработка пользовательского свайпа в разные стороны
+    /// </summary>
     public class FlyBehaviourPm : MovingBehaviourPm
     {
         protected static readonly int _flyingHash = Animator.StringToHash("Flying");

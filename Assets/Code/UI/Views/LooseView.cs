@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 namespace UI.Views
 {
+    /// <summary>
+    /// Дисплей проигрыша
+    /// </summary>
     public class LooseView : MonoBehaviour
     {
         [SerializeField] private Button _restartButton;
@@ -26,6 +29,7 @@ namespace UI.Views
         private void OnValidate()
         {
             Assert.IsTrue(_restartButton != null, "Restart button cannot be null");
+            Assert.IsTrue(_coins != null, "Coins button cannot be null");
         }
     }
 }

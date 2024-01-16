@@ -10,6 +10,10 @@ namespace UI.Roots
 {
     public class VirtualPadRoot : BaseDisposable
     {
+        /// <summary>
+        /// Входная точка или доменная область панели ввода. Создает представление, presenter'a
+        /// и организовывает слабое сцепление между ними с помощью реактивных команд 
+        /// </summary>
         private ReactiveCommand<(Vector2, Vector2)> _onSwipeRaw;
         private readonly Ctx _ctx;
 

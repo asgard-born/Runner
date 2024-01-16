@@ -4,7 +4,7 @@ using UnityEngine.AddressableAssets;
 namespace Configs
 {
     /// <summary>
-    /// Конфиги для загружаемых ресурсов
+    /// Конфиги для загружаемых ресурсов, собранные в одном месте
     /// </summary>
     [CreateAssetMenu(menuName = "Configs/Resources Configs", fileName = "Resources_Configs")]
     public class ResourcesConfigs : ScriptableObject
