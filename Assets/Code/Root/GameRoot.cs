@@ -120,7 +120,9 @@ namespace Root
                 onInteractWithObstacle = _onInteractWithObstacle,
                 onInteractWithSaveZone = _onInteractWithSaveZone,
                 onFinishZoneReached = _onFinishZoneReached,
-                onCoinTaken = _onCoinTaken
+                onCoinTaken = _onCoinTaken,
+                onGameWin = _onGameWin,
+                onGameOver = _onGameOver
             };
 
             AddUnsafe(new CharacterRoot(ctx));

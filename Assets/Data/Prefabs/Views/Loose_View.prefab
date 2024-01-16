@@ -267,7 +267,7 @@ GameObject:
   - component: {fileID: 2347960131469288418}
   - component: {fileID: 7801679081881547209}
   m_Layer: 5
-  m_Name: Coins Coint (1)
+  m_Name: Coins Coint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -401,7 +401,7 @@ GameObject:
   - component: {fileID: 4777097312291478951}
   - component: {fileID: 8519836515391960874}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: Coins Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -603,7 +603,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _restartButton: {fileID: 1483694182}
-  _coins: {fileID: 0}
+  _coins: {fileID: 7801679081881547209}
 --- !u!114 &5005619792516446491
 MonoBehaviour:
   m_ObjectHideFlags: 0

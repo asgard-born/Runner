@@ -48,6 +48,8 @@ namespace Character
             public ReactiveTrigger onFinishZoneReached;
             public ReactiveTrigger onCoinTaken;
             public ReactiveTrigger onGameRun;
+            public ReactiveTrigger onGameWin;
+            public ReactiveTrigger onGameOver;
         }
 
         public CharacterRoot(Ctx ctx)
@@ -115,7 +117,8 @@ namespace Character
                 onNewBehaviourProduced = _onNewBehaviourProduced,
                 onBehaviourAdded = _onBehaviourAdded,
                 onBehaviourFinished = _onBehaviourFinished,
-                onFinishZoneReached = _ctx.onFinishZoneReached
+                onGameWin = _ctx.onGameWin,
+                onGameOver = _ctx.onGameOver
             };
 
             AddUnsafe(new CharacterPm(ctx));

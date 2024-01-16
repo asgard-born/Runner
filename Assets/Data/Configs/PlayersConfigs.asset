@@ -22,4 +22,4 @@ MonoBehaviour:
     m_Bits: 512
   _crashDelay: 2
   _initialSpeed: {x: 5, y: 7, z: 6}
-  _initialLives: 5
+  _initialLives: 1
