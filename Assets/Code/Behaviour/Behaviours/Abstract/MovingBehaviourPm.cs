@@ -47,6 +47,7 @@ namespace Behaviour.Behaviours.Abstract
             _ctx.rigidbody.useGravity = false;
             _ctx.collider.enabled = false;
             _ctx.state.lives.Value -= 1;
+            _ctx.state.currentRoadline = _ctx.state.currentRoadline.List.First;
 
             if (_ctx.state.lives.Value > 0)
             {
