@@ -66,6 +66,16 @@ namespace Root
             InitializeCharacter();
         }
 
+        private void AfterCharacterInitizlied(Transform characterTransform)
+        {
+            InitializeCamera(characterTransform);
+            InitializeUI(_ctx);
+            InitializeSoundPlayer();
+            InitializeSceneLoaderPm();
+
+            _onInitialized?.Notify();
+        }
+
         private void InitializeRx()
         {
             _lives = AddUnsafe(new ReactiveProperty<int>(_ctx.playersConfigs.initialLives));
@@ -131,16 +141,6 @@ namespace Root
             };
 
             AddUnsafe(new InteractionHandlerPm(characterCtx));
-        }
-
-        private void AfterCharacterInitizlied(Transform characterTransform)
-        {
-            InitializeCamera(characterTransform);
-            InitializeUI(_ctx);
-            InitializeSoundPlayer();
-            InitializeSceneLoaderPm();
-            
-            _onInitialized?.Notify();
         }
 
         private void InitializeCamera(Transform characterTransform)
