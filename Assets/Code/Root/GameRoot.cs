@@ -32,6 +32,8 @@ namespace Root
         private ReactiveTrigger _onInitialized;
         private ReactiveTrigger _onFinishZoneReached;
         private ReactiveTrigger _onCoinTaken;
+        private ReactiveTrigger _onRestartLevel;
+        private ReactiveTrigger _onNextLevel;
         private ReactiveCommand<Direction> _onSwipeDirection;
         private ReactiveCommand<Transform> _onCharacterInitialized;
         private ReactiveCommand<Collider> _onInterraction;
@@ -65,6 +67,7 @@ namespace Root
             InitializeCharacter();
             InitializeUI(ctx);
             InitializeSoundPlayer();
+            InitializeSceneLoaderPm();
 
             _onInitialized?.Notify();
         }
@@ -79,6 +82,9 @@ namespace Root
             _onInitialized = AddUnsafe(new ReactiveTrigger());
             _onCoinTaken = AddUnsafe(new ReactiveTrigger());
             _onGameRun = AddUnsafe(new ReactiveTrigger());
+            _onRestartLevel = AddUnsafe(new ReactiveTrigger());
+            _onNextLevel = AddUnsafe(new ReactiveTrigger());
+
             _onInteractWithSaveZone = AddUnsafe(new ReactiveCommand<Transform>());
             _onSwipeDirection = AddUnsafe(new ReactiveCommand<Direction>());
             _onCharacterInitialized = AddUnsafe(new ReactiveCommand<Transform>());
@@ -153,12 +159,14 @@ namespace Root
                 uiTransform = ctx.uiTransform,
                 resourcesConfigs = ctx.resourcesConfigs,
                 onSwipeDirection = _onSwipeDirection,
-                
+
                 lives = _lives,
                 coins = _coins,
-                
+
                 onGameOver = _onGameOver,
-                onGameWin = _onGameWin
+                onGameWin = _onGameWin,
+                onRestartLevel = _onRestartLevel,
+                onNextLevel = _onNextLevel
             };
 
             AddUnsafe(new UIRoot(uiRootCtx));
@@ -191,6 +199,17 @@ namespace Root
             };
 
             AddUnsafe(new GameStateListenerPm(ctx));
+        }
+
+        private void InitializeSceneLoaderPm()
+        {
+            var ctx = new SceneLoaderPm.Ctx
+            {
+                onRestartLevel = _onRestartLevel,
+                onNextLevel = _onNextLevel
+            };
+
+            AddUnsafe(new SceneLoaderPm(ctx));
         }
     }
 }

@@ -22,6 +22,8 @@ namespace UI.Roots
 
             public ReactiveTrigger onGameWin;
             public ReactiveTrigger onGameOver;
+            public ReactiveTrigger onRestartLevel;
+            public ReactiveTrigger onNextLevel;
             public ReactiveCommand<Direction> onSwipeDirection;
         }
 
@@ -54,20 +56,36 @@ namespace UI.Roots
 
             var hudViewPrefab = await LoadAndTrackPrefab<HUDView>(_ctx.resourcesConfigs.hudViewReference);
             var hudView = Object.Instantiate(hudViewPrefab, _ctx.uiTransform);
-            
+
             hudView.SetContext(ctx);
         }
 
         private async void InitWinViewAsync()
         {
             var winViewprefab = await LoadAndTrackPrefab<WinView>(_ctx.resourcesConfigs.winViewReference);
-            Object.Instantiate(winViewprefab, _ctx.uiTransform);
+            var winView = Object.Instantiate(winViewprefab, _ctx.uiTransform);
+
+            var ctx = new WinView.Ctx
+            {
+                onNextLevel = _ctx.onNextLevel,
+                coinsCount = _ctx.coins.Value
+            };
+
+            winView.SetContext(ctx);
         }
 
         private async void InitLooseViewAsync()
         {
             var looseViewprefab = await LoadAndTrackPrefab<LooseView>(_ctx.resourcesConfigs.looseViewReference);
-            Object.Instantiate(looseViewprefab, _ctx.uiTransform);
+            var looseView = Object.Instantiate(looseViewprefab, _ctx.uiTransform);
+            
+            var ctx = new LooseView.Ctx
+            {
+                onRestartLevel = _ctx.onRestartLevel,
+                coinsCount = _ctx.coins.Value
+            };
+
+            looseView.SetContext(ctx);
         }
     }
 }
