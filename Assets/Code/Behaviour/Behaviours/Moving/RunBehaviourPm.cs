@@ -100,6 +100,7 @@ namespace Behaviour.Behaviours.Moving
         {
             SetDefaultCondition();
             ClearAnimations();
+            _ctx.state.speed = Vector3.zero;
 
             _ctx.rigidbody.Sleep();
             _ctx.animator.SetTrigger(_idleHash);

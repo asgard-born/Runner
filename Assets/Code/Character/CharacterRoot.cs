@@ -114,7 +114,8 @@ namespace Character
                 onBehaviourTaken = _ctx.onBehaviourTaken,
                 onNewBehaviourProduced = _onNewBehaviourProduced,
                 onBehaviourAdded = _onBehaviourAdded,
-                onBehaviourFinished = _onBehaviourFinished
+                onBehaviourFinished = _onBehaviourFinished,
+                onFinishZoneReached = _ctx.onFinishZoneReached
             };
 
             AddUnsafe(new CharacterPm(ctx));

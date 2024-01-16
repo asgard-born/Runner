@@ -10,7 +10,7 @@ public class AudioPlayerPm : BaseDisposable
 {
     private readonly Ctx _ctx;
     private IDisposable _musicPlayingProcess;
-
+    
     public struct Ctx
     {
         public ReactiveTrigger onGameRun;
@@ -23,9 +23,7 @@ public class AudioPlayerPm : BaseDisposable
     public AudioPlayerPm(Ctx ctx)
     {
         _ctx = ctx;
-        
-        _musicPlayingProcess = Observable.EveryUpdate().Subscribe(PlayingMusicProcess);
-        
+
         AddUnsafe(_ctx.onGameRun.Subscribe(StartPlayingMusicProcess));
         AddUnsafe(_ctx.onGameWin.Subscribe(OnGameStopped));
         AddUnsafe(_ctx.onGameOver.Subscribe(OnGameStopped));
@@ -44,7 +42,7 @@ public class AudioPlayerPm : BaseDisposable
 
     private void PlayingMusicProcess(long _)
     {
-        if (!_ctx.audioSource.isPlaying)
+        if (_ctx.audioSource != null && _ctx.audioSource.isPlaying)
         {
             PlayRandomSound();
         }

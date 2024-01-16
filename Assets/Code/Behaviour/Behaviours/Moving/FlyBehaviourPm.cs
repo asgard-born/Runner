@@ -22,6 +22,7 @@ namespace Behaviour.Behaviours.Moving
             Reset();
             SetDefaultCondition();
 
+            _ctx.state.speed = Vector3.zero;
             _ctx.rigidbody.Sleep();
             _ctx.animator.SetTrigger(_idleHash);
             _ctx.state.currentAction = CharacterAction.Idle;

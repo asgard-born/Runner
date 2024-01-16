@@ -32,6 +32,7 @@ namespace Character
             public ReactiveCommand<Transform> onCharacterInitialized;
             public ReactiveCommand<BehaviourType> onBehaviourFinished;
             public ReactiveTrigger onGameRun;
+            public ReactiveTrigger onFinishZoneReached;
         }
 
         public CharacterPm(Ctx ctx)
@@ -47,6 +48,7 @@ namespace Character
             AddUnsafe(_ctx.onNewBehaviourProduced.Subscribe(OnNewBehaviourProduced));
             AddUnsafe(_ctx.onBehaviourFinished.Subscribe(OnBehaviourFinished));
             AddUnsafe(_ctx.onGameRun.Subscribe(() => _ctx.onBehaviourTaken?.Execute(_ctx.initialBehaviourInfo)));
+            AddUnsafe(_ctx.onFinishZoneReached.Subscribe(DisposeAll));
         }
 
         private void InitializeCharacter()
@@ -87,6 +89,16 @@ namespace Character
             {
                 _ctx.onBehaviourTaken?.Execute(_ctx.initialBehaviourInfo);
             }
+        }
+
+        private void DisposeAll()
+        {
+            foreach (var behaviour in _behaviours)
+            {
+                behaviour.Value.Dispose();
+            }
+            
+            _behaviours.Clear();
         }
     }
 }
