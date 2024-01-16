@@ -12,7 +12,19 @@ namespace Behaviour.Behaviours.Moving
         public FlyBehaviourPm(Ctx ctx) : base(ctx)
         {
             AddUnsafe(_ctx.onSwipeDirection.Subscribe(OnSwipeDirection));
+            AddUnsafe(_ctx.onFinishZoneReached.Subscribe(OnFinishZoneReached));
+
             Initialize();
+        }
+
+        private void OnFinishZoneReached()
+        {
+            Reset();
+            SetDefaultCondition();
+
+            _ctx.rigidbody.Sleep();
+            _ctx.animator.SetTrigger(_idleHash);
+            _ctx.state.currentAction = CharacterAction.Idle;
         }
 
         protected override void Initialize()
@@ -184,6 +196,7 @@ namespace Behaviour.Behaviours.Moving
         private void OnLanded()
         {
             var characterPosition = _ctx.transform.position;
+            
             _ctx.transform.position = new Vector3(characterPosition.x, _ctx.state.currentRoadline.Value.transform.position.y, characterPosition.z);
             _ctx.state.currentAction = CharacterAction.Finish;
 

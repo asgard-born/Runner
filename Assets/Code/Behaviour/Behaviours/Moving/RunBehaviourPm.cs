@@ -18,6 +18,7 @@ namespace Behaviour.Behaviours.Moving
         public RunBehaviourPm(Ctx ctx) : base(ctx)
         {
             AddUnsafe(_ctx.onSwipeDirection.Subscribe(OnSwipeDirection));
+            AddUnsafe(_ctx.onFinishZoneReached.Subscribe(OnFinishZoneReached));
             Initialize();
         }
 
@@ -95,11 +96,14 @@ namespace Behaviour.Behaviours.Moving
             base.onInteractedWIthObstacle(obstacle);
         }
 
-        protected override void OnGameWin()
+        private void OnFinishZoneReached()
         {
+            SetDefaultCondition();
             ClearAnimations();
 
-            base.OnGameWin();
+            _ctx.rigidbody.Sleep();
+            _ctx.animator.SetTrigger(_idleHash);
+            _ctx.state.currentAction = CharacterAction.Idle;
         }
 
         private void MoveToSavePoint()
@@ -126,6 +130,7 @@ namespace Behaviour.Behaviours.Moving
         {
             ClearAnimations();
             SetDefaultCondition();
+
             _ctx.onRespawned?.Notify();
         }
 

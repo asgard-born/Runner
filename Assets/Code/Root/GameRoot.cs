@@ -12,6 +12,10 @@ using UnityEngine;
 
 namespace Root
 {
+    /// <summary>
+    /// Главный Root-объект ветвления нашего Composition Tree создает общие реактивные объекты а другие Roots и Presentation Models (Rm), ветки дерева, в которых будут,
+    /// располагаться Pms и Views, слабо зацепленные между собой посредством  другие Roots 
+    /// </summary>
     public class GameRoot : BaseDisposable
     {
         private CameraPm _cameraPm;
@@ -55,7 +59,7 @@ namespace Root
             _ctx = ctx;
 
             InitializeRx();
-            
+
             InitializeGameStateListenerPm();
             InitializeInteractionHandler();
             InitializeCharacter();
@@ -149,8 +153,12 @@ namespace Root
                 uiTransform = ctx.uiTransform,
                 resourcesConfigs = ctx.resourcesConfigs,
                 onSwipeDirection = _onSwipeDirection,
+                
                 lives = _lives,
-                coins = _coins
+                coins = _coins,
+                
+                onGameOver = _onGameOver,
+                onGameWin = _onGameWin
             };
 
             AddUnsafe(new UIRoot(uiRootCtx));

@@ -1,5 +1,6 @@
 ﻿using Configs;
 using Framework;
+using Framework.Reactive;
 using Shared;
 using UI.Views;
 using UniRx;
@@ -19,6 +20,8 @@ namespace UI.Roots
             public ReactiveProperty<int> lives;
             public ReactiveProperty<int> coins;
 
+            public ReactiveTrigger onGameWin;
+            public ReactiveTrigger onGameOver;
             public ReactiveCommand<Direction> onSwipeDirection;
         }
 
@@ -36,6 +39,9 @@ namespace UI.Roots
             AddUnsafe(new VirtualPadRoot(virtualPadEntityCtx));
 
             InitHUDViewAsync();
+
+            AddUnsafe(_ctx.onGameWin.Subscribe(InitWinViewAsync));
+            AddUnsafe(_ctx.onGameOver.Subscribe(InitLooseViewAsync));
         }
 
         private async void InitHUDViewAsync()
@@ -58,7 +64,7 @@ namespace UI.Roots
             Object.Instantiate(winViewprefab, _ctx.uiTransform);
         }
 
-        private async void InitWinLooseAsync()
+        private async void InitLooseViewAsync()
         {
             var looseViewprefab = await LoadAndTrackPrefab<LooseView>(_ctx.resourcesConfigs.looseViewReference);
             Object.Instantiate(looseViewprefab, _ctx.uiTransform);

@@ -18,7 +18,6 @@ namespace Behaviour.Behaviours.Abstract
 
         protected MovingBehaviourPm(Ctx ctx) : base(ctx)
         {
-            AddUnsafe(_ctx.onFinishZoneReached.Subscribe(OnGameWin));
             AddUnsafe(_ctx.onInteractedWIthObstacle.Subscribe(onInteractedWIthObstacle));
             AddUnsafe(_ctx.onInteractWithSaveZone.Subscribe(OnInteractedWithSaveZone));
             AddUnsafe(Observable.EveryFixedUpdate().Subscribe(_ => MovingProcess()));
@@ -95,14 +94,6 @@ namespace Behaviour.Behaviours.Abstract
             }
 
             return false;
-        }
-
-        protected virtual void OnGameWin()
-        {
-            _ctx.rigidbody.Sleep();
-            _ctx.animator.SetTrigger(_idleHash);
-            _ctx.state.currentAction = CharacterAction.Idle;
-            _ctx.onFinishZoneReached?.Notify();
         }
 
         private void OnInteractedWithSaveZone(Transform saveZone)
