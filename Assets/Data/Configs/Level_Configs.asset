@@ -95,4 +95,4 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  _startDelaySec: 2.5
+  _startDelaySec: 5
