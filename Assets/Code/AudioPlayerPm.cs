@@ -1,30 +1,46 @@
-﻿using Configs;
+﻿using System;
+using System.Threading.Tasks;
+using Configs;
 using Framework;
 using Framework.Reactive;
 using UniRx;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-public class SoundPlayerPm : BaseDisposable
+public class AudioPlayerPm : BaseDisposable
 {
     private readonly Ctx _ctx;
+    private IDisposable _musicPlayingProcess;
 
     public struct Ctx
     {
         public ReactiveTrigger onGameRun;
+        public ReactiveTrigger onGameWin;
+        public ReactiveTrigger onGameOver;
         public AudioConfigs configs;
         public AudioSource audioSource;
     }
 
-    public SoundPlayerPm(Ctx ctx)
+    public AudioPlayerPm(Ctx ctx)
     {
         _ctx = ctx;
-
+        
+        _musicPlayingProcess = Observable.EveryUpdate().Subscribe(PlayingMusicProcess);
+        
         AddUnsafe(_ctx.onGameRun.Subscribe(StartPlayingMusicProcess));
+        AddUnsafe(_ctx.onGameWin.Subscribe(OnGameStopped));
+        AddUnsafe(_ctx.onGameOver.Subscribe(OnGameStopped));
+    }
+
+    private void OnGameStopped()
+    {
+        _ctx.audioSource.Stop();
+        _musicPlayingProcess.Dispose();
     }
 
     private void StartPlayingMusicProcess()
     {
-        AddUnsafe(Observable.EveryUpdate().Subscribe(PlayingMusicProcess));
+        _musicPlayingProcess = Observable.EveryUpdate().Subscribe(PlayingMusicProcess);
     }
 
     private void PlayingMusicProcess(long _)

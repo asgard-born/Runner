@@ -5,7 +5,7 @@ using UnityEngine;
 namespace CameraLogic
 {
     /// <summary>
-    /// Управляет логикой работы камеры.
+    /// Управляет логикой работы камеры
     /// </summary>
     public class CameraPm : BaseDisposable
     {

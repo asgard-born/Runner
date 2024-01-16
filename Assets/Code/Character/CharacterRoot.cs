@@ -45,8 +45,9 @@ namespace Character
             public ReactiveCommand<BehaviourInfo> onBehaviourTaken;
             public ReactiveCommand<GameObject> onInteractWithObstacle;
             public ReactiveCommand<Transform> onInteractWithSaveZone;
-            public ReactiveTrigger onFinishReached;
+            public ReactiveTrigger onFinishZoneReached;
             public ReactiveTrigger onCoinTaken;
+            public ReactiveTrigger onGameRun;
         }
 
         public CharacterRoot(Ctx ctx)
@@ -108,6 +109,7 @@ namespace Character
                 spawnPoint = _ctx.spawnPoint,
                 initialBehaviourInfo = _ctx.initialBehaviourInfo,
 
+                onGameRun = _ctx.onGameRun,
                 onCharacterInitialized = _ctx.onCharacterInitialized,
                 onBehaviourTaken = _ctx.onBehaviourTaken,
                 onNewBehaviourProduced = _onNewBehaviourProduced,
@@ -120,14 +122,17 @@ namespace Character
 
         private void InitializeCharacterState()
         {
+            var currentRoadline = new LinkedList<RoadlinePoint>(_ctx.roadlinePoints).Find(_ctx.spawnPoint);
+
             _state = new CharacterState
             {
                 initialSpeed = _ctx.playersConfigs.initialSpeed,
                 speed = _ctx.playersConfigs.initialSpeed,
                 height = _ctx.initialBehaviourInfo.configs.height,
                 lives = _ctx.lives,
+                currentSavePoint = currentRoadline.Value.transform,
                 currentAction = CharacterAction.Moving,
-                currentRoadline = new LinkedList<RoadlinePoint>(_ctx.roadlinePoints).Find(_ctx.spawnPoint),
+                currentRoadline = currentRoadline
             };
         }
 
@@ -151,7 +156,7 @@ namespace Character
                 onBehaviourFinished = _onBehaviourFinished,
                 onInteractWithObstacle = _ctx.onInteractWithObstacle,
                 onInteractWithSaveZone = _ctx.onInteractWithSaveZone,
-                onFinishReached = _ctx.onFinishReached,
+                onFinishZoneReached = _ctx.onFinishZoneReached,
                 onRespawned = _onRespawned
             };
 

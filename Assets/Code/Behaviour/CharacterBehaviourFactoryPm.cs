@@ -32,7 +32,7 @@ namespace Behaviour
             public ReactiveCommand<BehaviourType> onBehaviourAdded;
             public ReactiveCommand<BehaviourType> onBehaviourFinished;
             public ReactiveCommand<GameObject> onInteractWithObstacle;
-            public ReactiveTrigger onFinishReached;
+            public ReactiveTrigger onFinishZoneReached;
             public ReactiveCommand<Transform> onInteractWithSaveZone;
             public ReactiveTrigger onRespawned;
         }
@@ -67,7 +67,7 @@ namespace Behaviour
                 onBehaviourAdded = _ctx.onBehaviourAdded,
                 onBehaviourFinished = _ctx.onBehaviourFinished,
                 onInteractedWIthObstacle = _ctx.onInteractWithObstacle,
-                onFinishReached = _ctx.onFinishReached,
+                onFinishZoneReached = _ctx.onFinishZoneReached,
                 onInteractWithSaveZone = _ctx.onInteractWithSaveZone
             };
 

@@ -9,7 +9,9 @@ using UnityEngine;
 namespace Character
 {
     /// <summary>
-    /// Управляет поведениями персонажа
+    /// Управляет поведениями персонажа: добавляет новые, если находит по типу
+    /// в словаре старое взаимоисключающее поведение, то меняет его на новое.
+    /// Например: Run/Fly типа Move.
     /// </summary>
     public class CharacterPm : BaseDisposable
     {
@@ -29,6 +31,7 @@ namespace Character
             public ReactiveCommand<BehaviourType> onBehaviourAdded;
             public ReactiveCommand<Transform> onCharacterInitialized;
             public ReactiveCommand<BehaviourType> onBehaviourFinished;
+            public ReactiveTrigger onGameRun;
         }
 
         public CharacterPm(Ctx ctx)
@@ -42,16 +45,15 @@ namespace Character
         private void InitializeRx()
         {
             AddUnsafe(_ctx.onNewBehaviourProduced.Subscribe(OnNewBehaviourProduced));
-            AddUnsafe(_ctx.onBehaviourFinished.Subscribe(onBehaviourFinished));
+            AddUnsafe(_ctx.onBehaviourFinished.Subscribe(OnBehaviourFinished));
+            AddUnsafe(_ctx.onGameRun.Subscribe(() => _ctx.onBehaviourTaken?.Execute(_ctx.initialBehaviourInfo)));
         }
 
         private void InitializeCharacter()
         {
             _ctx.characterTransform.position = _ctx.spawnPoint.transform.position;
             _ctx.characterTransform.rotation = _ctx.spawnPoint.transform.rotation;
-
             _ctx.onCharacterInitialized?.Execute(_ctx.characterTransform);
-            _ctx.onBehaviourTaken?.Execute(_ctx.initialBehaviourInfo);
         }
 
         private void OnNewBehaviourProduced(BehaviourType type, CharacterBehaviourPm newBehaviour)
@@ -69,7 +71,7 @@ namespace Character
             _ctx.onBehaviourAdded?.Execute(type);
         }
 
-        private void onBehaviourFinished(BehaviourType type)
+        private void OnBehaviourFinished(BehaviourType type)
         {
             if (_behaviours.TryGetValue(type, out var finishedBehaviour))
             {

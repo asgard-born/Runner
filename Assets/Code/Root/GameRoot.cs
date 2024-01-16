@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CameraLogic;
 using Character;
 using Configs;
+using Cysharp.Threading.Tasks;
 using Framework;
 using Framework.Reactive;
 using Interactions;
@@ -22,26 +24,32 @@ namespace Root
         private ReactiveProperty<int> _lives;
         private ReactiveProperty<int> _coins;
 
+        private ReactiveTrigger _onGameRun;
+        private ReactiveTrigger _onGameOver;
+        private ReactiveTrigger _onGameWin;
+        private ReactiveTrigger _onInitialized;
+        private ReactiveTrigger _onFinishZoneReached;
+        private ReactiveTrigger _onCoinTaken;
         private ReactiveCommand<Direction> _onSwipeDirection;
         private ReactiveCommand<Transform> _onCharacterInitialized;
         private ReactiveCommand<Collider> _onInterraction;
         private ReactiveCommand<GameObject> _onInteractWithObstacle;
         private ReactiveCommand<BehaviourInfo> _onBehaviourTaken;
         private ReactiveCommand<Transform> _onInteractWithSaveZone;
-        private ReactiveTrigger _onFinishReached;
-        private ReactiveTrigger _onCoinTaken;
-        private ReactiveTrigger _onGameLoose;
 
         public struct Ctx
         {
             public PlayersConfigs playersConfigs;
-            public GlobalConfigs globalConfigs;
+            public LevelConfigs levelConfigs;
             public ResourcesConfigs resourcesConfigs;
             public CameraConfigs cameraConfigs;
+            public AudioConfigs audioConfigs;
+
             public RectTransform uiTransform;
             public List<RoadlinePoint> roadlinePoints;
             public Camera camera;
             public RoadlinePoint spawnPoint;
+            public AudioSource audioSource;
         }
 
         public GameRoot(Ctx ctx)
@@ -49,9 +57,14 @@ namespace Root
             _ctx = ctx;
 
             InitializeRx();
+            
+            InitializeGameStateListenerPm();
             InitializeInteractionHandler();
             InitializeUI(ctx);
             InitializeCharacter();
+            InitializeSoundPlayer();
+
+            _onInitialized?.Notify();
         }
 
         private void InitializeRx()
@@ -59,15 +72,18 @@ namespace Root
             _lives = AddUnsafe(new ReactiveProperty<int>(_ctx.playersConfigs.initialLives));
             _coins = AddUnsafe(new ReactiveProperty<int>());
 
+            _onGameWin = AddUnsafe(new ReactiveTrigger());
+            _onGameOver = AddUnsafe(new ReactiveTrigger());
+            _onInitialized = AddUnsafe(new ReactiveTrigger());
+            _onCoinTaken = AddUnsafe(new ReactiveTrigger());
+            _onGameRun = AddUnsafe(new ReactiveTrigger());
             _onInteractWithSaveZone = AddUnsafe(new ReactiveCommand<Transform>());
             _onSwipeDirection = AddUnsafe(new ReactiveCommand<Direction>());
             _onCharacterInitialized = AddUnsafe(new ReactiveCommand<Transform>());
             _onBehaviourTaken = AddUnsafe(new ReactiveCommand<BehaviourInfo>());
             _onInterraction = AddUnsafe(new ReactiveCommand<Collider>());
             _onInteractWithObstacle = AddUnsafe(new ReactiveCommand<GameObject>());
-            _onFinishReached = AddUnsafe(new ReactiveTrigger());
-            _onCoinTaken = AddUnsafe(new ReactiveTrigger());
-            _onGameLoose = AddUnsafe(new ReactiveTrigger());
+            _onFinishZoneReached = AddUnsafe(new ReactiveTrigger());
 
             AddUnsafe(_onCharacterInitialized.Subscribe(InitializeCamera));
         }
@@ -84,13 +100,14 @@ namespace Root
                 lives = _lives,
                 coins = _coins,
 
+                onGameRun = _onGameRun,
                 onCharacterInitialized = _onCharacterInitialized,
                 onInterraction = _onInterraction,
                 onSwipeDirection = _onSwipeDirection,
                 onBehaviourTaken = _onBehaviourTaken,
                 onInteractWithObstacle = _onInteractWithObstacle,
                 onInteractWithSaveZone = _onInteractWithSaveZone,
-                onFinishReached = _onFinishReached,
+                onFinishZoneReached = _onFinishZoneReached,
                 onCoinTaken = _onCoinTaken
             };
 
@@ -101,13 +118,13 @@ namespace Root
         {
             var characterCtx = new InteractionHandlerPm.Ctx
             {
-                layersDictionary = _ctx.globalConfigs.layersDictionary,
+                layersDictionary = _ctx.levelConfigs.layersDictionary,
 
                 onInterraction = _onInterraction,
                 onBehaviourTaken = _onBehaviourTaken,
                 onInteractWithObstacle = _onInteractWithObstacle,
                 onInteractWithSaveZone = _onInteractWithSaveZone,
-                onFinishReached = _onFinishReached,
+                onFinishZoneReached = _onFinishZoneReached,
                 onCoinTaken = _onCoinTaken
             };
 
@@ -139,6 +156,33 @@ namespace Root
             };
 
             AddUnsafe(new UIRoot(uiRootCtx));
+        }
+
+        private void InitializeSoundPlayer()
+        {
+            var ctx = new AudioPlayerPm.Ctx
+            {
+                configs = _ctx.audioConfigs,
+                audioSource = _ctx.audioSource,
+                onGameRun = _onGameRun
+            };
+
+            AddUnsafe(new AudioPlayerPm(ctx));
+        }
+
+        private void InitializeGameStateListenerPm()
+        {
+            var ctx = new GameStateListenerPm.Ctx
+            {
+                onGameInitialized = _onInitialized,
+                onGameRun = _onGameRun,
+                onGameOver = _onGameOver,
+                onGameWin = _onGameWin,
+                onFinishZoneReached = _onFinishZoneReached,
+                lives = _lives
+            };
+
+            AddUnsafe(new GameStateListenerPm(ctx));
         }
     }
 }

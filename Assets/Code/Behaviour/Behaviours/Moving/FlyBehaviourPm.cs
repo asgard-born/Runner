@@ -30,8 +30,6 @@ namespace Behaviour.Behaviours.Moving
 
         protected override void MovingProcess()
         {
-            Debug.Log($"<color='red'>Current action/behaviour {_ctx.state.currentAction.ToString()}, {_ctx.configs.name}</color>");
-
             switch (_ctx.state.currentAction)
             {
                 case CharacterAction.Moving:
@@ -150,7 +148,7 @@ namespace Behaviour.Behaviours.Moving
         private void Lifting()
         {
             var roadlinePosition = _ctx.state.currentRoadline.Value.transform.position;
-            var localDistance = (roadlinePosition.y + _ctx.configs.height) - _ctx.transform.position.y;
+            var localDistance = roadlinePosition.y + _ctx.configs.height - _ctx.transform.position.y;
 
             if (localDistance >= _ctx.toleranceDistance.y)
             {

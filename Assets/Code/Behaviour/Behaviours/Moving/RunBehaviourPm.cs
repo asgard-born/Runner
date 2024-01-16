@@ -34,8 +34,6 @@ namespace Behaviour.Behaviours.Moving
 
         protected override void MovingProcess()
         {
-            Debug.Log($"<color='red'>Current action/behaviour {_ctx.state.currentAction.ToString()}, {_ctx.configs.name}</color>");
-
             switch (_ctx.state.currentAction)
             {
                 case CharacterAction.Moving:

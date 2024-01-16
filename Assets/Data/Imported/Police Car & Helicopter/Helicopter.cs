@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Police_Car___Helicopter
+namespace Data.Imported.Police_Car___Helicopter
 {
     public class Helicopter : MonoBehaviour
     {

@@ -25,7 +25,7 @@ namespace Interactions
             public ReactiveCommand<BehaviourInfo> onBehaviourTaken;
             public ReactiveCommand<GameObject> onInteractWithObstacle;
             public ReactiveCommand<Transform> onInteractWithSaveZone;
-            public ReactiveTrigger onFinishReached;
+            public ReactiveTrigger onFinishZoneReached;
             public ReactiveTrigger onCoinTaken;
         }
 
@@ -66,7 +66,7 @@ namespace Interactions
                             break;
 
                         case LayerName.Finish:
-                            _ctx.onFinishReached?.Notify();
+                            _ctx.onFinishZoneReached?.Notify();
 
                             break;
                     }

@@ -14,6 +14,5 @@ namespace Configs
         public AssetReference winViewReference;
         public AssetReference looseViewReference;
         public AssetReference virtualPadReference;
-
     }
 }

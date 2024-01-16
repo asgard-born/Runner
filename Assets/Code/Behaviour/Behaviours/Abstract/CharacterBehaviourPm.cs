@@ -39,7 +39,7 @@ namespace Behaviour.Behaviours.Abstract
             public ReactiveCommand<BehaviourType> onBehaviourAdded;
             public ReactiveCommand<BehaviourType> onBehaviourFinished;
             public ReactiveCommand<GameObject> onInteractedWIthObstacle;
-            public ReactiveTrigger onFinishReached;
+            public ReactiveTrigger onFinishZoneReached;
             public ReactiveCommand<Transform> onInteractWithSaveZone;
             public ReactiveTrigger onRespawned;
         }

@@ -32,7 +32,7 @@ namespace UI.Views
         {
             var distance = Vector3.Distance(_currentPosition, _prevPosition);
 
-            var normalizedDistance = (distance / Screen.width) * 10;
+            var normalizedDistance = distance / Screen.width * 10;
             
             if (normalizedDistance < _distanceThreshold) return;
 

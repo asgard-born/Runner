@@ -15,9 +15,11 @@ namespace Root
     public class EnterPoint : MonoBehaviour
     {
         [Header("Configs")] [SerializeField] private PlayersConfigs _playersConfigs;
-        [SerializeField] private GlobalConfigs _globalConfigs;
+        [SerializeField] private LevelConfigs _levelConfigs;
         [SerializeField] private ResourcesConfigs _resourcesConfigs;
         [SerializeField] private CameraConfigs _cameraConfigs;
+        [SerializeField] private AudioConfigs _audioConfigs;
+        [SerializeField] private AudioSource _audioSource;
         [SerializeField] private List<RoadlinePoint> _roadlinePoints;
         [SerializeField] private Transform _spawnPoint;
         [SerializeField] private Camera _camera;
@@ -37,13 +39,16 @@ namespace Root
             var rootCtx = new GameRoot.Ctx
             {
                 playersConfigs = _playersConfigs,
-                globalConfigs = _globalConfigs,
+                levelConfigs = _levelConfigs,
                 resourcesConfigs = _resourcesConfigs,
                 cameraConfigs = _cameraConfigs,
+                audioConfigs = _audioConfigs,
+
                 uiTransform = _uiTransform,
                 roadlinePoints = _roadlinePoints,
                 spawnPoint = _roadlinePoints.First(r => r.transform == _spawnPoint),
-                camera = _camera
+                camera = _camera,
+                audioSource = _audioSource,
             };
 
             _root = new GameRoot(rootCtx);
@@ -52,7 +57,7 @@ namespace Root
         private void ValidateData()
         {
             ValidateConfigs(_playersConfigs);
-            ValidateConfigs(_globalConfigs);
+            ValidateConfigs(_levelConfigs);
             ValidateConfigs(_resourcesConfigs);
             ValidateConfigs(_cameraConfigs);
             ValidateRoadlines();
@@ -85,7 +90,7 @@ namespace Root
         {
             if (_roadlinePoints.IsNullOrEmpty())
             {
-                Debug.LogException(new NullReferenceException("RoadlinePoint points cannot be null or empty"));
+                Debug.LogException(new NullReferenceException("Roadline points cannot be null or empty"));
             }
 
             var roadline = _roadlinePoints.FirstOrDefault(r => r.transform == _spawnPoint);
