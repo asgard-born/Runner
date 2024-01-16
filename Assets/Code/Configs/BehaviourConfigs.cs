@@ -15,9 +15,9 @@ namespace Configs
         [SerializeField] private BehaviourType _type;
         [SerializeField] private BehaviourName _name;
         [SerializeField] private GameObject[] _effects;
-        [SerializeField] private bool _hasSpeed;
+        [SerializeField] private bool _isChangingSpeed;
         // для разных поведений нужна разная скорость, лаконично будет скомпоновать в Vector3
-        [SerializeField, ShowIf("_hasSpeed")] private Vector3 _speed;
+        [SerializeField, ShowIf("_isChangingSpeed")] private Vector3 _speed;
         [SerializeField] private float _height;
 
         public BehaviourType type => _type;
