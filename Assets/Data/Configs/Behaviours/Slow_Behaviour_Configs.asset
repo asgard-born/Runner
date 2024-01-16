@@ -15,7 +15,6 @@ MonoBehaviour:
   _type: 20
   _name: 30
   _effects:
-  - {fileID: 185530, guid: adf34b037141b6346b5afdebc3ebe2b2, type: 3}
   - {fileID: 1920325297268671343, guid: 889dd67908ff48640a817f0b0074814e, type: 3}
   _isChangingSpeed: 1
   _speed: {x: 3, y: 0, z: 3.5}
