@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using CameraLogic;
 using Character;
 using Configs;
-using Cysharp.Threading.Tasks;
 using Framework;
 using Framework.Reactive;
 using Interactions;
@@ -60,8 +58,8 @@ namespace Root
             
             InitializeGameStateListenerPm();
             InitializeInteractionHandler();
-            InitializeUI(ctx);
             InitializeCharacter();
+            InitializeUI(ctx);
             InitializeSoundPlayer();
 
             _onInitialized?.Notify();
@@ -164,6 +162,8 @@ namespace Root
             {
                 configs = _ctx.audioConfigs,
                 audioSource = _ctx.audioSource,
+                onGameWin = _onGameWin,
+                onGameOver = _onGameOver,
                 onGameRun = _onGameRun
             };
 

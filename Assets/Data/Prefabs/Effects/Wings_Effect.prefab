@@ -231,7 +231,7 @@ GameObject:
   - component: {fileID: 95072353171676640}
   - component: {fileID: 114466666382659404}
   m_Layer: 0
-  m_Name: AngelWings
+  m_Name: Wings_Effect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

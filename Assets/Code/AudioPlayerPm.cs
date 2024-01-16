@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Configs;
 using Framework;
 using Framework.Reactive;
@@ -34,8 +33,8 @@ public class AudioPlayerPm : BaseDisposable
 
     private void OnGameStopped()
     {
-        _ctx.audioSource.Stop();
         _musicPlayingProcess.Dispose();
+        _ctx.audioSource.Stop();
     }
 
     private void StartPlayingMusicProcess()
