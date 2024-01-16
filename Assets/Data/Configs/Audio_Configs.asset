@@ -13,7 +13,4 @@ MonoBehaviour:
   m_Name: Audio_Configs
   m_EditorClassIdentifier: 
   _musicList:
-  - {fileID: 8300000, guid: 801b2d5683a074f45b00f1313b542a5e, type: 3}
-  - {fileID: 8300000, guid: c69934b7dcd1c83488b82491724ef281, type: 3}
-  - {fileID: 8300000, guid: 4b3bba844472f8f49bd399e7264068b8, type: 3}
-  - {fileID: 8300000, guid: b03dc6a0661a55848ab302980ebd9b45, type: 3}
+  - {fileID: 8300000, guid: eb4cbe75d9dbf2b49aa53d1f03911314, type: 3}
