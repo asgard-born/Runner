@@ -579,6 +579,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8190251925471091978}
   - component: {fileID: 2443131701724829280}
+  - component: {fileID: 5088016687851557447}
   m_Layer: 5
   m_Name: HUD_View
   m_TagString: Untagged
@@ -615,6 +616,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5562601355165405784}
   m_CullTransparentMesh: 1
+--- !u!114 &5088016687851557447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5562601355165405784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a82bfa1f21274c3d85bff54011359054, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _lives: {fileID: 173775704914215669}
+  _coins: {fileID: 5656110483256557319}
 --- !u!1 &6611237479395106826
 GameObject:
   m_ObjectHideFlags: 0
