@@ -61,6 +61,7 @@ namespace Character
         {
             _ctx.characterTransform.position = _ctx.spawnPoint.transform.position;
             _ctx.characterTransform.rotation = _ctx.spawnPoint.transform.rotation;
+            
             _ctx.onCharacterInitialized?.Execute(_ctx.characterTransform);
         }
 

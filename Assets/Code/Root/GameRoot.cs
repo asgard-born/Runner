@@ -61,15 +61,9 @@ namespace Root
             _ctx = ctx;
 
             InitializeRx();
-
             InitializeGameStateListenerPm();
             InitializeInteractionHandler();
             InitializeCharacter();
-            InitializeUI(ctx);
-            InitializeSoundPlayer();
-            InitializeSceneLoaderPm();
-
-            _onInitialized?.Notify();
         }
 
         private void InitializeRx()
@@ -93,7 +87,7 @@ namespace Root
             _onInteractWithObstacle = AddUnsafe(new ReactiveCommand<GameObject>());
             _onFinishZoneReached = AddUnsafe(new ReactiveTrigger());
 
-            AddUnsafe(_onCharacterInitialized.Subscribe(InitializeCamera));
+            AddUnsafe(_onCharacterInitialized.Subscribe(AfterCharacterInitizlied));
         }
 
         private void InitializeCharacter()
@@ -137,6 +131,16 @@ namespace Root
             };
 
             AddUnsafe(new InteractionHandlerPm(characterCtx));
+        }
+
+        private void AfterCharacterInitizlied(Transform characterTransform)
+        {
+            InitializeCamera(characterTransform);
+            InitializeUI(_ctx);
+            InitializeSoundPlayer();
+            InitializeSceneLoaderPm();
+            
+            _onInitialized?.Notify();
         }
 
         private void InitializeCamera(Transform characterTransform)
