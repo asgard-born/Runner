@@ -17,7 +17,6 @@ public class GameStateListenerPm : BaseDisposable
         public float startDelaySec;
 
         public ReactiveProperty<int> lives;
-
         public ReactiveTrigger onGameInitialized;
         public ReactiveTrigger onGameRun;
         public ReactiveTrigger onGameOver;

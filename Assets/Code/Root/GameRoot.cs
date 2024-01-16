@@ -196,6 +196,7 @@ namespace Root
         {
             var ctx = new GameStateListenerPm.Ctx
             {
+                startDelaySec = _ctx.levelConfigs.startDelaySec,
                 onGameInitialized = _onInitialized,
                 onGameRun = _onGameRun,
                 onGameOver = _onGameOver,

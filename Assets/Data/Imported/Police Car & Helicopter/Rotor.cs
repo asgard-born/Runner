@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Data.Imported.Police_Car___Helicopter
 {
-    public class Helicopter : MonoBehaviour
+    public class Rotor : MonoBehaviour
     {
         [SerializeField] private Transform rotor;
         [SerializeField] private float _speed;
