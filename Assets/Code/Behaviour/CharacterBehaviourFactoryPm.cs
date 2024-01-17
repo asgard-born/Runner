@@ -79,7 +79,7 @@ namespace Behaviour
             var delegateType = typeof(Func<,>).MakeGenericType(typeof(CharacterBehaviourPm.Ctx), type);
             var lambda = Expression.Lambda(delegateType, newExpression, ctxParam); 
             
-            Func<CharacterBehaviourPm.Ctx, CharacterBehaviourPm> createInstance = (Func<CharacterBehaviourPm.Ctx, CharacterBehaviourPm>)lambda.Compile();
+            var createInstance = (Func<CharacterBehaviourPm.Ctx, CharacterBehaviourPm>)lambda.Compile();
             var instance = createInstance(ctx);
             
             _ctx.onNewBehaviourProduced?.Notify(behaviourInfo.configs.key, instance);
