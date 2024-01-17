@@ -1,7 +1,9 @@
 ﻿using System;
+using Behaviour.Behaviours.Abstract;
 using Shared;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Configs
 {
@@ -26,5 +28,10 @@ namespace Configs
         public GameObject[] effects => _effects;
         public Vector3 speed => _speed;
         public float height => _height;
+
+        private void OnValidate()
+        {
+            Assert.IsTrue(_behaviourType.IsSubclassOf(typeof(CharacterBehaviourPm)), "Behaviour type must be derived from CharacterBehaviourPm");
+        }
     }
 }
