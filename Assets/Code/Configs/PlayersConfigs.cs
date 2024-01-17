@@ -27,7 +27,7 @@ namespace Configs
         private void OnValidate()
         {
             Assert.IsTrue(_initialBehaviourInfo != null, "Initial behaviour cannot be null");
-            Assert.IsTrue(_initialBehaviourInfo.configs.type == BehaviourType.Moving, "Initial behaviour must have Moving type");
+            Assert.IsTrue(_initialBehaviourInfo.configs.key == BehaviourKey.Moving, "Initial behaviour must have Moving key");
         }
     }
 }

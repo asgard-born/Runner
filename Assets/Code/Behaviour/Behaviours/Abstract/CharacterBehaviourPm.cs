@@ -36,8 +36,8 @@ namespace Behaviour.Behaviours.Abstract
             public float crashDelay;
 
             public ReactiveCommand<Direction> onSwipeDirection;
-            public ReactiveCommand<BehaviourType> onBehaviourAdded;
-            public ReactiveCommand<BehaviourType> onBehaviourFinished;
+            public ReactiveCommand<BehaviourKey> onBehaviourAdded;
+            public ReactiveCommand<BehaviourKey> onBehaviourFinished;
             public ReactiveCommand<GameObject> onInteractedWIthObstacle;
             public ReactiveTrigger onFinishZoneReached;
             public ReactiveCommand<Transform> onInteractWithSaveZone;
@@ -51,9 +51,9 @@ namespace Behaviour.Behaviours.Abstract
             AddUnsafe(_ctx.onBehaviourAdded.Subscribe(OnBehaviourAdded));
         }
 
-        private void OnBehaviourAdded(BehaviourType type)
+        private void OnBehaviourAdded(BehaviourKey key)
         {
-            if (type != _ctx.configs.type) return;
+            if (key != _ctx.configs.key) return;
 
             _secondsLeft = _ctx.behaviourDurationSec;
             var effects = _ctx.configs.effects;

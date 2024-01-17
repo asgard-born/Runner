@@ -1,6 +1,6 @@
-﻿using Behaviour.Behaviours.Abstract;
-using Behaviour.Behaviours.Moving;
-using Behaviour.Behaviours.Velocity;
+﻿using System;
+using System.Linq.Expressions;
+using Behaviour.Behaviours.Abstract;
 using Framework;
 using Framework.Reactive;
 using Shared;
@@ -11,13 +11,11 @@ namespace Behaviour
 {
     /// <summary>
     /// Данному классу делегируется создание объектов поведений и их отправка в реактивных командах.
-    /// Определяет нужное поведение от полученных кофигов по ключу и создает нужную реализацию
+    /// Создает поведение по типу, получаемому из конфигов
     /// </summary>
     public class CharacterBehaviourFactoryPm : BaseDisposable
     {
         private readonly Ctx _ctx;
-
-        private CharacterBehaviourPm.Ctx _behaviourCtx;
 
         public struct Ctx
         {
@@ -32,9 +30,9 @@ namespace Behaviour
 
             public ReactiveCommand<BehaviourInfo> onBehaviourTaken;
             public ReactiveCommand<Direction> onSwipeDirection;
-            public ReactiveTrigger<BehaviourType, CharacterBehaviourPm> onNewBehaviourProduced;
-            public ReactiveCommand<BehaviourType> onBehaviourAdded;
-            public ReactiveCommand<BehaviourType> onBehaviourFinished;
+            public ReactiveTrigger<BehaviourKey, CharacterBehaviourPm> onNewBehaviourProduced;
+            public ReactiveCommand<BehaviourKey> onBehaviourAdded;
+            public ReactiveCommand<BehaviourKey> onBehaviourFinished;
             public ReactiveCommand<GameObject> onInteractWithObstacle;
             public ReactiveTrigger onFinishZoneReached;
             public ReactiveCommand<Transform> onInteractWithSaveZone;
@@ -50,9 +48,7 @@ namespace Behaviour
 
         private void Create(BehaviourInfo behaviourInfo)
         {
-            CharacterBehaviourPm behaviour;
-
-            _behaviourCtx = new CharacterBehaviourPm.Ctx
+            var ctx = new CharacterBehaviourPm.Ctx
             {
                 configs = behaviourInfo.configs,
                 isEndless = behaviourInfo.isEndless,
@@ -75,31 +71,18 @@ namespace Behaviour
                 onInteractWithSaveZone = _ctx.onInteractWithSaveZone
             };
 
-            switch (behaviourInfo.configs.name)
-            {
-                default:
-                case BehaviourName.Run:
-                    behaviour = new RunBehaviourPm(_behaviourCtx);
-
-                    break;
-
-                case BehaviourName.Fly:
-                    behaviour = new FlyBehaviourPm(_behaviourCtx);
-
-                    break;
-
-                case BehaviourName.Slow:
-                    behaviour = new SlowBehaviourPm(_behaviourCtx);
-
-                    break;
-
-                case BehaviourName.Fast:
-                    behaviour = new FastBehaviourPm(_behaviourCtx);
-
-                    break;
-            }
-
-            _ctx.onNewBehaviourProduced?.Notify(behaviourInfo.configs.type, behaviour);
+            Type type = behaviourInfo.configs.type;
+            
+            var ctxParam = Expression.Parameter(typeof(CharacterBehaviourPm.Ctx), "ctx");
+            var newExpression = Expression.New(type.GetConstructor(new[] { typeof(CharacterBehaviourPm.Ctx) }), ctxParam);
+            
+            var delegateType = typeof(Func<,>).MakeGenericType(typeof(CharacterBehaviourPm.Ctx), type);
+            var lambda = Expression.Lambda(delegateType, newExpression, ctxParam); 
+            
+            Func<CharacterBehaviourPm.Ctx, CharacterBehaviourPm> createInstance = (Func<CharacterBehaviourPm.Ctx, CharacterBehaviourPm>)lambda.Compile();
+            var instance = createInstance(ctx);
+            
+            _ctx.onNewBehaviourProduced?.Notify(behaviourInfo.configs.key, instance);
         }
     }
 }

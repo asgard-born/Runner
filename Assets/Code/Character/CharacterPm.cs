@@ -15,7 +15,7 @@ namespace Character
     /// </summary>
     public class CharacterPm : BaseDisposable
     {
-        private Dictionary<BehaviourType, CharacterBehaviourPm> _behaviours = new();
+        private Dictionary<BehaviourKey, CharacterBehaviourPm> _behaviours = new();
 
         private Ctx _ctx;
 
@@ -26,10 +26,10 @@ namespace Character
             public BehaviourInfo initialBehaviourInfo;
 
             public ReactiveCommand<BehaviourInfo> onBehaviourTaken;
-            public ReactiveTrigger<BehaviourType, CharacterBehaviourPm> onNewBehaviourProduced;
-            public ReactiveCommand<BehaviourType> onBehaviourAdded;
+            public ReactiveTrigger<BehaviourKey, CharacterBehaviourPm> onNewBehaviourProduced;
+            public ReactiveCommand<BehaviourKey> onBehaviourAdded;
             public ReactiveCommand<Transform> onCharacterInitialized;
-            public ReactiveCommand<BehaviourType> onBehaviourFinished;
+            public ReactiveCommand<BehaviourKey> onBehaviourFinished;
             public ReactiveTrigger onGameRun;
             public ReactiveTrigger onGameWin;
             public ReactiveTrigger onGameOver;
@@ -65,24 +65,24 @@ namespace Character
             _ctx.onCharacterInitialized?.Execute(_ctx.characterTransform);
         }
 
-        private void OnNewBehaviourProduced(BehaviourType type, CharacterBehaviourPm newBehaviour)
+        private void OnNewBehaviourProduced(BehaviourKey key, CharacterBehaviourPm newBehaviour)
         {
-            if (_behaviours.TryGetValue(type, out var oldBehaviour))
+            if (_behaviours.TryGetValue(key, out var oldBehaviour))
             {
                 oldBehaviour.Dispose();
-                _behaviours[type] = newBehaviour;
+                _behaviours[key] = newBehaviour;
             }
             else
             {
-                _behaviours.Add(type, newBehaviour);
+                _behaviours.Add(key, newBehaviour);
             }
 
-            _ctx.onBehaviourAdded?.Execute(type);
+            _ctx.onBehaviourAdded?.Execute(key);
         }
 
-        private void OnBehaviourFinished(BehaviourType type)
+        private void OnBehaviourFinished(BehaviourKey key)
         {
-            if (_behaviours.TryGetValue(type, out var finishedBehaviour))
+            if (_behaviours.TryGetValue(key, out var finishedBehaviour))
             {
                 finishedBehaviour.Dispose();
             }
@@ -92,7 +92,7 @@ namespace Character
             }
 
             // Если завершился жизненный цикл поведения, подменяющего наше дефолтное, мы возвращаем его обратно
-            if (type == _ctx.initialBehaviourInfo.configs.type)
+            if (key == _ctx.initialBehaviourInfo.configs.key)
             {
                 _ctx.onBehaviourTaken?.Execute(_ctx.initialBehaviourInfo);
             }

@@ -12,8 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9de22e7fe84b47bd80503d86cd70a294, type: 3}
   m_Name: Run_Behaviour_Configs
   m_EditorClassIdentifier: 
-  _type: 10
-  _name: 10
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _behaviourType
+      Entry: 7
+      Data: 0|System.RuntimeType, mscorlib
+    - Name: 
+      Entry: 1
+      Data: Behaviour.Behaviours.Moving.RunBehaviourPm, Assembly-CSharp
+    - Name: 
+      Entry: 8
+      Data: 
+  _key: 10
   _effects: []
   _isChangingSpeed: 0
   _speed: {x: 5, y: 7, z: 8}

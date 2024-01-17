@@ -82,7 +82,7 @@ namespace Behaviour.Behaviours.Abstract
             _ctx.state.currentRoadline = nextRoadline;
         }
 
-        protected bool CanMoveToDirection(Direction direction)
+        private bool CanMoveToDirection(Direction direction)
         {
             if (direction == Direction.Left && _ctx.state.currentRoadline.Previous != null)
             {

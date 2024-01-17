@@ -23,9 +23,9 @@ namespace Character
         private CharacterView _view;
         private CharacterState _state;
 
-        private ReactiveCommand<BehaviourType> _onBehaviourAdded;
-        private ReactiveTrigger<BehaviourType, CharacterBehaviourPm> _onNewBehaviourProduced;
-        private ReactiveCommand<BehaviourType> _onBehaviourFinished;
+        private ReactiveCommand<BehaviourKey> _onBehaviourAdded;
+        private ReactiveTrigger<BehaviourKey, CharacterBehaviourPm> _onNewBehaviourProduced;
+        private ReactiveCommand<BehaviourKey> _onBehaviourFinished;
         private ReactiveTrigger _onRespawned;
 
         public struct Ctx
@@ -82,9 +82,9 @@ namespace Character
 
         private void InitializeRx()
         {
-            _onNewBehaviourProduced = AddUnsafe(new ReactiveTrigger<BehaviourType, CharacterBehaviourPm>());
-            _onBehaviourAdded = AddUnsafe(new ReactiveCommand<BehaviourType>());
-            _onBehaviourFinished = AddUnsafe(new ReactiveCommand<BehaviourType>());
+            _onNewBehaviourProduced = AddUnsafe(new ReactiveTrigger<BehaviourKey, CharacterBehaviourPm>());
+            _onBehaviourAdded = AddUnsafe(new ReactiveCommand<BehaviourKey>());
+            _onBehaviourFinished = AddUnsafe(new ReactiveCommand<BehaviourKey>());
             _onRespawned = AddUnsafe(new ReactiveTrigger());
         }
 

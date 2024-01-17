@@ -12,8 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9de22e7fe84b47bd80503d86cd70a294, type: 3}
   m_Name: Fast_Behaviour_Configs
   m_EditorClassIdentifier: 
-  _type: 20
-  _name: 40
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _behaviourType
+      Entry: 7
+      Data: 0|System.RuntimeType, mscorlib
+    - Name: 
+      Entry: 1
+      Data: Behaviour.Behaviours.Velocity.FastBehaviourPm, Assembly-CSharp
+    - Name: 
+      Entry: 8
+      Data: 
+  _key: 20
   _effects:
   - {fileID: 1255053967005034563, guid: 11fa2034a1fc7ed40b0a644fa680c340, type: 3}
   _isChangingSpeed: 1

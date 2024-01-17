@@ -23,7 +23,7 @@ namespace Behaviour.Behaviours.Velocity
         protected override void OnTimeOver()
         {
             Reset();
-            _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
+            _ctx.onBehaviourFinished?.Execute(_ctx.configs.key);
         }
 
         protected override void Reset()

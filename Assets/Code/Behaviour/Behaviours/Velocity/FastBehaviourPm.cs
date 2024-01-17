@@ -26,7 +26,7 @@ namespace Behaviour.Behaviours.Velocity
         {
             Reset();
             
-            _ctx.onBehaviourFinished?.Execute(_ctx.configs.type);
+            _ctx.onBehaviourFinished?.Execute(_ctx.configs.key);
         }
 
         protected override void Reset()

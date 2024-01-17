@@ -4,7 +4,7 @@
     /// Служит для необходимости маппинга типа поведения на его имя,
     /// Для работы со взаимоисключаемыми типами поведения (Fly/Run, Fast/Slow)
     /// </summary>
-    public enum BehaviourType: byte
+    public enum BehaviourKey: byte
     {
         None = 0,
         Moving = 10,
